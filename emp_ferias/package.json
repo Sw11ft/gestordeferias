@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "bower": "1.7.9"
+  },
+  "name": "emp_ferias",
+  "private": true,
+  "version": "1.0.0"
+}

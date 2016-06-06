@@ -1,0 +1,36 @@
+﻿@model List<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+@{
+    ViewBag.Title = "Role Panel";
+}
+
+<h2 style="height: inherit">
+    Role Panel
+    <button style="vertical-align: middle; float: right; font-size: 0.6em;" onclick="location.href='@Url.Action("Create", "Role")';return false;" class="btn btn-default">Create Role</button>
+</h2>
+<hr />
+<table class="table table-hover" style="font-size:15px">
+    <thead style="font-size:20px">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var roles in Model)
+        {
+            <tr>
+                <td>
+                    @roles.Id
+                </td>
+                <td>
+                    @roles.Name
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = roles.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = roles.Id })
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
