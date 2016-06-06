@@ -124,11 +124,11 @@ namespace emp_ferias.Controllers
             return View();
         }
 
-        //
-        // POST: /User/Create
-        [System.Web.Mvc.HttpPost]
-        [System.Web.Mvc.AllowAnonymous]
-        [ValidateAntiForgeryToken]
+
+       // POST: /User/Create
+       [System.Web.Mvc.HttpPost]
+       [System.Web.Mvc.AllowAnonymous]
+       [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(RegisterViewModel model)
         {
             if (ModelState.IsValid)
