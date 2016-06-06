@@ -6,6 +6,17 @@
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/Content/Site.css" />
+
+    <style>
+        .navbar-brand {
+            font-size: 1.7em;
+            color: white !important;
+        }
+        .navbar-inverse { 
+            background-color: #563d7c !important; 
+
+        }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -16,16 +27,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+             @Html.ActionLink("Gestor de Férias", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })    &nbsp; &nbsp; &nbsp; 
+   
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-
+                    <li><a href="@Url.Action("Index", "Home")"><span class="glyphicon glyphicon-home"></span>&nbsp; Home</a></li>
                     @if (Context.User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("User Panel", "Index","User")</li>
-                        <li>@Html.ActionLink("Role Panel", "Index", "Role")</li>
+                        <li><a href="@Url.Action("Index", "User")"><span class="glyphicon glyphicon-user"></span>&nbsp; User Panel</a></li>
+                        <li><a href="@Url.Action("Index", "Role")"><span class="glyphicon glyphicon-file"></span>&nbsp; Role Panel</a></li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
