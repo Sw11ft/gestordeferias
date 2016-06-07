@@ -9,7 +9,6 @@
     "commit": "f6ebbb887780c57deeb4af439609ebbc92a0241f"
   },
   "_source": "https://github.com/Modernizr/Modernizr.git",
-  "_target": "^3.3.1",
-  "_originalSource": "modernizr",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "modernizr"
 }

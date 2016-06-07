@@ -9,6 +9,9 @@
     "bootstrap": "*",
     "jquery-validation-unobtrusive": "*",
     "modernizr": "*",
-    "respond": "*"
+    "respond": "*",
+    "moment": "*",
+    "eonasdan-bootstrap-datetimepicker": "*"
+     
   }
 }

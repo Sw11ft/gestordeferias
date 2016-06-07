@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.css" />
+    <title>@ViewBag.Title</title>   
+    <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="~/Content/Site.css" />
+
 
     <style>
         .navbar-brand {
@@ -13,8 +15,7 @@
             color: white !important;
         }
         .navbar-inverse { 
-            background-color: #563d7c !important; 
-
+            background-color: #563d7c !important;      
         }
     </style>
 </head>
@@ -47,7 +48,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>@DateTime.Now.Year - Pedro G.</p>
         </footer>
     </div>
 
@@ -56,5 +57,21 @@
     <script src="~/bower_components/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <script src="~/bower_components/respond/dest/respond.src.js"></script>
+    <script src="~/bower_components/moment/min/moment-with-locales.min.js"></script>
+    <script src="~/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('.divs_Datas').datetimepicker({
+                format: 'L',
+                locale: 'pt'
+            });
+        });
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+
 </body>
 </html>
