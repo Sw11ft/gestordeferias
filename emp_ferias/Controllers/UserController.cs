@@ -63,8 +63,6 @@ namespace emp_ferias.Controllers
         // GET: User/Edit
         public async Task<ActionResult> Edit(string id)
         {
-            usercopy copy = new usercopy();
-
             var user = await UserManager.FindByIdAsync(id);
 
             if (user == null)
@@ -72,38 +70,40 @@ namespace emp_ferias.Controllers
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
 
-            copy.UserName = user.UserName;
-            copy.Email = user.Email;
+            EditUserViewModel viewModel = GetViewModel(user);
 
-            ViewBag.CopyUserName = copy.UserName;
-            ViewBag.CopyEmail = copy.Email;
+            return View(viewModel);
+        }
 
-
-            return View(user);
+        private static EditUserViewModel GetViewModel(ApplicationUser user)
+        {
+            return new EditUserViewModel()
+            {
+                CurrentEmail = user.Email,
+                CurrentUsername = user.UserName,
+                id = user.Id,
+                NewEmail = user.Email,
+                NewUsername = user.UserName
+            };
         }
 
         //POST: /User/Edit
         [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "UserName, Email")] ApplicationUser formtarget, string id)
+        public async Task<ActionResult> Edit(EditUserViewModel viewModel)
         {
-            if (id == null)
+            if (viewModel.id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
             }
-            usercopy copy = new usercopy();
 
-            var user = await UserManager.FindByIdAsync(id);
+            var user = await UserManager.FindByIdAsync(viewModel.id);
 
-            copy.UserName = user.UserName;
-            copy.Email = user.Email;
+            var vm = GetViewModel(user);
 
-            ViewBag.CopyUserName = copy.UserName;
-            ViewBag.CopyEmail = copy.Email;
-
-            user.UserName = formtarget.UserName;
-            user.Email = formtarget.Email;
-
+            user.UserName = viewModel.NewUsername;
+            user.Email = viewModel.NewEmail;
+            
             IdentityResult result = UserManager.Update(user);
 
             if (!result.Succeeded)
@@ -111,11 +111,10 @@ namespace emp_ferias.Controllers
                 foreach (var error in result.Errors)
                     ModelState.AddModelError("", error);
 
-                return View(user);
+                return View(vm);
             }
 
             return RedirectToAction("Index");
-
         }
 
         // GET: User/Create

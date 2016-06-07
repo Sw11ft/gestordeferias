@@ -1,4 +1,4 @@
-﻿@model emp_ferias.Models.ApplicationUser
+﻿@model emp_ferias.Models.EditUserViewModel
 @{
     ViewBag.Title = "Edit";
 }
@@ -42,7 +42,7 @@
 <ol class="breadcrumb">
     <li>@Html.ActionLink("Home", "Index", "Home")</li>
     <li>@Html.ActionLink("User Panel", "Index","User")</li>
-    <li class="active">ID: @Html.DisplayFor(model => model.Id)</li>
+    <li class="active">ID: @Html.DisplayFor(model => model.id)</li>
 </ol>
 
 <br />
@@ -69,7 +69,7 @@
                         Username:
                     </div>
                     <div id="details-right" class="col-xs-6">
-                        @ViewBag.CopyUserName
+                        @Model.CurrentUsername
                     </div>
                     <br />
 
@@ -78,7 +78,7 @@
                         Email:
                     </div>
                     <div id="details-right" class="col-xs-6">
-                        @ViewBag.CopyEmail
+                         @Model.CurrentEmail
                     </div>
 
                     <!--ID-->
@@ -86,7 +86,7 @@
                         ID:
                     </div>
                     <div id="details-right" class="col-xs-6">
-                        @Html.DisplayFor(model => model.Id)
+                        @Model.id
                     </div>
 
                     <br />
@@ -111,7 +111,7 @@
                             Username:
                         </div>
                         <div class="col-xs-10">
-                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.NewUsername, new { @class = "form-control" })
                         </div>
                         <br />
 
@@ -120,7 +120,7 @@
                             Email:
                         </div>
                         <div class="col-xs-10">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control" })
                         </div>
                         <br />
                         <div id="submit-btn">

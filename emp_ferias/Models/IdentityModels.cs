@@ -33,10 +33,14 @@ namespace emp_ferias.Models
             return new ApplicationDbContext();
         }
     }
-    public class usercopy
+
+    public class EditUserViewModel
     {
-        public string UserName { get; set; }
-        public string Email { get; set; }
+        public string CurrentUsername { get; set; }
+        public string CurrentEmail { get; set; }
+        public string id { get; set; }
+        public string NewUsername { get; set; }
+        public string NewEmail { get; set; }
     }
 
     public class RoleViewModel
