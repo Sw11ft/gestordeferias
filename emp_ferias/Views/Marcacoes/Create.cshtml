@@ -15,7 +15,9 @@
         <h4>Marcacao</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
+
+
+      @*<div class="form-group">
             @Html.LabelFor(model => model.UserId, "UserId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("UserId", null, htmlAttributes: new { @class = "form-control" })
@@ -23,16 +25,15 @@
             </div>
         </div>
 
-       @* <div class="form-group">
+        <div class="form-group">
             @Html.LabelFor(model => model.DataPedido, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.DataPedido, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.DataPedido, "", new { @class = "text-danger" })
             </div>
         </div>*@
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataInicio, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="form-group form-inline">
+            @Html.Label("De", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class='input-group date divs_Datas'>
                    @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control" } })  
@@ -45,22 +46,28 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataFim, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="form-group form-inline">
+            @Html.Label("Até:", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control" } })
+                <div class='input-group date divs_Datas'>
+                    @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
                 @Html.ValidationMessageFor(model => model.DataFim, "", new { @class = "text-danger" })
+
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Observacoes, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("Observações", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Observacoes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Observacoes, new { @class = "form-control", @rows = "3" })
                 @Html.ValidationMessageFor(model => model.Observacoes, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        @*
         <div class="form-group">
             @Html.LabelFor(model => model.Aprovado, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -85,7 +92,7 @@
                 @Html.EditorFor(model => model.RazaoAprovacao, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.RazaoAprovacao, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Motivo, htmlAttributes: new { @class = "control-label col-md-2" })

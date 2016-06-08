@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ExecutionResult.cs" />
     <Compile Include="Classes\Marcacao.cs" />
     <Compile Include="DAL\EmpFeriasDbContext.cs" />
     <Compile Include="Migrations\201606071355091_Initial.cs" />

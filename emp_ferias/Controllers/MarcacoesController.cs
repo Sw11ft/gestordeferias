@@ -9,11 +9,16 @@ using System.Web;
 using System.Web.Mvc;
 using emp_ferias.lib.Classes;
 using emp_ferias.lib.DAL;
+using emp_ferias.Models;
+using emp_ferias.lib.Services;
 
 namespace emp_ferias.Controllers
 {
     public class MarcacoesController : Controller
     {
+
+        var serviceMarcacoes = new ServiceMarcacoes();
+
         private EmpFeriasDbContext db = new EmpFeriasDbContext();
 
         // GET: Marcacoes
@@ -41,28 +46,34 @@ namespace emp_ferias.Controllers
         // GET: Marcacoes/Create
         public ActionResult Create()
         {
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Id");
-            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id");
             return View();
         }
 
+        private static Marcacao MapViewModel(CreateMarcacaoViewModel UserInput)
+        {
+            return new Marcacao
+            {
+                DataInicio = UserInput.DataInicio,
+                DataFim = UserInput.DataFim,
+                Motivo = UserInput.Motivo,
+                Observacoes = UserInput.Observacoes
+            };
+        }
+
         // POST: Marcacoes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,UserId,DataPedido,DataInicio,DataFim,Observacoes,Aprovado,UserIdAprovacao,RazaoAprovacao,Motivo")] Marcacao marcacao)
+        public ActionResult Create(CreateMarcacaoViewModel viewModel)
         {
-            if (ModelState.IsValid)
-            {
-                db.Marcacoes.Add(marcacao);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+            //if (ModelState.IsValid)
+            //{
+            //    db.Marcacoes.Add(marcacao);
+            //    await db.SaveChangesAsync();
+            //    return RedirectToAction("Index");
+            //}
+            
 
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Id", marcacao.UserId);
-            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.UserIdAprovacao);
-            return View(marcacao);
+            return View(viewModel);
         }
 
         // GET: Marcacoes/Edit/5
