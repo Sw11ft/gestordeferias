@@ -12,10 +12,23 @@ namespace emp_ferias.lib.Services
     {
         private EmpFeriasDbContext db = new EmpFeriasDbContext();
 
-        public void Create()
+        public void Create(Marcacao m)
         {
-            if 
+            List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
 
+            if (m.DataFim < m.DataInicio)
+            {
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "The end date must be after the start date."});
+            }
+            if (!(Enum.IsDefined(typeof(Motivo),m.Motivo)))
+            {
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Invalid reason." });
+            }
+            if (ExecutionResult.Any())
+            {
+                m.DataPedido = DateTime.Now;
+               // m.UserId = 
+            }
         }
 
         public void Update()

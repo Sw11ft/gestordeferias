@@ -17,7 +17,7 @@ namespace emp_ferias.Controllers
     public class MarcacoesController : Controller
     {
 
-        var serviceMarcacoes = new ServiceMarcacoes();
+        ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes();
 
         private EmpFeriasDbContext db = new EmpFeriasDbContext();
 
@@ -71,8 +71,7 @@ namespace emp_ferias.Controllers
             //    await db.SaveChangesAsync();
             //    return RedirectToAction("Index");
             //}
-            
-
+                  
             return View(viewModel);
         }
 
