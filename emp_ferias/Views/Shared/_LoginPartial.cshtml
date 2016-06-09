@@ -8,24 +8,33 @@
             color: #aeff00 !important;
             font-size: 1.2em;
         }
+        footer {
+            min-height:100%
+        }
     </style>
 
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", new { title = "Manage" }, new { @class = "username" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li>
+                    @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", new { title = "Manage" }, new { @class = "username" })
+                </li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            </ul>
+        </div>
     }
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-    </ul>
+    <div id="sidebar-wrapper">
+        <footer class="bg-primary" style="position:absolute; width: 100%; ">
+            <ul class="sidebar-nav">
+                <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+            </ul>
+        </footer>
+    </div>
 }

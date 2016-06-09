@@ -52,9 +52,14 @@
     <Compile Include="Classes\ExecutionResult.cs" />
     <Compile Include="Classes\Marcacao.cs" />
     <Compile Include="DAL\EmpFeriasDbContext.cs" />
+    <Compile Include="Interfaces\IServiceLogin.cs" />
     <Compile Include="Migrations\201606071355091_Initial.cs" />
     <Compile Include="Migrations\201606071355091_Initial.Designer.cs">
       <DependentUpon>201606071355091_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606091529309_AddUserName.cs" />
+    <Compile Include="Migrations\201606091529309_AddUserName.Designer.cs">
+      <DependentUpon>201606091529309_AddUserName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +72,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201606071355091_Initial.resx">
       <DependentUpon>201606071355091_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606091529309_AddUserName.resx">
+      <DependentUpon>201606091529309_AddUserName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

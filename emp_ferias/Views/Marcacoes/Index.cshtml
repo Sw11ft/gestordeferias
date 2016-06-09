@@ -12,31 +12,34 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.User.Id)
+            Request ID
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.UserAprovacao.Id)
+            User ID
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DataPedido)
+            User Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DataInicio)
+            Request Date
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DataFim)
+            Start Date
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Observacoes)
+            End Date
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Aprovado)
+            Notes
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RazaoAprovacao)
+            Approved
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Motivo)
+            Reason (If not approved)
+        </th>
+        <th>
+            Request Reason
         </th>
         <th></th>
     </tr>
@@ -44,16 +47,19 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.User.Id)
+            @Html.DisplayFor(modelItem => item.Id)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UserAprovacao.Id)
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @*@Html.DisplayFor(modelItem => item.123123123)*@ user name
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DataPedido)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DataInicio)
+            @Html.DisplayFor(modelItem => item.DataInicio, "{0:d}")
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DataFim)

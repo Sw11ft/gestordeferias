@@ -11,13 +11,13 @@ using emp_ferias.lib.Classes;
 using emp_ferias.lib.DAL;
 using emp_ferias.Models;
 using emp_ferias.lib.Services;
+using emp_ferias.Services;
 
 namespace emp_ferias.Controllers
 {
     public class MarcacoesController : Controller
     {
-
-        ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes();
+        ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes(new ServiceLogin());
 
         private EmpFeriasDbContext db = new EmpFeriasDbContext();
 
@@ -65,14 +65,17 @@ namespace emp_ferias.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateMarcacaoViewModel viewModel)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    db.Marcacoes.Add(marcacao);
-            //    await db.SaveChangesAsync();
-            //    return RedirectToAction("Index");
-            //}
-                  
-            return View(viewModel);
+            var ExecutionResult = serviceMarcacoes.Create(MapViewModel(viewModel));
+
+            foreach (var i in ExecutionResult)
+                if (i.MessageType == MessageType.Error)
+                    ModelState.AddModelError("", i.Message);
+
+            if (ModelState.IsValid)
+                return RedirectToAction("Index");
+            else 
+                return View(viewModel);
+
         }
 
         // GET: Marcacoes/Edit/5

@@ -23,7 +23,9 @@ namespace emp_ferias.lib.Classes
         [Required]
         public string UserId { get; set; } //id do utilizador que efetuou a marcação
         public DateTime DataPedido { get; set; } //data de quando foi efetuada a marcação
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataInicio { get; set; } //data pretendida pelo utilizador de quando as férias vão começar
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataFim { get; set; } //data pretendida pelo utilizador de quando as férias vão acabar
         public string Observacoes { get; set; } // ... 
         public bool Aprovado { get; set; } //marcação aprovada ou não (apenas por utilizadores com permissões para tal)
@@ -42,5 +44,6 @@ namespace emp_ferias.lib.Classes
     public class User
     {
         public string Id { get; set; }
+        public string UserName { get; set; }
     }
 }

@@ -1,0 +1,14 @@
+{
+  "name": "startbootstrap-simple-sidebar",
+  "homepage": "https://github.com/IronSummitMedia/startbootstrap-simple-sidebar",
+  "version": "1.0.5",
+  "_release": "1.0.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.5",
+    "commit": "0c8b1fc9731a3f22fb2c0fe73f9b76eba7a6e0a3"
+  },
+  "_source": "https://github.com/IronSummitMedia/startbootstrap-simple-sidebar.git",
+  "_target": "*",
+  "_originalSource": "startbootstrap-simple-sidebar"
+}

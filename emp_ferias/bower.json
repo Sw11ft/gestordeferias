@@ -11,7 +11,8 @@
     "modernizr": "*",
     "respond": "*",
     "moment": "*",
-    "eonasdan-bootstrap-datetimepicker": "*"
+    "eonasdan-bootstrap-datetimepicker": "*",
+    "startbootstrap-simple-sidebar": "*"
      
   }
 }

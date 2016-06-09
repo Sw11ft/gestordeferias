@@ -1,5 +1,6 @@
 ﻿using emp_ferias.lib.Classes;
 using emp_ferias.lib.DAL;
+using emp_ferias.lib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,14 @@ namespace emp_ferias.lib.Services
     public class ServiceMarcacoes
     {
         private EmpFeriasDbContext db = new EmpFeriasDbContext();
+        private IServiceLogin _serviceLogin;
 
-        public void Create(Marcacao m)
+        public ServiceMarcacoes(IServiceLogin serviceLogin)
+        {
+            _serviceLogin = serviceLogin;
+        }
+
+        public List<ExecutionResult> Create(Marcacao m)
         {
             List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
 
@@ -24,11 +31,20 @@ namespace emp_ferias.lib.Services
             {
                 ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Invalid reason." });
             }
-            if (ExecutionResult.Any())
-            {
-                m.DataPedido = DateTime.Now;
-               // m.UserId = 
-            }
+
+
+
+            foreach (var i in ExecutionResult)
+                if (i.MessageType == MessageType.Error)
+                    return(ExecutionResult);
+
+            m.DataPedido = DateTime.Now;
+            m.UserId = _serviceLogin.GetUserID();
+
+            db.Marcacoes.Add(m);
+            db.SaveChanges();
+            return (ExecutionResult);
+
         }
 
         public void Update()

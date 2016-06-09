@@ -6,20 +6,57 @@
     <title>@ViewBag.Title</title>   
     <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="~/bower_components/startbootstrap-simple-sidebar/css/simple-sidebar.css" />
     <link rel="stylesheet" href="~/Content/Site.css" />
 
 
     <style>
-        .navbar-brand {
-            font-size: 1.7em;
-            color: white !important;
+        body {
+            padding-top: 0px;
         }
-        .navbar-inverse { 
-            background-color: #563d7c !important;      
+        .sidebar-nav li {
+            border-bottom: 1px solid #e7e7e7;
+        }
+        .sidebar-nav .sidebar-brand a {
+            color: #777;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 1.2em;
+        }
+        .glyphicon {
+            -webkit-font-smoothing: antialiased;
+        }
+        .sidebar-nav .sidebar-brand a:hover {
+            color: #4a4a4a;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 1.2em;
+        }
+        .sidebar-nav li a:hover{
+            background: #4a4a4a;
+        }
+        #sidebar-wrapper{
+            background: #f8f8f8;
+        }
+        .brand-glyph {
+            display: inline;
+            top: 0.2em;
+        }
+        .sidebar-glyph {
+            display: inline;
+            margin-left: -1.5em;
+            font-size: 1.1em;
+            font-weight: lighter;
+        }
+        .sidebar-glyph-container {
+            border-right: 1px solid #e7e7e7
+        }
+
+        #login-bottom {
+           
         }
     </style>
 </head>
 <body>
+    @*
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -28,8 +65,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-             @Html.ActionLink("Gestor de Férias", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })    &nbsp; &nbsp; &nbsp; 
-   
+             @Html.ActionLink("Gestor de Férias", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })    &nbsp; &nbsp; &nbsp;
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -41,17 +78,49 @@
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
-            </div>  
+            </div>
+        </div>
+    </div>*@
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="@Url.Action("Index", "Home")">
+                    <span class="brand-glyph glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                    &nbsp; Gestor de Férias
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <div class="col-xs-2 sidebar-glyph-container bg-primary"><span class="glyphicon glyphicon-dashboard sidebar-glyph" aria-hidden="true"></span></div>
+                    Dashboard
+                </a>
+            </li>
+            <li>              
+                <a href="@Url.Action("Index", "User")">
+                    <div class="col-xs-2 sidebar-glyph-container bg-primary"><span class="glyphicon glyphicon-user sidebar-glyph" aria-hidden="true"></span></div>
+                    User Panel                   
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Role")">
+                    <div class="col-xs-2 sidebar-glyph-container bg-primary"><span class="glyphicon glyphicon-file sidebar-glyph" aria-hidden="true"></span></div>
+                    Role Panel
+                </a>
+            </li>
+            <li id="login-bottom">
+                @Html.Partial("_LoginPartial")
+            </li>
+        </ul>
+    </div>
+    <div id="page-content-wrapper">
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>@DateTime.Now.Year - Pedro G.</p>
+            </footer>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>@DateTime.Now.Year - Pedro G.</p>
-        </footer>
-    </div>
-
     <script src="~/bower_components/jquery/dist/jquery.js"></script>
     <script src="~/bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/bower_components/jquery-validation/dist/jquery.validate.js"></script>
@@ -65,7 +134,7 @@
         $(function () {
             $('.divs_Datas').datetimepicker({
                 format: 'L',
-              //  locale: 'pt'
+                locale: 'pt'
             });
         });
 
