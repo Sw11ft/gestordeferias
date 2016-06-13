@@ -4,6 +4,7 @@ using emp_ferias.lib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,7 +55,7 @@ namespace emp_ferias.lib.Services
 
         public List<Marcacao> Get()
         {
-            return db.Marcacoes.ToList();
+            return db.Marcacoes.Include(x => x.User).ToList();
         }
     }
 }

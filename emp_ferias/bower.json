@@ -12,7 +12,7 @@
     "respond": "*",
     "moment": "*",
     "eonasdan-bootstrap-datetimepicker": "*",
-    "startbootstrap-simple-sidebar": "*"
-     
+    "startbootstrap-simple-sidebar": "*",
+    "font-awesome": "*"
   }
 }

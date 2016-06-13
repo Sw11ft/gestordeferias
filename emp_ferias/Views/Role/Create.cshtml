@@ -3,23 +3,36 @@
     ViewBag.Title = "Create Role";
 }
 
-<h2>Create Role</h2>
-
-@using (Html.BeginForm("Create", "Role", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-        </div>
+<div class="jumbotron" style="border-radius: 0 0; padding: 0 0 0 0">
+    <div class="container-fluid body-content" style="width: 70%">
+        <h1 id="icon"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;Create Role</h1>
+        <p class="lead container body-content jumbotron-description"></p>
     </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Create" />
-        </div>
-    </div>
-}
+</div>
 
+<div class="content">
+
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Role Panel", "Index", "Role")</li>
+        <li class="active">Create Role</li>
+    </ol>
+
+    @using (Html.BeginForm("Create", "Role", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="Create" />
+            </div>
+        </div>
+    }
+</div>

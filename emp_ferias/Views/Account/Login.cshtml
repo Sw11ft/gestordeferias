@@ -1,12 +1,61 @@
 ﻿@using emp_ferias.Models
 @model LoginViewModel
+
 @{
     ViewBag.Title = "Log in";
+    Layout = null;
 }
 
-<h2>@ViewBag.Title</h2>
+<link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.css" /> <!--FONT AWESOME-->
 
-<hr />   
+<style>
+    .login-page {
+      width: 360px;
+      padding: 8% 0 0;
+      margin: auto;
+    }
+    .form {
+      position: relative;
+      z-index: 1;
+      background: #ffffff;
+      max-width: 360px;
+      margin: 0 auto;
+      padding: 20px 45px 25px 45px;
+
+      padding-bottom: 25px;
+      text-align: center;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
+    .form input {
+      font-family: "Roboto", sans-serif;
+      background: #f2f2f2;
+      width: 100%;
+      border: 0;
+      margin: 0 0 15px;
+      padding: 15px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .login-btn {
+      text-transform: uppercase;
+      background: #6f5499 !important;
+      margin-bottom: 0 !important;
+      color: #FFFFFF;
+      cursor: pointer;
+    }
+    .login-btn :hover,.login-btn:active,.login-btn:focus {
+      background: #43A047 !important;
+    }
+
+
+    body {
+      font-family: "Roboto", sans-serif;
+      -webkit-font-smoothing: antialiased; 
+      background: #efefef;  
+}
+</style>
+
+ <!-- @*
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
@@ -17,14 +66,14 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        
+                        
                     </div>
                 </div>
                 <div class="form-group">
@@ -37,7 +86,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Log in" class="btn btn-default" />
+                        
                     </div>
                 </div>
                 <p>
@@ -45,5 +94,29 @@
                 </p>
             }
         </section>
+    </div>
+</div>*@-->
+<div class="login-page">
+
+    <div class="form">
+        <h1 style="color: #6f5499"><i class="fa fa-paperclip fa-2x" aria-hidden="true"></i></h1>
+
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "username" })
+                </div>
+                <div class="form-group">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "password" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="log in" class="login-btn" />
+                </div>
+            }
+
+        
     </div>
 </div>

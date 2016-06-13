@@ -3,34 +3,49 @@
     ViewBag.Title = "Role Panel";
 }
 
-<h2 style="height: inherit">
-    Role Panel
-    <button style="vertical-align: middle; float: right; font-size: 0.6em;" onclick="location.href='@Url.Action("Create", "Role")';return false;" class="btn btn-default">Create Role</button>
-</h2>
-<hr />
-<table class="table table-hover" style="font-size:15px">
-    <thead style="font-size:20px">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var roles in Model)
-        {
+<div class="jumbotron">
+    <div class="container-fluid body-content">
+        <h1 id="icon"><i class="fa fa-files-o" aria-hidden="true"></i>&nbsp;Role Panel</h1>
+        <p class="lead container body-content jumbotron-description"></p>
+    </div>
+</div>
+
+
+<div class="content">
+    <div class="col-md-10">
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("Home", "Home")</li>
+            <li class="active">Role Panel</li>
+        </ol>
+    </div>
+    <div class="col-md-2">
+        <button style="vertical-align: middle; float: right; font-size: 1em;" onclick="location.href='@Url.Action("Create", "Role")';return false;" class="btn btn-default"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;Create Role</button>
+    </div>
+
+    <table class="table table-hover" style="font-size:15px">
+        <thead style="font-size:20px">
             <tr>
-                <td>
-                    @roles.Id
-                </td>
-                <td>
-                    @roles.Name
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = roles.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = roles.Id })
-                    
-                </td>
+                <th>ID</th>
+                <th>Name</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var roles in Model)
+            {
+                <tr>
+                    <td>
+                        @roles.Id
+                    </td>
+                    <td>
+                        @roles.Name
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = roles.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = roles.Id })
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

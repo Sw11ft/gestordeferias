@@ -15,17 +15,40 @@ using emp_ferias.Services;
 
 namespace emp_ferias.Controllers
 {
+    [Authorize]
     public class MarcacoesController : Controller
     {
         ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes(new ServiceLogin());
 
         private EmpFeriasDbContext db = new EmpFeriasDbContext();
 
-        // GET: Marcacoes
-        public async Task<ActionResult> Index()
+        private static List<IndexMarcacaoViewModel> MapIndexMarcacaoViewModel(List<Marcacao> Marcacoes)
         {
-            var marcacoes = db.Marcacoes.Include(m => m.User).Include(m => m.UserAprovacao);
-            return View(await marcacoes.ToListAsync());
+            List<IndexMarcacaoViewModel> MappedViewModels = new List<IndexMarcacaoViewModel>();
+            foreach (var i in Marcacoes)
+            {
+                var MappedViewModel = new IndexMarcacaoViewModel();
+
+                MappedViewModel.id = i.Id;
+                MappedViewModel.UserName = i.User.UserName;
+                MappedViewModel.DataPedido = i.DataPedido;
+                MappedViewModel.DataInicio = i.DataInicio;
+                MappedViewModel.DataFim = i.DataFim;
+                MappedViewModel.Observacoes = i.Observacoes;
+                MappedViewModel.Motivo = i.Motivo;
+                MappedViewModel.Aprovado = i.Aprovado;
+                MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
+                MappedViewModel.UserNameAprovacao = i.User.UserName;
+
+                MappedViewModels.Add(MappedViewModel);
+            }
+            return MappedViewModels;           
+        }
+
+        // GET: Marcacoes
+        public ActionResult Index()
+        {
+            return View(MapIndexMarcacaoViewModel(serviceMarcacoes.Get()));
         }
 
         // GET: Marcacoes/Details/5

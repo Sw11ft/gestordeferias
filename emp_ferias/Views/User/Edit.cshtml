@@ -37,99 +37,106 @@
     }
 </style>
 
-<br />
+<div class="jumbotron" style="border-radius: 0 0; padding: 0 0 0 0">
+    <div class="container-fluid body-content" style="width: 70%">
+        <h1 id="icon"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Edit User</h1>
+        <p class="lead container body-content jumbotron-description"></p>
+    </div>
+</div>
 
-<ol class="breadcrumb">
-    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-    <li>@Html.ActionLink("User Panel", "Index","User")</li>
-    <li class="active">ID: @Html.DisplayFor(model => model.id)</li>
-</ol>
+<div class="content">
+    
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("User Panel", "Index", "User")</li>
+        <li class="active">ID: @Html.DisplayFor(model => model.id)</li>
+    </ol>
 
-<br />
-@Html.ValidationSummary("", new { @class = "text-danger" })
-<br />
+    <br />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
 
-@using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
 
 
-    <div class="row">
+        <div class="row">
 
-        <!--DETAILS-->
-        <div class="col-xs-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h2 class="panel-title">Details</h2>
-                </div>
-                <div class="panel-body">
-
-                    <!--USERNAME-->
-                   <div id="details-left" class="col-xs-6">
-                        Username:
+            <!--DETAILS-->
+            <div class="col-xs-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Details</h2>
                     </div>
-                    <div id="details-right" class="col-xs-6">
-                        @Model.CurrentUsername
-                    </div>
-                    <br />
+                    <div class="panel-body">
 
-                    <!--EMAIL-->
-                    <div id="details-left" class="col-xs-6">
-                        Email:
-                    </div>
-                    <div id="details-right" class="col-xs-6">
-                         @Model.CurrentEmail
-                    </div>
-
-                    <!--ID-->
-                    <div id="details-left" class="col-xs-6">
-                        ID:
-                    </div>
-                    <div id="details-right" class="col-xs-6">
-                        @Model.id
-                    </div>
-
-                    <br />
-                    <br />
-                </div>
-            </div>
-        </div>
-        
-        <!--SPACER-->
-        <div class="col-xs-1"></div>
-
-        <!--EDIT-->
-        <div class="col-xs-7">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h2 class="panel-title">Edit</h2>
-                </div>
-                <div class="panel-body">
-                    <fieldset class="form-horizontal">
                         <!--USERNAME-->
-                        <div id="edit-left" class="col-xs-2">
+                        <div id="details-left" class="col-xs-6">
                             Username:
                         </div>
-                        <div class="col-xs-10">
-                            @Html.TextBoxFor(m => m.NewUsername, new { @class = "form-control" })
+                        <div id="details-right" class="col-xs-6">
+                            @Model.CurrentUsername
                         </div>
                         <br />
 
                         <!--EMAIL-->
-                        <div id="edit-left" class="col-xs-2">
+                        <div id="details-left" class="col-xs-6">
                             Email:
                         </div>
-                        <div class="col-xs-10">
-                            @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control" })
+                        <div id="details-right" class="col-xs-6">
+                            @Model.CurrentEmail
                         </div>
+
+                        <!--ID-->
+                        <div id="details-left" class="col-xs-6">
+                            ID:
+                        </div>
+                        <div id="details-right" class="col-xs-6">
+                            @Model.id
+                        </div>
+
                         <br />
-                        <div id="submit-btn">
-                            <input type="submit" value="Edit" class="btn btn-default" />
-                        </div>
-                     </fieldset>
+                        <br />
+                    </div>
                 </div>
-             </div>
+            </div>
+
+            <!--SPACER-->
+            <div class="col-xs-1"></div>
+
+            <!--EDIT-->
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Edit</h2>
+                    </div>
+                    <div class="panel-body">
+                        <fieldset class="form-horizontal">
+                            <!--USERNAME-->
+                            <div id="edit-left" class="col-xs-2">
+                                Username:
+                            </div>
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(m => m.NewUsername, new { @class = "form-control" })
+                            </div>
+                            <br />
+
+                            <!--EMAIL-->
+                            <div id="edit-left" class="col-xs-2">
+                                Email:
+                            </div>
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control" })
+                            </div>
+                            <br />
+                            <div id="submit-btn">
+                                <input type="submit" value="Edit" class="btn btn-default" />
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
         </div>
+    }
     </div>
-}
 

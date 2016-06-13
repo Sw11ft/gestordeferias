@@ -1,146 +1,210 @@
 ﻿<!DOCTYPE html>
 <html lang="pt">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>   
-    <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
-    <link rel="stylesheet" href="~/bower_components/startbootstrap-simple-sidebar/css/simple-sidebar.css" />
-    <link rel="stylesheet" href="~/Content/Site.css" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title</title>   
+        <link rel="stylesheet" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+        <link rel="stylesheet" href="~/bower_components/startbootstrap-simple-sidebar/css/simple-sidebar.css" />
+        <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.css" />
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+        <link rel="stylesheet" href="~/Content/Site.css" />
+    
+        <style> /*
+            body {
+                padding-top: 0px;
+            }
+            .sidebar-nav li {
+                border-bottom: 1px solid #e7e7e7;
+            }
+            .sidebar-nav .sidebar-brand a {
+                color: #777;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: 1.2em;
+            }
+            .glyphicon {
+                -webkit-font-smoothing: antialiased;
+            }
+            .sidebar-nav .sidebar-brand a:hover {
+                color: #4a4a4a;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: 1.2em;
+            }
+            .sidebar-nav li a:hover{
+                background: #4a4a4a;
+            }
+            #sidebar-wrapper{
+                background: #f8f8f8;
+            }
+            .brand-glyph {
+                display: inline;
+                top: 0.2em;
+            }
+            .sidebar-glyph {
+                display: inline;
+                margin-left: -1.5em;
+                font-size: 1.1em;
+                font-weight: lighter;
+            }
+            .sidebar-glyph-container {
+                border-right: 1px solid #e7e7e7
+            }
+            .navbar-fixed-bottom {
+                width: 250px;
+                height: 80px;
+                border-top: 1px solid #e7e7e7;
+            }
 
+        
+            #login-bottom li:hover {
+                 color: #ffffff;
+            }
+            */
+        </style><!--SIDEBAR CSS (kinda useless)-->
 
-    <style>
-        body {
-            padding-top: 0px;
-        }
-        .sidebar-nav li {
-            border-bottom: 1px solid #e7e7e7;
-        }
-        .sidebar-nav .sidebar-brand a {
-            color: #777;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            font-size: 1.2em;
-        }
-        .glyphicon {
-            -webkit-font-smoothing: antialiased;
-        }
-        .sidebar-nav .sidebar-brand a:hover {
-            color: #4a4a4a;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            font-size: 1.2em;
-        }
-        .sidebar-nav li a:hover{
-            background: #4a4a4a;
-        }
-        #sidebar-wrapper{
-            background: #f8f8f8;
-        }
-        .brand-glyph {
-            display: inline;
-            top: 0.2em;
-        }
-        .sidebar-glyph {
-            display: inline;
-            margin-left: -1.5em;
-            font-size: 1.1em;
-            font-weight: lighter;
-        }
-        .sidebar-glyph-container {
-            border-right: 1px solid #e7e7e7
-        }
-
-        #login-bottom {
-           
-        }
-    </style>
-</head>
-<body>
-    @*
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-             @Html.ActionLink("Gestor de Férias", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })    &nbsp; &nbsp; &nbsp;
-
+        <style>
+            html, body {
+                overflow-x: hidden;
+            }
+            .navbar-brand {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.5em; 
+                font-weight: bolder;
+                color: #6f5499 !important;
+            }
+            .navbar-brand a :hover {
+                -webkit-text-stroke: 1px black;
+            }
+            .navbar-default {
+                background-color: white;
+            
+            }
+            .navbar {
+                margin-bottom: 0;
+                border-bottom: 1px solid #6f5499;
+            }
+            .navbar a {
+                color: #6f5499 !important;
+            }
+            .navbar li:hover {
+                background-color: #ebebeb !important;
+            }
+            .content {
+               width: 65%;
+               margin: auto;
+            }
+            .jumbotron {
+                margin-top: 50px;
+                background-color: #6f5499;
+                color: white;
+                border-radius: 0 0;
+                padding: 0 0 0 0;
+            }
+            .jumbotron p {        
+                font-family: 'Roboto',  sans-serif;
+                font-weight: 100;
+                text-align: center;
+                font-size: 3em;
+            }
+            .jumbotron container-fluid {
+                width: 70%;
+            }
+            #icon {
+                text-align: center;
+            }
+        </style><!--DO NOT DELETE-->
+    </head>
+    <body>
+        <header class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="@Url.Action("Index","Home")" class="navbar-brand">Gestor de Férias</a>
+                    &nbsp; &nbsp; &nbsp;
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="@Url.Action("Index", "Home")"><span class="glyphicon glyphicon-home"></span>&nbsp; Home</a></li>
+                        <li><a href="@Url.Action("Index", "User")"><i class="fa fa-users" aria-hidden="true"></i>&nbsp; User Panel</a></li>
+                        <li><a href="@Url.Action("Index", "Role")"><i class="fa fa-files-o" aria-hidden="true"></i>&nbsp; Role Panel</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        @Html.Partial("_LoginPartial")
+                    </ul>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="@Url.Action("Index", "Home")"><span class="glyphicon glyphicon-home"></span>&nbsp; Home</a></li>
-                    @if (Context.User.Identity.IsAuthenticated)
-                    {
-                        <li><a href="@Url.Action("Index", "User")"><span class="glyphicon glyphicon-user"></span>&nbsp; User Panel</a></li>
-                        <li><a href="@Url.Action("Index", "Role")"><span class="glyphicon glyphicon-file"></span>&nbsp; Role Panel</a></li>
-                    }
+        </header>
+      <!--  @*
+        <div class="row">
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand">
+                        <a href="@Url.Action("Index", "Home")">
+                            <span class="brand-glyph glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                            &nbsp; Gestor de Férias
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <div class="col-xs-2 sidebar-glyph-container bg-primary"><span class="glyphicon glyphicon-dashboard sidebar-glyph" aria-hidden="true"></span></div>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "User")">
+                            <div class="col-xs-2 sidebar-glyph-container bg-success"><span class="glyphicon glyphicon-user sidebar-glyph" aria-hidden="true"></span></div>
+                            User Panel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Role")">
+                            <div class="col-xs-2 sidebar-glyph-container bg-info"><span class="glyphicon glyphicon-file sidebar-glyph" aria-hidden="true"></span></div>
+                            Role Panel
+                        </a>
+                    </li>
+                    <li id="login-bottom">                   
+                        <div class="navbar navbar-fixed-bottom" style="">@Html.Partial("_LoginPartial")</div>
+                    </li>
+
                 </ul>
-                @Html.Partial("_LoginPartial")
+        
+
+            </div>
+        </div>*@ --><!--SIDEBAR-->
+        <div id="page-content-wrapper" style="padding: 0 0 0 0">
+            <div class="container body-content" style="width: 100%; padding: 0 0 0 0">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p align="center">@DateTime.Now.Year - Pedro G.</p>
+                </footer>
             </div>
         </div>
-    </div>*@
-    <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-            <li class="sidebar-brand">
-                <a href="@Url.Action("Index", "Home")">
-                    <span class="brand-glyph glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-                    &nbsp; Gestor de Férias
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <div class="col-xs-2 sidebar-glyph-container bg-primary"><span class="glyphicon glyphicon-dashboard sidebar-glyph" aria-hidden="true"></span></div>
-                    Dashboard
-                </a>
-            </li>
-            <li>              
-                <a href="@Url.Action("Index", "User")">
-                    <div class="col-xs-2 sidebar-glyph-container bg-primary"><span class="glyphicon glyphicon-user sidebar-glyph" aria-hidden="true"></span></div>
-                    User Panel                   
-                </a>
-            </li>
-            <li>
-                <a href="@Url.Action("Index", "Role")">
-                    <div class="col-xs-2 sidebar-glyph-container bg-primary"><span class="glyphicon glyphicon-file sidebar-glyph" aria-hidden="true"></span></div>
-                    Role Panel
-                </a>
-            </li>
-            <li id="login-bottom">
-                @Html.Partial("_LoginPartial")
-            </li>
-        </ul>
-    </div>
-    <div id="page-content-wrapper">
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>@DateTime.Now.Year - Pedro G.</p>
-            </footer>
-        </div>
-    </div>
-    <script src="~/bower_components/jquery/dist/jquery.js"></script>
-    <script src="~/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/bower_components/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-    <script src="~/bower_components/respond/dest/respond.src.js"></script>
-    <script src="~/bower_components/moment/min/moment-with-locales.min.js"></script>
-    <script src="~/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+        <script src="~/bower_components/jquery/dist/jquery.js"></script>
+        <script src="~/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/bower_components/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/bower_components/respond/dest/respond.src.js"></script>
+        <script src="~/bower_components/moment/min/moment-with-locales.min.js"></script>
+        <script src="~/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-        $(function () {
-            $('.divs_Datas').datetimepicker({
-                format: 'L',
-                locale: 'pt'
+            $(function () {
+                $('.divs_Datas').datetimepicker({
+                    format: 'L',
+                    locale: 'pt'
+                });
             });
-        });
 
-    </script>
+        </script>
 
-    @RenderSection("scripts", required: false)
+        @RenderSection("scripts", required: false)
 
-</body>
+    </body>
 </html>

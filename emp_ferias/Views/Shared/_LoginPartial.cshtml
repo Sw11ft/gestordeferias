@@ -1,40 +1,23 @@
 ﻿@using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
-
-    <style>
-        .username {
-            font-weight: bold;
-            color: #aeff00 !important;
-            font-size: 1.2em;
-        }
-        footer {
-            min-height:100%
-        }
-    </style>
-
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
 
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li>
-                    @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", new { title = "Manage" }, new { @class = "username" })
-                </li>
-                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-            </ul>
-        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+            <li><a href="@Url.Action("Index", "Manage")"><span class="glyphicon glyphicon-user"></span>&nbsp; @User.Identity.GetUserName()</a></li>
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
     }
 }
 else
 {
-    <div id="sidebar-wrapper">
-        <footer class="bg-primary" style="position:absolute; width: 100%; ">
-            <ul class="sidebar-nav">
-                <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-            </ul>
-        </footer>
-    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
 }
+
