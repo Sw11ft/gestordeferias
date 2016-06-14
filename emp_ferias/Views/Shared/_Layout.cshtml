@@ -91,14 +91,16 @@
                 background-color: #ebebeb !important;
             }
             .content {
+               margin-left: auto;
+               margin-right: auto;
+               position: relative;
                width: 65%;
-               margin: auto;
             }
             .jumbotron {
                 margin-top: 50px;
                 background-color: #6f5499;
                 color: white;
-                border-radius: 0 0;
+                border-radius: 0 0 !important;
                 padding: 0 0 0 0;
             }
             .jumbotron p {        
@@ -112,6 +114,16 @@
             }
             #icon {
                 text-align: center;
+            }
+
+            .btn-round-success-bordered {
+                background-color: rgba(0,0,0,.0);
+                font-weight: 400;
+                border-color: #05ae0e;
+                border-width: 1px;
+                border-radius: 30px !important;
+                opacity: 0.95;
+                padding: 9px 18px;
             }
         </style><!--DO NOT DELETE-->
     </head>
@@ -129,9 +141,10 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-left">
-                        <li><a href="@Url.Action("Index", "Home")"><span class="glyphicon glyphicon-home"></span>&nbsp; Home</a></li>
-                        <li><a href="@Url.Action("Index", "User")"><i class="fa fa-users" aria-hidden="true"></i>&nbsp; User Panel</a></li>
-                        <li><a href="@Url.Action("Index", "Role")"><i class="fa fa-files-o" aria-hidden="true"></i>&nbsp; Role Panel</a></li>
+                        <li><a href="@Url.Action("Index", "Home")"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li><a href="@Url.Action("Index", "User")"><i class="fa fa-users" aria-hidden="true"></i> User Panel</a></li>
+                        <li><a href="@Url.Action("Index", "Role")"><i class="fa fa-files-o" aria-hidden="true"></i> Role Panel</a></li>
+                        <li><a href="@Url.Action("Index", "Marcacoes")"><i class="fa fa-bookmark-o" aria-hidden="true"></i> Marcações</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         @Html.Partial("_LoginPartial")
@@ -139,7 +152,7 @@
                 </div>
             </div>
         </header>
-      <!--  @*
+        <!--  @*
         <div class="row">
             <div id="sidebar-wrapper">
                 <ul class="sidebar-nav">
@@ -167,28 +180,33 @@
                             Role Panel
                         </a>
                     </li>
-                    <li id="login-bottom">                   
+                    <li id="login-bottom">
                         <div class="navbar navbar-fixed-bottom" style="">@Html.Partial("_LoginPartial")</div>
                     </li>
 
                 </ul>
-        
+
 
             </div>
         </div>*@ --><!--SIDEBAR-->
+        
         <div id="page-content-wrapper" style="padding: 0 0 0 0">
             <div class="container body-content" style="width: 100%; padding: 0 0 0 0">
                 @RenderBody()
-                <hr />
+
+
                 <footer>
+                    <hr />
                     <p align="center">@DateTime.Now.Year - Pedro G.</p>
                 </footer>
             </div>
         </div>
+        
         <script src="~/bower_components/jquery/dist/jquery.js"></script>
         <script src="~/bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/bower_components/jquery-validation/dist/jquery.validate.js"></script>
         <script src="~/bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/bower_components/jquery-validation/dist/jquery.validate.date.js"></script>
         <script src="~/bower_components/respond/dest/respond.src.js"></script>
         <script src="~/bower_components/moment/min/moment-with-locales.min.js"></script>
         <script src="~/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
@@ -198,13 +216,12 @@
             $(function () {
                 $('.divs_Datas').datetimepicker({
                     format: 'L',
-                    locale: 'pt'
+                    locale: 'pt',
                 });
             });
 
         </script>
 
         @RenderSection("scripts", required: false)
-
     </body>
 </html>

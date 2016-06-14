@@ -37,12 +37,16 @@ namespace emp_ferias.Controllers
                 MappedViewModel.Observacoes = i.Observacoes;
                 MappedViewModel.Motivo = i.Motivo;
                 MappedViewModel.Aprovado = i.Aprovado;
-                MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
-                MappedViewModel.UserNameAprovacao = i.User.UserName;
-
+                if (i.Aprovado)
+                {
+                    MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
+                    MappedViewModel.UserNameAprovacao = i.UserAprovacao.UserName;
+                }
                 MappedViewModels.Add(MappedViewModel);
             }
-            return MappedViewModels;           
+            
+            return MappedViewModels;
+                 
         }
 
         // GET: Marcacoes

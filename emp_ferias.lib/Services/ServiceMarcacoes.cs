@@ -41,6 +41,7 @@ namespace emp_ferias.lib.Services
 
             m.DataPedido = DateTime.Now;
             m.UserId = _serviceLogin.GetUserID();
+            m.Aprovado = false;
 
             db.Marcacoes.Add(m);
             db.SaveChanges();

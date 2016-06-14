@@ -4,88 +4,323 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<style>
+    table {
+        width: 100%;
+    }
+    table th:first-child {
+        border-radius:10px 0 0 10px;
+    }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table" style="width: 100%">
-    <tr>
-        <th>
-            Request ID
-        </th>
-        <th>
-            User ID
-        </th>
-        <th>
-            User Name
-        </th>
-        <th>
-            Request Date
-        </th>
-        <th>
-            Start Date
-        </th>
-        <th>
-            End Date
-        </th>
-        <th>
-            Request Reason
-        </th>
-        <th>
-            Notes
-        </th>
-        <th>
-            Approved
-        </th>
-        <th>
-            Reason (If not approved)
-        </th>
-        <th>
-            Approvation User ID
-        </th>
+    table th:last-child {
+        border-radius:0 10px 10px 0;
+    }
+    th {
+        background-color: #6f5499;
+        color:white;
+        font-weight: 600;
+    }
+    th, td {
+        text-align: center;
+    }
+    .table > thead > tr > td, .table > thead > tr > th {
+        border-top:0px !important;
+    }
+    .table > thead > tr > th {
+        border-bottom: 0px !important;
+    }
+    .table > tbody > tr:first-child > td {
+        border-top: 0px !important;
+    }
+    #create-new-button {
+        vertical-align: middle;
+        float: right;
+        font-size: 1em;
+    }
+    .panel-default {
+        margin: 20px 0px 10px 0px;
+        background-color: #f5f5f5;
+    }
+    .panel-body {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: center; 
+    }
+    .btn-simple {
+        background-color: rgba(0,0,0,.0);
+        border: 0;
+    }
+    #left-btn {
+        border-radius: 30px 0px 0px 30px !important;
+        width: 90px;
+        height: 40px;
+        text-align: center;
+    }
+    #right-btn {
+        border-radius: 0px 30px 30px 0px !important;
+        border-color: red;
+        width: 90px;
+        height: 40px;
+        text-align: center;
+    }
+</style>
+
+
+
+<div class="jumbotron">
+    <div class="container-fluid body-content">
+        <h1 id="icon"><i class="fa fa-bookmark-o" aria-hidden="true"></i>&nbsp;Marcações</h1>
+        <p class="lead container body-content jumbotron-description"></p>
+    </div>
+</div>
+
+<div class="content">
+    <div class="col-xs-10">
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li class="active">Marcações</li>
+        </ol>
+    </div>
+    <div class="col-xs-2">
+        <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-default" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Create New</button>
+    </div>
+    <br />
+    <!--APPROVAL PENDING-->
+    <div class="col-xs-12" style="padding: 0">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-10">
+                    Action Pending
+                    <span class="badge">
+                        @{
+                            var i = 0;
+                            foreach (var item in Model)
+                            {
+                                if (!item.Aprovado && item.RazaoAprovacao == null && item.UserNameAprovacao == null)
+                                {
+                                    i++;
+                                }
+                            }
+                            <text>@i</text>
+                        }
+                    </span>
+                </div>
+                <div class="col-xs-1">
+                    <button button id="table1btn" class="btn-simple" style="float:right;" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-up" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="collapse in" id="table1" style="width: 100%">
+        <table class="table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>
+                        Request ID
+                    </th>
+                    <th>
+                        User Name
+                    </th>
+                    <th>
+                        Request Date
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Request Reason
+                    </th>
+                    <th>
+                        Notes
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+            {
+                if (!item.Aprovado && item.RazaoAprovacao == null && item.UserNameAprovacao == null)
+                {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataPedido)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataInicio)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataFim)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Motivo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Observacoes)
+                            </td>
+                            <td>
+
+                                <div class="btn-group">
+                                    <button id="left-btn" class="btn btn-round-success-bordered" type="button" data-toggle="modal" data-target="#accept">Approve</button>
+                                    <button id="right-btn" class="btn btn-round-success-bordered" type="button" data-toggle="modal" data-target="#reject">Reject</button>
+                                </div>  
+
+                                <!-- ACCEPT MODAL -->
+                                <div class="modal fade" id="accept" tabindex="-1" role="dialog" aria-labelledby="approve @item.id">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Approve Request #@item.id</h4>
+                                            </div>
+                                            <div class="modal-body" style="text-align: left">
+                                                <p>approve modal</p>
+                                                @Html.DisplayFor(modelItem => item.id)
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-round-success-bordered">Approve</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <!--END MODAL-->
+
+                                <!-- REJECT MODAL -->
+                                <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Reject Request #@item.id</h4>
+                                            </div>
+                                            <div class="modal-body" style="text-align: left">
+                                                <p>reject modaasdasdasddsal</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-round-success-bordered" style="border-color: red">Reject</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--END MODAL-->      
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+
+        </table>
+    </div>
+    <!--APPROVED-->
+
+    <!--info panel-->
+    <div class="col-xs-12" style="padding: 0">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                Previous
+            </div>
+        </div>
+    </div>
+
+    <!--approved table-->
+    <table class="table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>
+                    Request ID
+                </th>
+                <th>
+                    User Name
+                </th>
+                <th>
+                    Request Date
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Request Reason
+                </th>
+                <th>
+                    Notes
+                </th>
+                <th>
+                    Approved
+                </th>
+                <th>
+                    Reason (If not approved)
+                </th>
+                <th>
+                    Approvation User ID
+                </th>
+            </tr>
+        </thead>
         
-        <th></th>
-    </tr>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (item.Aprovado)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataPedido)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataInicio, "{0:d}")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataFim)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Motivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Observacoes)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Aprovado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RazaoAprovacao)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserNameAprovacao)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataPedido)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataInicio, "{0:d}")
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataFim)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Motivo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Observacoes)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Aprovado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RazaoAprovacao)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserNameAprovacao)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
-    </tr>
+@section scripts{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#table1btn').click(function () {
+            $(this).find('i').toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+        })
+    })
+</script>
 }
-
-</table>
