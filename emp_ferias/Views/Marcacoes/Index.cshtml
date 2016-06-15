@@ -22,6 +22,7 @@
     }
     th, td {
         text-align: center;
+        vertical-align: middle !important;
     }
     .table > thead > tr > td, .table > thead > tr > th {
         border-top:0px !important;
@@ -50,23 +51,83 @@
         background-color: rgba(0,0,0,.0);
         border: 0;
     }
-    #left-btn {
+    .left-btn {
         border-radius: 30px 0px 0px 30px !important;
         width: 90px;
         height: 40px;
         text-align: center;
     }
-    #right-btn {
+    .right-btn {
         border-radius: 0px 30px 30px 0px !important;
         border-color: red;
         width: 90px;
         height: 40px;
         text-align: center;
     }
+    .btn-round-success-bordered {
+        padding: 5px 9px 5px 9px;
+        height: 35px !important;
+        outline: none !important;
+    }
+    .form-control {
+        resize: none;
+    }
 </style>
 
+<!-- ACCEPT MODAL -->
+<div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approve">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="approvetitle">Approve Request</h4>
+            </div>
+            <div class="modal-body" style="text-align: left">
+                <p>Are you sure you want to perform this operation?</p>
+                
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("Approve", "Marcacoes", FormMethod.Post, htmlAttributes: new { id = "approveform" }))
+                {
+                    @Html.AntiForgeryToken();
+                    <div class="form-horizontal">
+                        <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
+                        <input name="accept" type="submit" value="Approve" class="btn btn-round-success-bordered" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODAL-->
+<!-- REJECT MODAL -->
+<div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="rejecttitle">Reject Request </h4>
+            </div>
+            @using (Html.BeginForm("Reject", "Marcacoes", FormMethod.Post, htmlAttributes: new { id = "rejectform"}))
+            {
+                @Html.AntiForgeryToken();
+                <div class="modal-body" style="text-align: left">
+                    <p><b>Before rejecting,</b> provide a reason:</p>
+                    @Html.TextArea("Reason", new { @class = "form-control", @rows = "5", placeholder = "Max 100 characters..." })
+                </div>
+                <div class="modal-footer">
+                    <div class="form-horizontal">
+                        <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
+                        <input name="reject" type="submit" value="Reject" class="btn btn-round-success-bordered" style="border-color: red" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--END MODAL--> 
 
-
+<!--jumbotron-->
 <div class="jumbotron">
     <div class="container-fluid body-content">
         <h1 id="icon"><i class="fa fa-bookmark-o" aria-hidden="true"></i>&nbsp;Marcações</h1>
@@ -75,24 +136,29 @@
 </div>
 
 <div class="content">
-    <div class="col-xs-10">
+    <!--breadcrumb-->
+    <div class="col-xs-10" style="padding: 0">
         <ol class="breadcrumb">
             <li>@Html.ActionLink("Home", "Index", "Home")</li>
             <li class="active">Marcações</li>
         </ol>
     </div>
-    <div class="col-xs-2">
+    <!--create new - button-->
+    <div class="col-xs-2" style="padding: 0">
         <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-default" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Create New</button>
     </div>
     <br />
-    <!--APPROVAL PENDING-->
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <!--action PENDING-->
     <div class="col-xs-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="col-xs-1"></div>
                 <div class="col-xs-10">
                     Action Pending
-                    <span class="badge">
+                    
                         @{
                             var i = 0;
                             foreach (var item in Model)
@@ -102,12 +168,12 @@
                                     i++;
                                 }
                             }
-                            <text>@i</text>
+                            <span class="badge" id="pendingAmount"><text>@i</text></span>
                         }
-                    </span>
+                           
                 </div>
                 <div class="col-xs-1">
-                    <button button id="table1btn" class="btn-simple" style="float:right;" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-up" aria-hidden="true"></i></button>
+                    <button button id="table1btn" class="btn-simple" style="float:right; outline: none !important" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-up" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -126,10 +192,7 @@
                         Request Date
                     </th>
                     <th>
-                        Start Date
-                    </th>
-                    <th>
-                        End Date
+                        Length
                     </th>
                     <th>
                         Request Reason
@@ -143,9 +206,10 @@
 
             <tbody>
                 @foreach (var item in Model)
-            {
-                if (!item.Aprovado && item.RazaoAprovacao == null && item.UserNameAprovacao == null)
                 {
+                    if (!item.Aprovado && item.RazaoAprovacao == null && item.UserNameAprovacao == null)
+                    {
+                        var currentItem = item;
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.id)
@@ -157,10 +221,22 @@
                                 @Html.DisplayFor(modelItem => item.DataPedido)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.DataInicio)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DataFim)
+                                @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
+                                <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total: 
+                                @{
+                                    var length = (item.DataFim - item.DataInicio).Days;
+                                    string lengthstring;
+                                    if (length == 1)
+                                    {
+                                        lengthstring = length + " day";
+                                    }
+                                    else
+                                    {
+                                        lengthstring = length + " days";
+                                    }
+                                    } @lengthstring"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                  
+
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Motivo)
@@ -171,50 +247,9 @@
                             <td>
 
                                 <div class="btn-group">
-                                    <button id="left-btn" class="btn btn-round-success-bordered" type="button" data-toggle="modal" data-target="#accept">Approve</button>
-                                    <button id="right-btn" class="btn btn-round-success-bordered" type="button" data-toggle="modal" data-target="#reject">Reject</button>
+                                    <button id="@(item.id)" class="btn btn-round-success-bordered left-btn" type="button" data-toggle="modal" data-target="#approve" >Approve</button>
+                                    <button id="@(item.id)" class="btn btn-round-success-bordered right-btn" type="button" data-toggle="modal" data-target="#reject">Reject</button>
                                 </div>  
-
-                                <!-- ACCEPT MODAL -->
-                                <div class="modal fade" id="accept" tabindex="-1" role="dialog" aria-labelledby="approve @item.id">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">Approve Request #@item.id</h4>
-                                            </div>
-                                            <div class="modal-body" style="text-align: left">
-                                                <p>approve modal</p>
-                                                @Html.DisplayFor(modelItem => item.id)
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-round-success-bordered">Approve</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!--END MODAL-->
-
-                                <!-- REJECT MODAL -->
-                                <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">Reject Request #@item.id</h4>
-                                            </div>
-                                            <div class="modal-body" style="text-align: left">
-                                                <p>reject modaasdasdasddsal</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-round-success-bordered" style="border-color: red">Reject</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--END MODAL-->      
                             </td>
                         </tr>
                     }
@@ -224,7 +259,6 @@
 
         </table>
     </div>
-    <!--APPROVED-->
 
     <!--info panel-->
     <div class="col-xs-12" style="padding: 0">
@@ -235,7 +269,7 @@
         </div>
     </div>
 
-    <!--approved table-->
+    <!--previous table-->
     <table class="table" style="width: 100%">
         <thead>
             <tr>
@@ -318,9 +352,35 @@
 @section scripts{
     <script type="text/javascript">
     $(document).ready(function () {
-        $('#table1btn').click(function () {
-            $(this).find('i').toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+        $(function () {
+            if ($('#pendingAmount').text() == '0') {
+                $('#table1').collapse('hide');
+                $('#table1').collapse();
+                $('#table1').collapse('show');
+            }
+        })
+        
+        $('#table1').on('show.bs.collapse', function () {
+            $('#collapse-btn').addClass('fa-caret-up').removeClass('fa-caret-down');
+        })
+
+        $('#table1').on('hide.bs.collapse', function () {
+            $('#collapse-btn').addClass('fa-caret-down').removeClass('fa-caret-up');
+        })
+
+        $('[data-toggle="popover"]').popover();
+
+        $('.modal').on('show.bs.modal', function (e) {
+            var $trigger = $(e.relatedTarget);
+            $('#approvetitle').text("Approve Request #" + $trigger.attr('id'));
+            $('#rejecttitle').text("Reject Request #" + $trigger.attr('id'));
+            $('#approveform').attr("action", "/Marcacoes/Approve/" + $trigger.attr('id'));
+            $('#rejectform').attr("action", "/Marcacoes/Reject/" + $trigger.attr('id'));
         })
     })
+    
+    function hideTable1() {
+        $('#table1').collapse();
+    }
 </script>
 }

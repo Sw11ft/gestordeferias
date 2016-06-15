@@ -105,6 +105,24 @@ namespace emp_ferias.Controllers
 
         }
 
+        //POST: Marcacoes/Approve
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Approve(int id)
+        {
+            var ExecutionResult = serviceMarcacoes.Approve(id);
+
+            foreach (var i in ExecutionResult)
+                if (i.MessageType == MessageType.Error)
+                    ModelState.AddModelError("", i.Message);
+
+            return RedirectToAction("Index");
+
+
+        }
+
+        //POST: Marcacoes/Reject
+
         // GET: Marcacoes/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
@@ -121,7 +139,7 @@ namespace emp_ferias.Controllers
             ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.UserIdAprovacao);
             return View(marcacao);
         }
-
+           
         // POST: Marcacoes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.

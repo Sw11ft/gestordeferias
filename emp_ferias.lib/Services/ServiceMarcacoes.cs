@@ -28,6 +28,10 @@ namespace emp_ferias.lib.Services
             {
                 ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "The end date must be after the start date."});
             }
+            if (m.DataInicio <= DateTime.Now)
+            {
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "The start date must not be before or in the present day." });
+            }
             if (!(Enum.IsDefined(typeof(Motivo),m.Motivo)))
             {
                 ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Invalid reason." });
@@ -58,5 +62,47 @@ namespace emp_ferias.lib.Services
         {
             return db.Marcacoes.Include(x => x.User).ToList();
         }
+
+        public List<ExecutionResult> Approve(int id)
+        {
+            List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
+
+            Marcacao Approving = db.Marcacoes.Find(id);
+
+            if (Approving != null)
+            {
+                Approving.Aprovado = true;
+                Approving.UserIdAprovacao = _serviceLogin.GetUserID();
+                db.SaveChanges();
+            }
+            else
+            {
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Cannot find the database entry." });
+            }
+
+            return (ExecutionResult);
+
+        }
+
+        public List<ExecutionResult> Reject (int id, string reason)
+        {
+            List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
+
+            Marcacao Rejecting = db.Marcacoes.Find(id);
+
+            if (Rejecting != null)
+            {
+                Rejecting.Aprovado = false;
+                Rejecting.RazaoAprovacao = reason;
+                Rejecting.UserIdAprovacao = _serviceLogin.GetUserID();
+                db.SaveChanges();
+            }
+            else
+            {
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Cannot find the database entry." });
+            }
+
+            return (ExecutionResult);
+        }   
     }
 }
