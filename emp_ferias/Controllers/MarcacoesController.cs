@@ -37,7 +37,7 @@ namespace emp_ferias.Controllers
                 MappedViewModel.Observacoes = i.Observacoes;
                 MappedViewModel.Motivo = i.Motivo;
                 MappedViewModel.Aprovado = i.Aprovado;
-                if (i.Aprovado)
+                if (i.UserAprovacao != null)
                 {
                     MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
                     MappedViewModel.UserNameAprovacao = i.UserAprovacao.UserName;
@@ -121,7 +121,29 @@ namespace emp_ferias.Controllers
 
         }
 
+        private static Marcacao MapRejectViewModel(RejectMarcacaoViewModel RejectionInfo)
+        {
+            return new Marcacao
+            {
+                Id = RejectionInfo.marcId,
+                RazaoAprovacao = RejectionInfo.Razao
+            };
+        }
+
         //POST: Marcacoes/Reject
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Reject(RejectMarcacaoViewModel RejectionInfo)
+        { 
+            var ExecutionResult = serviceMarcacoes.Reject(MapRejectViewModel(RejectionInfo));
+
+            foreach (var i in ExecutionResult)
+                if (i.MessageType == MessageType.Error)
+                    ModelState.AddModelError("", i.Message);
+
+            return RedirectToAction("Index");
+        }
+
 
         // GET: Marcacoes/Edit/5
         public async Task<ActionResult> Edit(int? id)

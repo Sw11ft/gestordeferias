@@ -34,4 +34,10 @@ namespace emp_ferias.Models
         public string RazaoAprovacao { get; set; }
         public Motivo Motivo { get; set; }
     }
+
+    public class RejectMarcacaoViewModel
+    {
+        public int marcId { get; set; }
+        public string Razao { get; set; }
+    }
 }

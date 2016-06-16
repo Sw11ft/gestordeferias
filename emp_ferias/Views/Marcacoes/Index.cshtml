@@ -4,75 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<style>
-    table {
-        width: 100%;
-    }
-    table th:first-child {
-        border-radius:10px 0 0 10px;
-    }
 
-    table th:last-child {
-        border-radius:0 10px 10px 0;
-    }
-    th {
-        background-color: #6f5499;
-        color:white;
-        font-weight: 600;
-    }
-    th, td {
-        text-align: center;
-        vertical-align: middle !important;
-    }
-    .table > thead > tr > td, .table > thead > tr > th {
-        border-top:0px !important;
-    }
-    .table > thead > tr > th {
-        border-bottom: 0px !important;
-    }
-    .table > tbody > tr:first-child > td {
-        border-top: 0px !important;
-    }
-    #create-new-button {
-        vertical-align: middle;
-        float: right;
-        font-size: 1em;
-    }
-    .panel-default {
-        margin: 20px 0px 10px 0px;
-        background-color: #f5f5f5;
-    }
-    .panel-body {
-        padding-top: 5px;
-        padding-bottom: 5px;
-        text-align: center; 
-    }
-    .btn-simple {
-        background-color: rgba(0,0,0,.0);
-        border: 0;
-    }
-    .left-btn {
-        border-radius: 30px 0px 0px 30px !important;
-        width: 90px;
-        height: 40px;
-        text-align: center;
-    }
-    .right-btn {
-        border-radius: 0px 30px 30px 0px !important;
-        border-color: red;
-        width: 90px;
-        height: 40px;
-        text-align: center;
-    }
-    .btn-round-success-bordered {
-        padding: 5px 9px 5px 9px;
-        height: 35px !important;
-        outline: none !important;
-    }
-    .form-control {
-        resize: none;
-    }
-</style>
 
 <!-- ACCEPT MODAL -->
 <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approve">
@@ -91,8 +23,8 @@
                 {
                     @Html.AntiForgeryToken();
                     <div class="form-horizontal">
-                        <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
-                        <input name="accept" type="submit" value="Approve" class="btn btn-round-success-bordered" />
+                        <button type="button" id="closeModalButton" class="btn btn-round-neutral" data-dismiss="modal">Close</button>
+                        <input name="accept" type="submit" value="Approve" class="btn btn-round-success" />
                     </div>
                 }
             </div>
@@ -113,12 +45,20 @@
                 @Html.AntiForgeryToken();
                 <div class="modal-body" style="text-align: left">
                     <p><b>Before rejecting,</b> provide a reason:</p>
-                    @Html.TextArea("Reason", new { @class = "form-control", @rows = "5", placeholder = "Max 100 characters..." })
+
+                    @Html.TextArea("Razao", new { @class = "form-control", id = "rejectTextBox", rows = "5", placeholder = "Max 100 characters..." })
+                    @Html.Hidden("marcId", new { id = "marcId"})
+
+                    <div class="panel panel-default" id="charactersPanel">
+                        <div class="panel-body" style="text-align: center">
+                            <b>Characters left: </b><span id="characters">100</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="form-horizontal">
-                        <button type="button" class="btn btn-round-success-bordered" style="border-color: gray" data-dismiss="modal">Close</button>
-                        <input name="reject" type="submit" value="Reject" class="btn btn-round-success-bordered" style="border-color: red" />
+                        <button id="closeModalButton" type="button" class="btn btn-round-neutral" data-dismiss="modal">Close</button>
+                        <input id="rejectButton" name="reject" type="submit" value="Reject" class="btn btn-round-danger" />
                     </div>
                 </div>
             }
@@ -135,7 +75,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content marcacoes-content">
     <!--breadcrumb-->
     <div class="col-xs-10" style="padding: 0">
         <ol class="breadcrumb">
@@ -147,6 +87,7 @@
     <div class="col-xs-2" style="padding: 0">
         <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-default" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Create New</button>
     </div>
+
     <br />
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -178,7 +119,8 @@
             </div>
         </div>
     </div>
-    <div class="collapse in" id="table1" style="width: 100%">
+    <!--pending table-->
+    <div class="collapse" id="table1" style="width: 100%">
         <table class="table" style="width: 100%">
             <thead>
                 <tr>
@@ -207,10 +149,9 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    if (!item.Aprovado && item.RazaoAprovacao == null && item.UserNameAprovacao == null)
+                    if (item.RazaoAprovacao == null && item.UserNameAprovacao == null)
                     {
-                        var currentItem = item;
-                        <tr>
+                        <tr class="bg-info">
                             <td>
                                 @Html.DisplayFor(modelItem => item.id)
                             </td>
@@ -235,20 +176,32 @@
                                         lengthstring = length + " days";
                                     }
                                     } @lengthstring"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-                                  
-
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Motivo)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Observacoes)
+                                @{
+                                    if (!(item.Observacoes == null) && !(item.Observacoes.Length == 0))
+                                    {
+                                        @item.Observacoes.Substring(0, Math.Min(item.Observacoes.Length, 25))
+                                            if (item.Observacoes.Count() > 25)
+                                            {
+                                               <text>... </text> <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="@item.Observacoes"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <text>-</text>
+                                    }
+                                }
+
                             </td>
                             <td>
 
                                 <div class="btn-group">
-                                    <button id="@(item.id)" class="btn btn-round-success-bordered left-btn" type="button" data-toggle="modal" data-target="#approve" >Approve</button>
-                                    <button id="@(item.id)" class="btn btn-round-success-bordered right-btn" type="button" data-toggle="modal" data-target="#reject">Reject</button>
+                                    <button id="@(item.id)" class="btn btn-round-success" type="button" data-toggle="modal" data-target="#approve" >Approve</button>
+                                    <button id="@(item.id)" class="btn btn-round-danger" type="button" data-toggle="modal" data-target="#reject">Reject</button>
                                 </div>  
                             </td>
                         </tr>
@@ -260,7 +213,7 @@
         </table>
     </div>
 
-    <!--info panel-->
+    <!--PREVIOUS panel-->
     <div class="col-xs-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -283,10 +236,7 @@
                     Request Date
                 </th>
                 <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
+                    Length
                 </th>
                 <th>
                     Request Reason
@@ -301,7 +251,7 @@
                     Reason (If not approved)
                 </th>
                 <th>
-                    Approvation User ID
+                    Approvation User
                 </th>
             </tr>
         </thead>
@@ -309,9 +259,11 @@
         <tbody>
             @foreach (var item in Model)
             {
-                if (item.Aprovado)
+                if (item.UserNameAprovacao != null)
                 {
-                    <tr>
+               
+                    <tr class="@(item.Aprovado ? "bg-success" : "bg-danger")">
+                    
                         <td>
                             @Html.DisplayFor(modelItem => item.id)
                         </td>
@@ -322,16 +274,41 @@
                             @Html.DisplayFor(modelItem => item.DataPedido)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.DataInicio, "{0:d}")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DataFim)
+                            @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
+                            <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total:
+                                @{
+                                    var length = (item.DataFim - item.DataInicio).Days;
+                                    string lengthstring;
+                                    if (length == 1)
+                                    {
+                                        lengthstring = length + " day";
+                                    }
+                                    else
+                                    {
+                                        lengthstring = length + " days";
+                                    }
+                                    } @lengthstring">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            </button>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Motivo)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Observacoes)
+                            @{
+                                if (!(item.Observacoes == null) && !(item.Observacoes.Length == 0))
+                                {
+                                    @item.Observacoes.Substring(0, Math.Min(item.Observacoes.Length, 15))
+                                    if (item.Observacoes.Count() > 15)
+                                    {
+                                        <text>... </text> <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="@item.Observacoes"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                    }
+                                }
+                                else
+                                {
+                                    <text>-</text>
+                                }
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Aprovado)
@@ -353,10 +330,10 @@
     <script type="text/javascript">
     $(document).ready(function () {
         $(function () {
-            if ($('#pendingAmount').text() == '0') {
-                $('#table1').collapse('hide');
-                $('#table1').collapse();
-                $('#table1').collapse('show');
+            if ($('#pendingAmount').text() != '0') {
+                $('#table1').addClass('no-transition');
+                $('#table1').collapse('toggle');
+                $('#table1').removeClass('no-transition');
             }
         })
         
@@ -375,12 +352,24 @@
             $('#approvetitle').text("Approve Request #" + $trigger.attr('id'));
             $('#rejecttitle').text("Reject Request #" + $trigger.attr('id'));
             $('#approveform').attr("action", "/Marcacoes/Approve/" + $trigger.attr('id'));
-            $('#rejectform').attr("action", "/Marcacoes/Reject/" + $trigger.attr('id'));
+            $('#marcId').attr("value", $trigger.attr('id'));
+        })
+
+        $('#rejectButton').prop('disabled', true);
+
+        $('#rejectTextBox').on('change keyup paste click', function() {
+            $('#characters').text(100 - $('#rejectTextBox').val().length);
+
+            if ($('#rejectTextBox').val().length == 0) {
+                $('#rejectButton').prop('disabled', true);
+            }
+            else if ($('#rejectTextBox').val().length > 100) {
+                $('#rejectButton').prop('disabled', true);
+            }
+            else {
+                $('#rejectButton').prop('disabled', false);
+            }
         })
     })
-    
-    function hideTable1() {
-        $('#table1').collapse();
-    }
 </script>
 }

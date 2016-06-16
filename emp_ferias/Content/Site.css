@@ -15,3 +15,203 @@
 .dl-horizontal dt {
     white-space: normal;
 }
+html, body {
+    overflow-x: hidden;
+}
+.navbar-brand {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5em; 
+    font-weight: bolder;
+    color: #6f5499 !important;
+}
+.navbar-brand a :hover {
+    -webkit-text-stroke: 1px black;
+}
+.navbar-default {
+    background-color: white;
+            
+}
+.navbar {
+    margin-bottom: 0;
+    border-bottom: 1px solid #6f5499;
+}
+.navbar a {
+    color: #6f5499 !important;
+}
+.navbar li:hover {
+    background-color: #ebebeb !important;
+}
+.content {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 65%;
+}
+.jumbotron {
+    margin-top: 50px;
+    background-color: #6f5499;
+    color: white;
+    border-radius: 0 0 !important;
+    padding: 0 0 0 0;
+}
+.jumbotron p {        
+    font-family: 'Roboto',  sans-serif;
+    font-weight: 100;
+    text-align: center;
+    font-size: 3em;
+}
+.jumbotron container-fluid {
+    width: 70%;
+}
+#icon {
+    text-align: center;
+}
+
+.btn-round-success-bordered {
+    background-color: rgba(0,0,0,.0);
+    font-weight: 400;
+    border-color: #05ae0e;
+    border-width: 1px;
+    border-radius: 30px !important;
+    opacity: 0.95;
+    padding: 9px 18px;
+}
+table {
+    width: 100%;
+}
+table th:first-child {
+    border-radius:10px 0 0 0;
+}
+
+table th:last-child {
+    border-radius:0 10px 0 0;
+}
+th {
+    background-color: #6f5499;
+    color:white;
+    font-weight: 600;
+}
+th, td {
+    text-align: center;
+    vertical-align: middle !important;
+}
+.table > thead > tr > td, .table > thead > tr > th {
+    border-top:0px !important;
+}
+.table > thead > tr > th {
+    border-bottom: 0px !important;
+}
+.table > tbody > tr:first-child > td {
+    border-top: 0px !important;
+}
+.table > tbody > tr:last-child > td:first-child {
+    border-radius: 0 0 0 10px;
+}
+.table > tbody > tr:last-child > td:last-child {
+    border-radius: 0 0 10px 0;
+}
+#create-new-button {
+    vertical-align: middle;
+    float: right;
+    font-size: 1em;
+}
+.panel-default {
+    margin: 20px 0px 10px 0px;
+    background-color: #f5f5f5;
+}
+.panel-body {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center; 
+}
+.btn-simple {
+    background-color: rgba(0,0,0,.0);
+    border: 0;
+}
+.btn-round-success {
+    border-radius: 30px 30px 30px 30px !important;
+    width: 90px;
+    height: 40px;
+    text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-color: #05ae0e;
+    padding: 5px 9px 5px 9px;
+    height: 35px !important;
+    outline: none !important;
+    background: none;
+    color: #05ae0e;
+    font-weight: bold;
+    font-family: 'Roboto',  sans-serif;
+}
+.btn-round-danger {
+    border-radius: 30px 30px 30px 30px !important;
+    width: 90px;
+    height: 40px;
+    text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-color: red;
+    padding: 5px 9px 5px 9px;
+    height: 35px !important;
+    outline: none !important;
+    background: none;
+    color: red;
+    font-weight: bold;
+    font-family: 'Roboto',  sans-serif;
+}
+.btn-round-neutral {
+    border-radius: 30px 30px 30px 30px !important;
+    width: 90px;
+    height: 40px;
+    text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-color: gray;
+    padding: 5px 9px 5px 9px;
+    height: 35px !important;
+    outline: none !important;
+    background: none;
+    color: gray;
+    font-weight: bold;
+    font-family: 'Roboto',  sans-serif;
+} 
+.btn-round-success-bordered {
+    
+}
+.form-control {
+    resize: none;
+}
+#rejectTextBox {
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: none;
+}
+#rejectButton {
+    border-color: red;
+}
+#closeModalButton {
+    border-color: gray;
+}
+#charactersPanel {
+    margin-top: 0px;
+    border: 1px solid #ccc;
+    border-radius: 0px 0px 4px 4px;
+}
+.no-transition {
+    -webkit-transition: height 0.01s !important;
+    -moz-transition: height 0.01s !important;
+    -o-transition: height 0.01s !important;
+    transition: height 0.01s !important;
+}
+.popover-content {
+    word-wrap: break-word;
+}
+.bg-success {
+    background-color: rgba(223, 240, 216, 0.4);
+}
+.bg-info {
+    background-color: rgba(217, 237, 247, 0.4);
+}
+.marcacoes-content {
+    width: 70%;
+}

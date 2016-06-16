@@ -60,7 +60,7 @@ namespace emp_ferias.lib.Services
 
         public List<Marcacao> Get()
         {
-            return db.Marcacoes.Include(x => x.User).ToList();
+            return db.Marcacoes.AsNoTracking().Include(x=> x.UserAprovacao).Include(x => x.User).ToList();
         }
 
         public List<ExecutionResult> Approve(int id)
@@ -84,16 +84,16 @@ namespace emp_ferias.lib.Services
 
         }
 
-        public List<ExecutionResult> Reject (int id, string reason)
+        public List<ExecutionResult> Reject (Marcacao m)
         {
             List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
 
-            Marcacao Rejecting = db.Marcacoes.Find(id);
+            Marcacao Rejecting = db.Marcacoes.Find(m.Id);
 
             if (Rejecting != null)
             {
                 Rejecting.Aprovado = false;
-                Rejecting.RazaoAprovacao = reason;
+                Rejecting.RazaoAprovacao = m.RazaoAprovacao;
                 Rejecting.UserIdAprovacao = _serviceLogin.GetUserID();
                 db.SaveChanges();
             }
