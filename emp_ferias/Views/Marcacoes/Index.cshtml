@@ -6,7 +6,7 @@
 
 
 
-<!-- ACCEPT MODAL -->
+<!-- APPROVE MODAL -->
 <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approve">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -33,7 +33,7 @@
 </div>
 <!--END MODAL-->
 <!-- REJECT MODAL -->
-<div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="reject modal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -121,7 +121,7 @@
     </div>
     <!--pending table-->
     <div class="collapse" id="table1" style="width: 100%">
-        <table class="table" style="width: 100%">
+        <table class="table table-hover" id="actionPendingTable" style="width: 100%">
             <thead>
                 <tr>
                     <th>
@@ -223,7 +223,7 @@
     </div>
 
     <!--previous table-->
-    <table class="table" style="width: 100%">
+    <table id="previousTable" class="table table-hover" style="width: 100%">
         <thead>
             <tr>
                 <th>
@@ -245,13 +245,7 @@
                     Notes
                 </th>
                 <th>
-                    Approved
-                </th>
-                <th>
-                    Reason (If not approved)
-                </th>
-                <th>
-                    Approvation User
+                    Status <i class="fa fa-info" aria-hidden="true" tabindex="0" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Hover over each individual status for more information."></i>
                 </th>
             </tr>
         </thead>
@@ -262,7 +256,7 @@
                 if (item.UserNameAprovacao != null)
                 {
                
-                    <tr class="@(item.Aprovado ? "bg-success" : "bg-danger")">
+                    <tr class="bg-info">
                     
                         <td>
                             @Html.DisplayFor(modelItem => item.id)
@@ -311,13 +305,31 @@
                             }
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Aprovado)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RazaoAprovacao)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UserNameAprovacao)
+                            @{
+                                if (item.Aprovado)
+                                {
+                                    if (item.DataInicio.Date <= DateTime.Today.Date)
+                                    {
+                                        if (item.DataFim.Date < DateTime.Today.Date)
+                                        {
+                                            <span class="label label-default" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Approved by</b> @item.UserNameAprovacao<br><br>Ended @{var ii = DateTime.Today - item.DataFim;} <text>@ii.Days</text> day(s) ago.">Completed</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-primary" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Approved by</b> @item.UserNameAprovacao<br><br>@{var ii = item.DataFim - DateTime.Today;} <text>@ii.Days</text> day(s) remaining.">Ongoing</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-info" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Approved by</b> @item.UserNameAprovacao<br><br>Starts in @{var ii = item.DataInicio - DateTime.Today;} <text>@ii.Days</text> day(s)">Approved</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="label label-danger"tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Rejected by</b> @item.UserNameAprovacao<br><br><b>Reason: </b>@item.RazaoAprovacao">Rejected</span>
+
+                                }
+                            }
                         </td>
                     </tr>
                 }
@@ -337,6 +349,10 @@
             }
         })
         
+
+
+        
+
         $('#table1').on('show.bs.collapse', function () {
             $('#collapse-btn').addClass('fa-caret-up').removeClass('fa-caret-down');
         })
@@ -370,6 +386,9 @@
                 $('#rejectButton').prop('disabled', false);
             }
         })
+
+        $('#actionPendingTable').DataTable();
+        $('#previousTable').DataTable();
     })
 </script>
 }

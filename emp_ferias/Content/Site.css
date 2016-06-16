@@ -203,8 +203,12 @@ th, td {
     -o-transition: height 0.01s !important;
     transition: height 0.01s !important;
 }
+.popover {
+    max-width: 100%;
+}
 .popover-content {
     word-wrap: break-word;
+    color: black;
 }
 .bg-success {
     background-color: rgba(223, 240, 216, 0.4);
