@@ -55,6 +55,73 @@ namespace emp_ferias.Controllers
             return View(MapIndexMarcacaoViewModel(serviceMarcacoes.Get()));
         }
 
+        // GET: Marcacoes/Overview
+        public ActionResult Overview()
+        {
+            return View(MapIndexMarcacaoViewModel(serviceMarcacoes.Get()));
+        }
+
+
+        private static List<Events> MapMarcacoesCalendar(List<Marcacao> Marcacoes, DateTime start, DateTime end)
+        {
+            List<Events> EventList = new List<Events>();
+            foreach (var m in Marcacoes)
+            {
+                if ((m.UserAprovacao != null && m.UserIdAprovacao != null) && m.Aprovado) { 
+                    if (m.DataFim >= start && m.DataInicio <= end)
+                    {
+                        Events newEvent = new Events
+                        {
+                            id = m.Id.ToString(),
+                            title = "#" + m.Id + ": " + m.User.UserName + ", " + m.Motivo,
+                            start = m.DataInicio.ToString("s"),
+                            end = m.DataFim.AddDays(1).ToString("s"),
+                            allDay = true,
+                        
+                        };
+                        if (m.DataFim < DateTime.Today)
+                        {
+                            newEvent.color = "#777";
+                            newEvent.textColor = "#ffffff";
+                        }
+                        else if (m.DataFim >= DateTime.Today && m.DataInicio <= DateTime.Today)
+                        {
+                            newEvent.color = "#337ab7";
+                            newEvent.textColor = "#ffffff";
+                        }
+                        else
+                        {
+                            newEvent.color = "#5bc0de";
+                            newEvent.textColor = "#ffffff";
+                        }
+                        EventList.Add(newEvent);
+                    }
+                }
+            }
+            return EventList;
+        }
+
+        public ActionResult GetMarcacoes (DateTime start, DateTime end)
+        {
+            //var minDate = ConvertFromUnixTimestamp(start);
+            //var maxDate = ConvertFromUnixTimestamp(end);
+
+
+            List<Marcacao> Marcacoes = serviceMarcacoes.Get();
+
+            var EventList = MapMarcacoesCalendar(Marcacoes, start, end);
+
+            var EventArray = EventList.ToArray();
+
+            return Json(EventArray, JsonRequestBehavior.AllowGet);
+        }
+
+        //private static datetime convertfromunixtimestamp(double timestamp)
+        //{
+        //    datetime origin = new datetime(1970, 1, 1, 0, 0, 0, 0);
+        //    return origin.addseconds(timestamp);
+        //}
+
         // GET: Marcacoes/Details/5
         public async Task<ActionResult> Details(int? id)
         {

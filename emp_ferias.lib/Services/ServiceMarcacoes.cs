@@ -92,6 +92,14 @@ namespace emp_ferias.lib.Services
 
             if (Rejecting != null)
             {
+                m.RazaoAprovacao = m.RazaoAprovacao.Trim();
+                if (string.IsNullOrWhiteSpace(m.RazaoAprovacao) || m.RazaoAprovacao.Length > 100)
+                    ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "The message may not be null, white spaces, or contain more than 100 characters." });
+
+                foreach (var i in ExecutionResult)
+                    if (i.MessageType == MessageType.Error)
+                        return (ExecutionResult);
+
                 Rejecting.Aprovado = false;
                 Rejecting.RazaoAprovacao = m.RazaoAprovacao;
                 Rejecting.UserIdAprovacao = _serviceLogin.GetUserID();

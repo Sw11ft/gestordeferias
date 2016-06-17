@@ -48,7 +48,6 @@ html, body {
     width: 65%;
 }
 .jumbotron {
-    margin-top: 50px;
     background-color: #6f5499;
     color: white;
     border-radius: 0 0 !important;
@@ -112,8 +111,15 @@ th, td {
 }
 #create-new-button {
     vertical-align: middle;
+    text-align: center;
     float: right;
     font-size: 1em;
+    width: 110px;
+}
+#overview-button {
+    width: 110px;
+    text-align: center;
+    float:right;
 }
 .panel-default {
     margin: 20px 0px 10px 0px;
@@ -176,8 +182,39 @@ th, td {
     font-weight: bold;
     font-family: 'Roboto',  sans-serif;
 } 
-.btn-round-success-bordered {
-    
+.fc-button {
+    border-radius: 30px 30px 30px 30px !important;
+    width: 90px;
+    height: 40px;
+    text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-color: #6f5499;
+    padding: 5px 9px 5px 9px;
+    height: 35px !important;
+    outline: none !important;
+    background: none;
+    color: #6f5499;
+    font-weight: bold;
+    font-family: 'Roboto',  sans-serif;
+}
+.fc-prev-button {
+    border-radius: 30px 0 0 30px !important;
+    width: 45px;
+}   
+.fc-next-button {
+    border-radius: 0 30px 30px 0 !important;
+    width: 45px;
+} 
+.fc th, th:last-child {
+    border-style: none !important;
+    border-width: 0;
+}
+#calendar {
+    overflow:hidden;
+}
+.fc-scroller {
+    overflow: hidden;
 }
 .form-control {
     resize: none;

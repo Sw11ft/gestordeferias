@@ -85,8 +85,10 @@
     </div>
     <!--create new - button-->
     <div class="col-xs-2" style="padding: 0">
-        <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-default" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Create New</button>
+        <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-round-neutral" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Create New</button>
+        <button onclick="location.href='@Url.Action("Overview", "Marcacoes")'; return false;" class="btn btn-round-success" id="overview-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Overview</button>
     </div>
+    
 
     <br />
 
@@ -121,7 +123,7 @@
     </div>
     <!--pending table-->
     <div class="collapse" id="table1" style="width: 100%">
-        <table class="table table-hover" id="actionPendingTable" style="width: 100%">
+        <table class="table table-hover marcacoes-table" id="actionPendingTable" style="width: 100%">
             <thead>
                 <tr>
                     <th>
@@ -165,7 +167,7 @@
                                 @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
                                 <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total: 
                                 @{
-                                    var length = (item.DataFim - item.DataInicio).Days;
+                                    var length = (item.DataFim - item.DataInicio).Days +1;
                                     string lengthstring;
                                     if (length == 1)
                                     {
@@ -223,7 +225,7 @@
     </div>
 
     <!--previous table-->
-    <table id="previousTable" class="table table-hover" style="width: 100%">
+    <table id="previousTable" class="table table-hover marcacoes-table" style="width: 100%">
         <thead>
             <tr>
                 <th>
@@ -271,7 +273,7 @@
                             @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
                             <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total:
                                 @{
-                                    var length = (item.DataFim - item.DataInicio).Days;
+                                    var length = (item.DataFim - item.DataInicio).Days +1;
                                     string lengthstring;
                                     if (length == 1)
                                     {
@@ -339,7 +341,7 @@
 </div>
 
 @section scripts{
-    <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         $(function () {
             if ($('#pendingAmount').text() != '0') {
@@ -349,10 +351,6 @@
             }
         })
         
-
-
-        
-
         $('#table1').on('show.bs.collapse', function () {
             $('#collapse-btn').addClass('fa-caret-up').removeClass('fa-caret-down');
         })
@@ -369,17 +367,20 @@
             $('#rejecttitle').text("Reject Request #" + $trigger.attr('id'));
             $('#approveform').attr("action", "/Marcacoes/Approve/" + $trigger.attr('id'));
             $('#marcId').attr("value", $trigger.attr('id'));
+            $('#rejectTextBox').val('');
         })
 
         $('#rejectButton').prop('disabled', true);
 
         $('#rejectTextBox').on('change keyup paste click', function() {
-            $('#characters').text(100 - $('#rejectTextBox').val().length);
 
-            if ($('#rejectTextBox').val().length == 0) {
+
+            $('#characters').text(100 - $('#rejectTextBox').val().trim().length);
+
+            if ($('#rejectTextBox').val().trim().length == 0) {
                 $('#rejectButton').prop('disabled', true);
             }
-            else if ($('#rejectTextBox').val().length > 100) {
+            else if ($('#rejectTextBox').val().trim().length > 100) {
                 $('#rejectButton').prop('disabled', true);
             }
             else {
@@ -389,6 +390,9 @@
 
         $('#actionPendingTable').DataTable();
         $('#previousTable').DataTable();
-    })
+
+        
+        }
+    )
 </script>
 }

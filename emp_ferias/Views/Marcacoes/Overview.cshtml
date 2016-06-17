@@ -1,0 +1,46 @@
+﻿@model List<emp_ferias.Models.IndexMarcacaoViewModel>
+
+@{
+    ViewBag.Title = "Overview";
+}
+
+<div class="jumbotron">
+    <div class="container-fluid body-content" style="width: 70%">
+        <h1 id="icon"><i class="fa fa-bookmark-o" aria-hidden="true"></i>&nbsp;Overview</h1>
+        <p class="lead container body-content jumbotron-description"></p>
+    </div>
+</div>
+
+<div class="content">
+
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Marcações", "Index", "Marcacoes")</li>
+        <li class="active">Overview</li>
+    </ol>
+    
+    <div id="calendar"></div>
+    <br />
+    <div class="col-xs-4 text-center">
+        <span class="label label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Completed <br />
+    </div>
+    <div class="col-xs-4 text-center">
+        <span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Ongoing <br />
+    </div>
+    <div class="col-xs-4 text-center">
+        <span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Accepted <br />
+    </div>
+    <br />
+
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                eventStartEditable: false,
+                eventLimit: true,
+                events: "/Marcacoes/GetMarcacoes/"
+            });
+        })
+    </script>
+}

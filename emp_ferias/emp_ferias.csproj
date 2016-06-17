@@ -271,6 +271,7 @@
     <Content Include="Views\Marcacoes\Details.cshtml" />
     <Content Include="Views\Marcacoes\Edit.cshtml" />
     <Content Include="Views\Marcacoes\Index.cshtml" />
+    <Content Include="Views\Marcacoes\Overview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
