@@ -77,14 +77,14 @@
 
 <div class="content marcacoes-content">
     <!--breadcrumb-->
-    <div class="col-xs-10" style="padding: 0">
+    <div class="col-xs-9" style="padding: 0">
         <ol class="breadcrumb">
             <li>@Html.ActionLink("Home", "Index", "Home")</li>
             <li class="active">Marcações</li>
         </ol>
     </div>
     <!--create new - button-->
-    <div class="col-xs-2" style="padding: 0">
+    <div class="col-xs-3" style="padding: 0">
         <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-round-neutral" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Create New</button>
         <button onclick="location.href='@Url.Action("Overview", "Marcacoes")'; return false;" class="btn btn-round-success" id="overview-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Overview</button>
     </div>
@@ -344,10 +344,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(function () {
-            if ($('#pendingAmount').text() != '0') {
-                $('#table1').addClass('no-transition');
+            if ($('#pendingamount').text() != '0') {
+                $('#table1').addclass('no-transition');
                 $('#table1').collapse('toggle');
-                $('#table1').removeClass('no-transition');
+                $('#table1').removeclass('no-transition');
             }
         })
         
@@ -373,8 +373,6 @@
         $('#rejectButton').prop('disabled', true);
 
         $('#rejectTextBox').on('change keyup paste click', function() {
-
-
             $('#characters').text(100 - $('#rejectTextBox').val().trim().length);
 
             if ($('#rejectTextBox').val().trim().length == 0) {
@@ -391,7 +389,6 @@
         $('#actionPendingTable').DataTable();
         $('#previousTable').DataTable();
 
-        
         }
     )
 </script>
