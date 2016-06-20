@@ -112,5 +112,15 @@ namespace emp_ferias.lib.Services
 
             return (ExecutionResult);
         }   
+
+        public List<Marcacao> GetHome(string SenderId)
+        {
+            return db.Marcacoes.AsNoTracking().Include(x => x.UserAprovacao).Include(x => x.User).Where(x => x.User.Id == SenderId && x.DataFim >= DateTime.Today.Date && x.UserIdAprovacao != null && x.Aprovado == true).ToList();
+        }
+
+        public List<Marcacao> GetUserMarcacoes(string SenderId)
+        {
+            return db.Marcacoes.AsNoTracking().Include(x => x.UserAprovacao).Include(x => x.User).Where(x => x.User.Id == SenderId).ToList();
+        }
     }
 }

@@ -7,12 +7,19 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using emp_ferias.Models;
+using MvcFlashMessages;
+using emp_ferias.lib.Classes;
+using System.Collections.Generic;
+using emp_ferias.lib.Services;
+using emp_ferias.Services;
 
 namespace emp_ferias.Controllers
 {
     [Authorize]
     public class ManageController : Controller
     {
+        ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes(new ServiceLogin());
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -50,25 +57,42 @@ namespace emp_ferias.Controllers
             }
         }
 
-        //
-        // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        private static List<IndexViewModel> MapManageViewModel(List<Marcacao> Marcacoes)
         {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : "";
-
-            var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            List<IndexViewModel> MappedViewModels = new List<IndexViewModel>();
+            foreach (var i in Marcacoes)
             {
-                HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            return View(model);
+                var MappedViewModel = new IndexViewModel();
+
+                MappedViewModel.id = i.Id;
+                MappedViewModel.DataInicio = i.DataInicio;
+                MappedViewModel.DataFim = i.DataFim;
+                MappedViewModel.Motivo = i.Motivo;
+                MappedViewModel.Aprovado = i.Aprovado;
+                if (i.UserAprovacao != null)
+                {
+                    MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
+                    MappedViewModel.UserNameAprovacao = i.UserAprovacao.UserName;
+                }
+                MappedViewModels.Add(MappedViewModel);
+            }
+
+            return MappedViewModels;
+        }
+
+        // GET: /Manage/Index
+        public ActionResult Index(ManageMessageId? message)
+        {
+            if (message == ManageMessageId.ChangePasswordSuccess)
+            {
+                this.Flash("success", "A password foi alterada com sucesso.");
+            }
+            else if (message == ManageMessageId.Error)
+            {
+                this.Flash("error", "Ocorreu um erro a processar o pedido.");
+            }
+
+            return View(MapManageViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
         }
 
         //
@@ -143,12 +167,7 @@ namespace emp_ferias.Controllers
 
         public enum ManageMessageId
         {
-            AddPhoneSuccess,
             ChangePasswordSuccess,
-            SetTwoFactorSuccess,
-            SetPasswordSuccess,
-            RemoveLoginSuccess,
-            RemovePhoneSuccess,
             Error
         }
 

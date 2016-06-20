@@ -12,17 +12,43 @@
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
+header > .container {
+    width:70%;
+}
+#logoutForm {
+    margin-right: 0;
+}
+body {
+    font-family: 'Roboto',  sans-serif;
+}
+.icon-bg {
+    width: 144px;
+    height: 144px;
+    line-height: 140px;
+    border: 1px solid white;
+    border-radius: 15%;
+    font-size: 108px;
+    margin:0 auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    text-align:center;
+}
+
+#welcome-message {
+    margin-top: 0px;
+    margin-bottom: 14px;
+    height: 35px;
+    font-family: 'Roboto',  sans-serif;
+}
 .dl-horizontal dt {
     white-space: normal;
-}
-html, body {
-    overflow-x: hidden;
 }
 .navbar-brand {
     font-family: 'Roboto', sans-serif;
     font-size: 1.5em; 
     font-weight: bolder;
     color: #6f5499 !important;
+    padding-left: 0;
 }
 .navbar-brand a :hover {
     -webkit-text-stroke: 1px black;
@@ -33,7 +59,6 @@ html, body {
 }
 .navbar {
     margin-bottom: 0;
-    border-bottom: 1px solid #6f5499;
 }
 .navbar a {
     color: #6f5499 !important;
@@ -45,13 +70,20 @@ html, body {
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    width: 65%;
+    width: 70%;
 }
 .jumbotron {
     background-color: #6f5499;
     color: white;
     border-radius: 0 0 !important;
     padding: 0 0 0 0;
+}
+.jumbotron > .container-fluid {
+    width: 70%;
+    padding: 0;
+}
+.container .jumbotron, .container-fluid .jumbotron {
+    padding: 0;
 }
 .jumbotron p {        
     font-family: 'Roboto',  sans-serif;
@@ -62,10 +94,6 @@ html, body {
 .jumbotron container-fluid {
     width: 70%;
 }
-#icon {
-    text-align: center;
-}
-
 .btn-round-success-bordered {
     background-color: rgba(0,0,0,.0);
     font-weight: 400;
@@ -114,10 +142,10 @@ th, td {
     text-align: center;
     float: right;
     font-size: 1em;
-    width: 110px;
+    width: 140px;
 }
 #overview-button {
-    width: 110px;
+    width: 115px;
     text-align: center;
     float:right;
 }
@@ -206,12 +234,10 @@ th, td {
     border-radius: 0 30px 30px 0 !important;
     width: 45px;
 } 
-.fc th, th:last-child {
-    border-style: none !important;
-    border-width: 0;
-}
-#calendar {
-    overflow:hidden;
+.fc-head-container, fc-widget-header {
+    border-top-width: 0 !important;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
 }
 .fc-scroller {
     overflow: hidden;
@@ -253,6 +279,12 @@ th, td {
 .bg-info {
     background-color: rgba(217, 237, 247, 0.4);
 }
+.bg-primary {
+    background-color: #337ab7;
+}
 .marcacoes-content {
     width: 70%;
+}
+.empty-notes {
+    color: #777;
 }

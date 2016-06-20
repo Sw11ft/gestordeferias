@@ -1,12 +1,12 @@
 ﻿@model List<emp_ferias.Models.IndexMarcacaoViewModel>
 
 @{
-    ViewBag.Title = "Overview";
+    ViewBag.Title = "Calendário > Marcações";
 }
 
 <div class="jumbotron">
     <div class="container-fluid body-content" style="width: 70%">
-        <h1 id="icon"><i class="fa fa-bookmark-o" aria-hidden="true"></i>&nbsp;Overview</h1>
+        <h1 id="icon">Calendário</h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
@@ -14,21 +14,21 @@
 <div class="content">
 
     <ol class="breadcrumb">
-        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
         <li>@Html.ActionLink("Marcações", "Index", "Marcacoes")</li>
-        <li class="active">Overview</li>
+        <li class="active">Calendário</li>
     </ol>
     
     <div id="calendar"></div>
     <br />
-    <div class="col-xs-4 text-center">
-        <span class="label label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Completed <br />
+    <div class="col-xs-4 text-center"> 
+        <span class="label label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Finalizado <br />
     </div>
     <div class="col-xs-4 text-center">
-        <span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Ongoing <br />
+        <span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Em Progresso <br />
     </div>
     <div class="col-xs-4 text-center">
-        <span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Accepted <br />
+        <span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Aprovado <br />
     </div>
     <br />
 

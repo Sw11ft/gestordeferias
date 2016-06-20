@@ -1,7 +1,7 @@
 ﻿@model List<emp_ferias.Models.IndexMarcacaoViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Índice > Marcações";
 }
 
 
@@ -12,10 +12,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="approvetitle">Approve Request</h4>
+                <h4 class="modal-title" id="approvetitle">Aprovar Marcação</h4>
             </div>
             <div class="modal-body" style="text-align: left">
-                <p>Are you sure you want to perform this operation?</p>
+                <p>Está prestes a aceitar a marcação. Continuar?</p>
                 
             </div>
             <div class="modal-footer">
@@ -23,8 +23,8 @@
                 {
                     @Html.AntiForgeryToken();
                     <div class="form-horizontal">
-                        <button type="button" id="closeModalButton" class="btn btn-round-neutral" data-dismiss="modal">Close</button>
-                        <input name="accept" type="submit" value="Approve" class="btn btn-round-success" />
+                        <button type="button" id="closeModalButton" class="btn btn-round-neutral" data-dismiss="modal">Cancelar</button>
+                        <input name="accept" type="submit" value="Aceitar" class="btn btn-round-success" />
                     </div>
                 }
             </div>
@@ -38,27 +38,27 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="rejecttitle">Reject Request </h4>
+                <h4 class="modal-title" id="rejecttitle">Rejeitar Marcação </h4>
             </div>
             @using (Html.BeginForm("Reject", "Marcacoes", FormMethod.Post, htmlAttributes: new { id = "rejectform"}))
             {
                 @Html.AntiForgeryToken();
                 <div class="modal-body" style="text-align: left">
-                    <p><b>Before rejecting,</b> provide a reason:</p>
+                    <p><b>Está prestes a rejeitar a marcação.<br />Para continuar,</b> escreva o motivo:</p>
 
-                    @Html.TextArea("Razao", new { @class = "form-control", id = "rejectTextBox", rows = "5", placeholder = "Max 100 characters..." })
+                    @Html.TextArea("Razao", new { @class = "form-control", id = "rejectTextBox", rows = "5", placeholder = "Motivo" })
                     @Html.Hidden("marcId", new { id = "marcId"})
 
                     <div class="panel panel-default" id="charactersPanel">
                         <div class="panel-body" style="text-align: center">
-                            <b>Characters left: </b><span id="characters">100</span>
+                            <b>Caracteres restantes: </b><span id="characters">100</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="form-horizontal">
-                        <button id="closeModalButton" type="button" class="btn btn-round-neutral" data-dismiss="modal">Close</button>
-                        <input id="rejectButton" name="reject" type="submit" value="Reject" class="btn btn-round-danger" />
+                        <button id="closeModalButton" type="button" class="btn btn-round-neutral" data-dismiss="modal">Cancelar</button>
+                        <input id="rejectButton" name="reject" type="submit" value="Rejeitar" class="btn btn-round-danger" />
                     </div>
                 </div>
             }
@@ -70,7 +70,7 @@
 <!--jumbotron-->
 <div class="jumbotron">
     <div class="container-fluid body-content">
-        <h1 id="icon"><i class="fa fa-bookmark-o" aria-hidden="true"></i>&nbsp;Marcações</h1>
+        <h1 id="icon">Marcações</h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
@@ -79,28 +79,27 @@
     <!--breadcrumb-->
     <div class="col-xs-9" style="padding: 0">
         <ol class="breadcrumb">
-            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
             <li class="active">Marcações</li>
         </ol>
     </div>
-    <!--create new - button-->
+    <!--botões-->
     <div class="col-xs-3" style="padding: 0">
-        <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-round-neutral" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Create New</button>
-        <button onclick="location.href='@Url.Action("Overview", "Marcacoes")'; return false;" class="btn btn-round-success" id="overview-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Overview</button>
+        <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-round-neutral" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Criar Marcação</button>
+        <button onclick="location.href='@Url.Action("Overview", "Marcacoes")'; return false;" class="btn btn-round-success" id="overview-button"><i class="fa fa-calendar-o" aria-hidden="true"></i>&nbsp;Calendário</button>
     </div>
     
-
     <br />
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <!--action PENDING-->
+    <!--action PENDING panel-->
     <div class="col-xs-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="col-xs-1"></div>
                 <div class="col-xs-10">
-                    Action Pending
+                    Ação Pendente
                     
                         @{
                             var i = 0;
@@ -111,12 +110,12 @@
                                     i++;
                                 }
                             }
-                            <span class="badge" id="pendingAmount"><text>@i</text></span>
+                            <span class="badge @(i == 0 ? "":"bg-primary")" id="pendingAmount"><text>@i</text></span>
                         }
                            
                 </div>
                 <div class="col-xs-1">
-                    <button button id="table1btn" class="btn-simple" style="float:right; outline: none !important" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-up" aria-hidden="true"></i></button>
+                    <button button id="table1btn" class="btn-simple" style="float:right; outline: none !important" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-down" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -127,27 +126,26 @@
             <thead>
                 <tr>
                     <th>
-                        Request ID
+                        ID
                     </th>
                     <th>
-                        User Name
+                        Utilizador
                     </th>
                     <th>
-                        Request Date
+                        Data de Pedido
                     </th>
                     <th>
-                        Length
+                        Duração
                     </th>
                     <th>
-                        Request Reason
+                        Razão
                     </th>
                     <th>
-                        Notes
+                        Notas
                     </th>
                     <th></th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach (var item in Model)
                 {
@@ -171,11 +169,11 @@
                                     string lengthstring;
                                     if (length == 1)
                                     {
-                                        lengthstring = length + " day";
+                                        lengthstring = length + " dia";
                                     }
                                     else
                                     {
-                                        lengthstring = length + " days";
+                                        lengthstring = length + " dias";
                                     }
                                     } @lengthstring"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                             </td>
@@ -194,7 +192,7 @@
                                     }
                                     else
                                     {
-                                        <text>-</text>
+                                        @Html.Label("–", new { @class = "empty-notes" });
                                     }
                                 }
 
@@ -202,16 +200,14 @@
                             <td>
 
                                 <div class="btn-group">
-                                    <button id="@(item.id)" class="btn btn-round-success" type="button" data-toggle="modal" data-target="#approve" >Approve</button>
-                                    <button id="@(item.id)" class="btn btn-round-danger" type="button" data-toggle="modal" data-target="#reject">Reject</button>
+                                    <button id="@(item.id)" class="btn btn-round-success" type="button" data-toggle="modal" data-target="#approve" >Aprovar</button>
+                                    <button id="@(item.id)" class="btn btn-round-danger" type="button" data-toggle="modal" data-target="#reject">Rejeitar</button>
                                 </div>  
                             </td>
                         </tr>
                     }
                 }
             </tbody>
-
-
         </table>
     </div>
 
@@ -219,7 +215,7 @@
     <div class="col-xs-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
-                Previous
+                Anteriores
             </div>
         </div>
     </div>
@@ -229,29 +225,28 @@
         <thead>
             <tr>
                 <th>
-                    Request ID
+                    ID
                 </th>
                 <th>
-                    User Name
+                    Utilizador
                 </th>
                 <th>
-                    Request Date
+                    Data de Pedido
                 </th>
                 <th>
-                    Length
+                    Duração
                 </th>
                 <th>
-                    Request Reason
+                    Razão
                 </th>
                 <th>
-                    Notes
+                    Notas
                 </th>
                 <th>
-                    Status <i class="fa fa-info" aria-hidden="true" tabindex="0" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Hover over each individual status for more information."></i>
+                    Estado <i class="fa fa-info" aria-hidden="true" tabindex="0" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Passe por cima de cada um dos estados das marcações para mais informações"></i>
                 </th>
             </tr>
         </thead>
-        
         <tbody>
             @foreach (var item in Model)
             {
@@ -277,11 +272,11 @@
                                     string lengthstring;
                                     if (length == 1)
                                     {
-                                        lengthstring = length + " day";
+                                        lengthstring = length + " dia";
                                     }
                                     else
                                     {
-                                        lengthstring = length + " days";
+                                        lengthstring = length + " dias";
                                     }
                                     } @lengthstring">
                                 <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -302,7 +297,7 @@
                                 }
                                 else
                                 {
-                                    <text>-</text>
+                                    @Html.Label("–", new { @class = "empty-notes" });
                                 }
                             }
                         </td>
@@ -314,22 +309,21 @@
                                     {
                                         if (item.DataFim.Date < DateTime.Today.Date)
                                         {
-                                            <span class="label label-default" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Approved by</b> @item.UserNameAprovacao<br><br>Ended @{var ii = DateTime.Today - item.DataFim;} <text>@ii.Days</text> day(s) ago.">Completed</span>
+                                            <span class="label label-default" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Acabou à @{var ii = DateTime.Today - item.DataFim;} <text>@ii.Days</text> dia(s).">Finalizado</span>
                                         }
                                         else
                                         {
-                                            <span class="label label-primary" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Approved by</b> @item.UserNameAprovacao<br><br>@{var ii = item.DataFim - DateTime.Today;} <text>@ii.Days</text> day(s) remaining.">Ongoing</span>
+                                            <span class="label label-primary" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>@{var ii = item.DataFim - DateTime.Today;} <text>@ii.Days</text> dia(s) restante(s).">Em Progresso</span>
                                         }
                                     }
                                     else
                                     {
-                                        <span class="label label-info" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Approved by</b> @item.UserNameAprovacao<br><br>Starts in @{var ii = item.DataInicio - DateTime.Today;} <text>@ii.Days</text> day(s)">Approved</span>
+                                        <span class="label label-info" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Começa em @{var ii = item.DataInicio - DateTime.Today;} <text>@ii.Days</text> dia(s).">Aprovado</span>
                                     }
                                 }
                                 else
                                 {
-                                    <span class="label label-danger"tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Rejected by</b> @item.UserNameAprovacao<br><br><b>Reason: </b>@item.RazaoAprovacao">Rejected</span>
-
+                                    <span class="label label-danger"tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Rejeitado por</b> @item.UserNameAprovacao<br><br><b>Reason: </b>@item.RazaoAprovacao">Rejeitado</span>
                                 }
                             }
                         </td>
@@ -343,13 +337,9 @@
 @section scripts{
 <script type="text/javascript">
     $(document).ready(function () {
-        $(function () {
-            if ($('#pendingamount').text() != '0') {
-                $('#table1').addclass('no-transition');
-                $('#table1').collapse('toggle');
-                $('#table1').removeclass('no-transition');
-            }
-        })
+        if ($('#pendingAmount').text() == '0') {
+            $('#table1btn').hide();
+        }
         
         $('#table1').on('show.bs.collapse', function () {
             $('#collapse-btn').addClass('fa-caret-up').removeClass('fa-caret-down');
@@ -386,10 +376,63 @@
             }
         })
 
-        $('#actionPendingTable').DataTable();
-        $('#previousTable').DataTable();
+        $('#actionPendingTable').DataTable({
+            "aoColumns": [
+                null,
+                null,
+                { "bSortable": false },
+                { "bSortable": false },
+                null,
+                { "bSortable": false },
+                { "bSortable": false }
+            ],
+            language: { 
+                "sProcessing":   "A processar...",
+                "sLengthMenu":   "Mostrar _MENU_ registos",
+                "sZeroRecords":  "Não foram encontrados resultados",
+                "sInfo":         "Mostrando _START_ a _END_ de _TOTAL_ registos",
+                "sInfoEmpty":    "Mostrando 0 a 0 de 0 registos",
+                "sInfoFiltered": "(filtrado de _MAX_ registos no total)",
+                "sInfoPostFix":  "",
+                "sSearch":       "Procurar:",
+                "sUrl":          "",
+                "oPaginate": {
+                    "sFirst":    "Primeiro",
+                    "sPrevious": "Anterior",
+                    "sNext":     "Seguinte",
+                    "sLast":     "Último"
+                }
+            }
+        })
+        $('#previousTable').DataTable({
+            "aoColumns": [
+                null,
+                null,
+                { "bSortable": false },
+                { "bSortable": false },
+                null,
+                { "bSortable": false },
+                null
+            ],
+            language: { 
+                "sProcessing":   "A processar...",
+                "sLengthMenu":   "Mostrar _MENU_ registos",
+                "sZeroRecords":  "Não foram encontrados resultados",
+                "sInfo":         "Mostrando _START_ a _END_ de _TOTAL_ registos",
+                "sInfoEmpty":    "Mostrando 0 a 0 de 0 registos",
+                "sInfoFiltered": "(filtrado de _MAX_ registos no total)",
+                "sInfoPostFix":  "",
+                "sSearch":       "Procurar:",
+                "sUrl":          "",
+                "oPaginate": {
+                    "sFirst":    "Primeiro",
+                    "sPrevious": "Anterior",
+                    "sNext":     "Seguinte",
+                    "sLast":     "Último"
+                }
+            }
+        });
 
-        }
-    )
+    })
 </script>
 }

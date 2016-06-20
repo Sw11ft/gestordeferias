@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="~/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
         <link rel="stylesheet" href="~/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" />
         <link rel="stylesheet" href="~/bower_components/fullcalendar/dist/fullcalendar.min.css" />
+        <link rel="stylesheet" href="~/Content/flash-messages.css" />
         
         <link rel="stylesheet" href="~/Content/Site.css" />
     </head>
@@ -27,16 +28,16 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-left">
-                        <li><a href="@Url.Action("Index", "Home")"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                        <li><a href="@Url.Action("Index", "User")"><i class="fa fa-users" aria-hidden="true"></i> User Panel</a></li>
-                        <li><a href="@Url.Action("Index", "Role")"><i class="fa fa-files-o" aria-hidden="true"></i> Role Panel</a></li>
+                        <li><a href="@Url.Action("Index", "Home")">Página Inicial</a></li>
+                        <li><a href="@Url.Action("Index", "User")">Painel de Utilizadores</a></li>
+                        <li><a href="@Url.Action("Index", "Role")">Painel de Funções</a></li>
                         <li class="dropdown">
-                            <a href="@Url.Action("Index", "Marcacoes")" class="dropdown-toggle" data-toggle="dropdown" data-trigger="hover" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bookmark" aria-hidden="true"></i> Marcações <span class="caret"></span></a>
+                            <a href="@Url.Action("Index", "Marcacoes")" class="dropdown-toggle" data-toggle="dropdown" data-trigger="hover" role="button" aria-haspopup="false" aria-expanded="false">Marcações <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="@Url.Action("Index", "Marcacoes")">Index</a></li>
-                                <li><a href="@Url.Action("Overview", "Marcacoes")">Overview</a></li>
+                                <li><a href="@Url.Action("Index", "Marcacoes")">Índice</a></li>
+                                <li><a href="@Url.Action("Overview", "Marcacoes")">Calendário</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="@Url.Action("Create", "Marcacoes")"><i class="fa fa-bookmark-o" aria-hidden="true"></i><i class="fa fa-plus" aria-hidden="true" style="font-size: 0.3em;"></i>&nbsp;Criar</a></li>
+                                <li><a href="@Url.Action("Create", "Marcacoes")"><i class="fa fa-bookmark-o" aria-hidden="true"></i><i class="fa fa-plus" aria-hidden="true" style="font-size: 0.3em;"></i>&nbsp;Criar Marcação</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -70,6 +71,7 @@
         <script src="~/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
         <script src="~/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
         <script src="~/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+        <script src="~/bower_components/fullcalendar/dist/lang/pt.js"></script>
 
         <script type="text/javascript">
 

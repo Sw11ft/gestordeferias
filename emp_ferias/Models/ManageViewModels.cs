@@ -2,16 +2,22 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using System;
+using emp_ferias.lib.Classes;
 
 namespace emp_ferias.Models
 {
     public class IndexViewModel
     {
-        public bool HasPassword { get; set; }
-        public IList<UserLoginInfo> Logins { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool TwoFactor { get; set; }
-        public bool BrowserRemembered { get; set; }
+        public int id { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime DataInicio { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime DataFim { get; set; }
+        public bool Aprovado { get; set; }
+        public string UserNameAprovacao { get; set; }
+        public string RazaoAprovacao { get; set; }
+        public Motivo Motivo { get; set; }
     }
 
     public class ManageLoginsViewModel

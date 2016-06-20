@@ -103,10 +103,6 @@ namespace emp_ferias.Controllers
 
         public ActionResult GetMarcacoes (DateTime start, DateTime end)
         {
-            //var minDate = ConvertFromUnixTimestamp(start);
-            //var maxDate = ConvertFromUnixTimestamp(end);
-
-
             List<Marcacao> Marcacoes = serviceMarcacoes.Get();
 
             var EventList = MapMarcacoesCalendar(Marcacoes, start, end);
@@ -115,12 +111,6 @@ namespace emp_ferias.Controllers
 
             return Json(EventArray, JsonRequestBehavior.AllowGet);
         }
-
-        //private static datetime convertfromunixtimestamp(double timestamp)
-        //{
-        //    datetime origin = new datetime(1970, 1, 1, 0, 0, 0, 0);
-        //    return origin.addseconds(timestamp);
-        //}
 
         // GET: Marcacoes/Details/5
         public async Task<ActionResult> Details(int? id)
