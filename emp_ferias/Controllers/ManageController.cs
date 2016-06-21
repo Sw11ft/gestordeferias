@@ -95,6 +95,13 @@ namespace emp_ferias.Controllers
             return View(MapManageViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
         }
 
+        // GET: /Manage/ChartData
+        public ActionResult ChartData(int DataSet, bool IncludeRejected)
+        {
+            var RazaoMarcacoes = serviceMarcacoes.GetUserRazaoMarcacao(User.Identity.GetUserId(), DataSet, IncludeRejected);
+            return Json(RazaoMarcacoes,JsonRequestBehavior.AllowGet);
+        }
+
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()

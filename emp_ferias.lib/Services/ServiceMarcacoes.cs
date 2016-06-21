@@ -122,5 +122,95 @@ namespace emp_ferias.lib.Services
         {
             return db.Marcacoes.AsNoTracking().Include(x => x.UserAprovacao).Include(x => x.User).Where(x => x.User.Id == SenderId).ToList();
         }
+
+        public Array GetUserRazaoMarcacao(string SenderId, int DataSet, bool IncludeRejected)
+        {
+            var Ferias = 0;
+            var Justificada = 0;
+            var Injustificada = 0;
+
+            if (DataSet == 1 && !IncludeRejected)
+            {
+                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null && x.Aprovado == true).ToList();
+
+                foreach (var i in Marcacoes)
+                {
+                    if (i.Motivo == Motivo.Ferias)
+                    {
+                        Ferias++;
+                    }
+                    else if (i.Motivo == Motivo.Justificada)
+                    {
+                        Justificada++;
+                    }
+                    else
+                    {
+                        Injustificada++;
+                    }
+                }
+            }
+            else if (DataSet == 1 && IncludeRejected)
+            {
+                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null).ToList();
+
+                foreach (var i in Marcacoes)
+                {
+                    if (i.Motivo == Motivo.Ferias)
+                    {
+                        Ferias++;
+                    }
+                    else if (i.Motivo == Motivo.Justificada)
+                    {
+                        Justificada++;
+                    }
+                    else
+                    {
+                        Injustificada++;
+                    }
+                }
+            }
+            else if (DataSet == 2 && !IncludeRejected)
+            {
+                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null && x.Aprovado == true).ToList();
+
+                foreach (var i in Marcacoes)
+                {
+                    if (i.Motivo == Motivo.Ferias)
+                    {
+                        Ferias += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                    }
+                    else if (i.Motivo == Motivo.Justificada)
+                    {
+                        Justificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                    }
+                    else
+                    {
+                        Injustificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                    }
+                }
+            }
+            else
+            {
+                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null == true).ToList();
+
+                foreach (var i in Marcacoes)
+                {
+                    if (i.Motivo == Motivo.Ferias)
+                    {
+                        Ferias += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                    }
+                    else if (i.Motivo == Motivo.Justificada)
+                    {
+                        Justificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                    }
+                    else
+                    {
+                        Injustificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                    }
+                }
+            }
+            
+            return new[] { Ferias, Justificada, Injustificada };
+        } 
     }
 }

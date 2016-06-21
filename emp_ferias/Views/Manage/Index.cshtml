@@ -1,4 +1,5 @@
 ﻿@using MvcFlashMessages
+@using System.Globalization
 @model List<emp_ferias.Models.IndexViewModel>
 @{
     ViewBag.Title = "Conta";
@@ -12,21 +13,59 @@
 </div>
 
 <div class="content">
-
     <ol class="breadcrumb">
         <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
         <li class="active">Conta</li>
     </ol>
     @Html.RenderFlash()
-    <div class="col-xs-6">dados aqui com informaçoes e graficos sobre as marcações do utilizador, etc</div>
+    <div class="col-xs-12" style="padding: 0">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                Marcações
+            </div>
+        </div>
+    </div>
     <div class="col-xs-6">
-        <div class="col-xs-12" style="padding: 0">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    Marcações
+        <form class="form-inline">
+            <label>Marcações efetuadas &nbsp;</label>
+            <select class="form-control" id="DataSet">
+                <option value="1">por pedido</option>
+                <option value="2">por total de dias</option>
+            </select>
+            <input type="checkbox" class="chkbox" id="IncludeRejected"/>
+            <label style="font-weight: 400;">Incluir rejeitadas</label>
+        </form>
+        <div id="canvas-wrapper" style="max-width:100%; height: auto; margin-top: 10px;">
+            <canvas id="doughnut" style="max-width:100%; height:auto"></canvas>
+        </div>
+        <div class="col-xs-12" id="progress-wrapper">
+            <label>Taxa de Aceitação</label>
+            <div class="progress" id="accBar">
+                @{
+                    double total = 0;
+                    double accepted = 0;
+                    foreach (var i in Model)
+                    {
+                        total++;
+                        if (i.Aprovado && i.UserNameAprovacao != null)
+                        {
+                            accepted++;
+                        }
+                    }
+                    var acceptedPercentage = Math.Round((accepted / total) * 100);
+                    var acceptedString = acceptedPercentage.ToString(CultureInfo.InvariantCulture) + "%";
+                    var rejectedString = (100 - acceptedPercentage).ToString(CultureInfo.InvariantCulture) + "%";
+                }
+                <div class="progress-bar progress-bar-success" style="width: @acceptedString" data-toggle="tooltip" data-placement="left" title="@accepted (@acceptedString) marcações aceites.">
+                    <span class="sr-only">@acceptedString</span>
+                </div>
+                <div class="progress-bar progress-bar-danger" style="width: @rejectedString" data-toggle="tooltip" data-placement="right" title="@(total-accepted) (@rejectedString) marcações rejeitadas.">
+                    <span class="sr-only">@rejectedString</span>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-xs-6">
         <table class="table table-hover marcacoes-table" id="table1">
             <thead>
                 <tr>
@@ -110,42 +149,133 @@
             </tbody>
         </table>
     </div>
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            @Html.ActionLink("Change your password", "ChangePassword")
-        </dd>
-    </dl>
+    <div class="col-xs-12" style="padding: 0">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                Dados
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <label>Password</label> 
+    </div>
+    <div class="col-xs-8">
+        @Html.ActionLink("Alterar", "ChangePassword")
+    </div>
+        
+
 </div>
 
 @section scripts {
+    <script src="~/bower_components/Chart.js/Chart.js"></script>
     <script>
-        $('[data-toggle="popover"]').popover();
+        $(document).ready(function () {
+            var ctx = document.getElementById("doughnut");
 
-        $('#table1').DataTable({
-            "aoColumns": [
-                null,
-                { "bSortable": false },
-                null,
-                null
-            ],
-            language: {
-                "sProcessing": "A processar...",
-                "sLengthMenu": "Mostrar _MENU_ registos",
-                "sZeroRecords": "Não foram encontrados resultados",
-                "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registos",
-                "sInfoEmpty": "Mostrando 0 a 0 de 0 registos",
-                "sInfoFiltered": "(filtrado de _MAX_ registos no total)",
-                "sInfoPostFix": "",
-                "sSearch": "Procurar:",
-                "sUrl": "",
-                "oPaginate": {
-                    "sFirst": "Primeiro",
-                    "sPrevious": "Anterior",
-                    "sNext": "Seguinte",
-                    "sLast": "Último"
+            var SelectedDataSet = 1;
+            var IncludeRejected = false;
+            RefreshChart();
+
+            $("#DataSet").change(function() {
+                if ($('#DataSet option:selected').val() == "1") {
+                    SelectedDataSet = 1;
                 }
+                else {
+                    SelectedDataSet = 2;
+                }
+                RefreshChart();
+            });
+            
+            $("#IncludeRejected").change(function () {
+                if (this.checked) {
+                    IncludeRejected = true;
+                }
+                else {
+                    IncludeRejected = false;
+                }
+
+                RefreshChart();
+            })
+
+            function RefreshChart() {
+                $.ajax({
+                    dataType: "json",
+                    data: {
+                        "DataSet": SelectedDataSet,
+                        "IncludeRejected": IncludeRejected
+                    },
+                    url: "/Manage/ChartData",
+                    success: function (data) {
+                        resetCanvas();
+                        var doughnut = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ["Férias", "Justificada", "Injustificada"],
+                                datasets: [{
+                                    label: '# de dias',
+                                    data: data,
+                                    backgroundColor: [
+                                        'rgba(51, 122, 183, 0.7)',
+                                        'rgba(92, 184, 92, 0.7)',
+                                        'rgba(217, 83, 79, 0.7)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(51, 122, 183, 1)',
+                                        'rgba(92, 184, 92, 1)',
+                                        'rgba(217, 83, 79, 0.7)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                        });
+                    }
+                })
             }
-        })
+
+            var resetCanvas = function () {
+                $('#doughnut').remove(); // this is my <canvas> element
+                $('#canvas-wrapper').append('<canvas id="doughnut"><canvas>');
+                canvas = document.querySelector('#doughnut'); // why use jQuery?
+                ctx = canvas.getContext('2d');
+                ctx.canvas.width = $('#graph').width(); // resize to parent width
+                ctx.canvas.height = $('#graph').height(); // resize to parent height
+
+                var x = canvas.width / 2;
+                var y = canvas.height / 2;
+                ctx.font = '10pt Roboto';
+                ctx.textAlign = 'center';
+                ctx.fillText('This text is centered on the canvas', x, y);
+            };
+
+            $('[data-toggle="popover"]').popover();
+              $('[data-toggle="tooltip"]').tooltip()
+
+
+            $('#table1').DataTable({
+                "aoColumns": [
+                    null,
+                    { "bSortable": false },
+                    null,
+                    null
+                ],
+                language: {
+                    "sProcessing": "A processar...",
+                    "sLengthMenu": "Mostrar _MENU_ registos",
+                    "sZeroRecords": "Não foram encontrados resultados",
+                    "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registos",
+                    "sInfoEmpty": "Mostrando 0 a 0 de 0 registos",
+                    "sInfoFiltered": "(filtrado de _MAX_ registos no total)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Procurar:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "Primeiro",
+                        "sPrevious": "Anterior",
+                        "sNext": "Seguinte",
+                        "sLast": "Último"
+                    }
+                }
+            })
+        });
     </script>
 }

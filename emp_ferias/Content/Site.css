@@ -288,3 +288,33 @@ th, td {
 .empty-notes {
     color: #777;
 }
+.form-inline {
+    vertical-align:middle;
+}
+.chkbox {
+    position:relative;
+    vertical-align:middle;
+    bottom:1px;
+    margin-left: 4em !important;
+}
+#doughnut {
+    max-width: 100%;
+    height: auto;
+}
+.progress-bar-success {
+    background-color: rgba(92, 184, 92, 0.7);
+}
+.progress-bar-danger {
+    background-color: rgba(217, 83, 79, 0.7);
+}
+#doughnut {
+    margin-top: 2em;
+}
+#accBar {
+    width:50%;
+    margin: 0 auto;
+}
+#progress-wrapper {
+    text-align: center;
+    margin-top: 3em;
+}

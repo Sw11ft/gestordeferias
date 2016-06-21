@@ -15,6 +15,7 @@
     "font-awesome": "*",
     "datatables.net": "*",
     "datatables.net-bs": "*",
-    "fullcalendar": "*"
+    "fullcalendar": "*",
+    "Chart.js": "*" 
   }
 }
