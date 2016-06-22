@@ -177,15 +177,15 @@ namespace emp_ferias.lib.Services
                 {
                     if (i.Motivo == Motivo.Ferias)
                     {
-                        Ferias += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                        Ferias += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays)) + 1;
                     }
                     else if (i.Motivo == Motivo.Justificada)
                     {
-                        Justificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                        Justificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays)) + 1;
                     }
                     else
                     {
-                        Injustificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                        Injustificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays)) + 1;
                     }
                 }
             }
@@ -197,15 +197,15 @@ namespace emp_ferias.lib.Services
                 {
                     if (i.Motivo == Motivo.Ferias)
                     {
-                        Ferias += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                        Ferias += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays)) + 1;
                     }
                     else if (i.Motivo == Motivo.Justificada)
                     {
-                        Justificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                        Justificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays)) + 1;
                     }
                     else
                     {
-                        Injustificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays));
+                        Injustificada += Convert.ToInt32(Math.Floor((i.DataFim - i.DataInicio).TotalDays)) + 1;
                     }
                 }
             }

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using emp_ferias.Models;
+using MvcFlashMessages;
 
 namespace emp_ferias.Controllers
 {
@@ -84,7 +85,7 @@ namespace emp_ferias.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Invalid username or password.");
+                this.Flash("error", "Invalid username or password.");
             }
             return View();
         }

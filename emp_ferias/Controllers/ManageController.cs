@@ -57,27 +57,36 @@ namespace emp_ferias.Controllers
             }
         }
 
-        private static List<IndexViewModel> MapManageViewModel(List<Marcacao> Marcacoes)
+        private IndexViewModel MapIndexViewModel(List<Marcacao> Marcacoes)
         {
-            List<IndexViewModel> MappedViewModels = new List<IndexViewModel>();
+
+            var CurrentUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IndexViewModel IndexViewModel = new IndexViewModel();
+
+            List<UserMarcacao> MappedMarcacoes = new List<UserMarcacao>();
             foreach (var i in Marcacoes)
             {
-                var MappedViewModel = new IndexViewModel();
+                var MappedMarcacao = new UserMarcacao();
 
-                MappedViewModel.id = i.Id;
-                MappedViewModel.DataInicio = i.DataInicio;
-                MappedViewModel.DataFim = i.DataFim;
-                MappedViewModel.Motivo = i.Motivo;
-                MappedViewModel.Aprovado = i.Aprovado;
+                MappedMarcacao.id = i.Id;
+                MappedMarcacao.DataInicio = i.DataInicio;
+                MappedMarcacao.DataFim = i.DataFim;
+                MappedMarcacao.Motivo = i.Motivo;
+                MappedMarcacao.Aprovado = i.Aprovado;
                 if (i.UserAprovacao != null)
                 {
-                    MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
-                    MappedViewModel.UserNameAprovacao = i.UserAprovacao.UserName;
+                    MappedMarcacao.RazaoAprovacao = i.RazaoAprovacao;
+                    MappedMarcacao.UserNameAprovacao = i.UserAprovacao.UserName;
                 }
-                MappedViewModels.Add(MappedViewModel);
+                MappedMarcacoes.Add(MappedMarcacao);
             }
+            IndexViewModel.Email = CurrentUser.Email;
+            IndexViewModel.UserId = CurrentUser.Id;
+            IndexViewModel.UserName = CurrentUser.UserName;
+            IndexViewModel.Marcacoes = MappedMarcacoes;
 
-            return MappedViewModels;
+            return IndexViewModel;
         }
 
         // GET: /Manage/Index
@@ -91,8 +100,7 @@ namespace emp_ferias.Controllers
             {
                 this.Flash("error", "Ocorreu um erro a processar o pedido.");
             }
-
-            return View(MapManageViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
+            return View(MapIndexViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
         }
 
         // GET: /Manage/ChartData

@@ -1,6 +1,6 @@
 ﻿@using MvcFlashMessages
 @using System.Globalization
-@model List<emp_ferias.Models.IndexViewModel>
+@model emp_ferias.Models.IndexViewModel
 @{
     ViewBag.Title = "Conta";
 }
@@ -18,14 +18,14 @@
         <li class="active">Conta</li>
     </ol>
     @Html.RenderFlash()
-    <div class="col-xs-12" style="padding: 0">
+    <div class="col-sm-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
                 Marcações
             </div>
         </div>
     </div>
-    <div class="col-xs-6">
+    <div class="col-sm-6">
         <form class="form-inline">
             <label>Marcações efetuadas &nbsp;</label>
             <select class="form-control" id="DataSet">
@@ -38,13 +38,13 @@
         <div id="canvas-wrapper" style="max-width:100%; height: auto; margin-top: 10px;">
             <canvas id="doughnut" style="max-width:100%; height:auto"></canvas>
         </div>
-        <div class="col-xs-12" id="progress-wrapper">
+        <div class="col-sm-12" id="progress-wrapper">
             <label>Taxa de Aceitação</label>
             <div class="progress" id="accBar">
                 @{
                     double total = 0;
                     double accepted = 0;
-                    foreach (var i in Model)
+                    foreach (var i in Model.Marcacoes)
                     {
                         total++;
                         if (i.Aprovado && i.UserNameAprovacao != null)
@@ -65,7 +65,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-6">
+    <div class="col-sm-6">
         <table class="table table-hover marcacoes-table" id="table1">
             <thead>
                 <tr>
@@ -85,7 +85,7 @@
             </thead>
 
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Marcacoes)
                 {
                     <tr class="bg-info">
                         <td>
@@ -140,7 +140,7 @@
                         </td>
                     </tr>
                 }
-                @if (!Model.Any())
+                @if (!Model.Marcacoes.Any())
                 {
                     <tr class="bg-info">
                         <td colspan="4">Ainda não tem marcações. @Html.ActionLink("Criar uma nova.", "Create", "Marcacoes")</td>
@@ -149,19 +149,32 @@
             </tbody>
         </table>
     </div>
-    <div class="col-xs-12" style="padding: 0">
+    <div class="col-sm-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
                 Dados
             </div>
         </div>
     </div>
-    <div class="col-xs-4">
-        <label>Password</label> 
-    </div>
-    <div class="col-xs-8">
-        @Html.ActionLink("Alterar", "ChangePassword")
-    </div>
+    <table id="#userdata" align="center" style="width: 40%">
+        <tr>
+            <td class="userinfo-left"><label class="userinfo">ID</label></td>
+            <td class="userinfo-right"><code>@Model.UserId</code></td>
+        </tr>
+        <tr>
+            <td class="userinfo-left"><label class="userinfo">Nome de Utilizador</label></td>
+            <td class="userinfo-right"><code>@Model.UserName</code></td>
+        </tr>
+        <tr>
+            <td class="userinfo-left"><label class="userinfo">Email</label></td>
+            <td class="userinfo-right"><code>@Model.Email</code></td>
+        </tr>
+        <tr>
+            <td class="userinfo-left"><label class="userinfo">Password</label></td>
+            <td class="userinfo-right">@Html.ActionLink("Alterar","ChangePassword")</td>
+        </tr>
+    </table>
+
         
 
 </div>

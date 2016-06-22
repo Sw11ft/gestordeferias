@@ -9,9 +9,9 @@
             <li class="dropdown">
                 <a href="@Url.Action("Index", "Manage")" class="dropdown-toggle" data-toggle="dropdown" data-trigger="hover" role="button" aria-haspopup="false" aria-expanded="false"><i class="glyphicon glyphicon-user" aria-hidden="true"></i>&nbsp;@User.Identity.GetUserName() <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="@Url.Action("Index", "Manage")">Manage</a></li>
+                    <li><a href="@Url.Action("Index", "Manage")">Conta</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a></li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-times" aria-hidden="true" id="logoff"></i> Term. Sessão</a></li>
                 </ul>
             </li>
         </ul>

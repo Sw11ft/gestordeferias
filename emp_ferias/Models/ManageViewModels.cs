@@ -9,6 +9,14 @@ namespace emp_ferias.Models
 {
     public class IndexViewModel
     {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public List<UserMarcacao> Marcacoes { get; set; }
+    }
+
+    public class UserMarcacao
+    {
         public int id { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataInicio { get; set; }
@@ -35,7 +43,7 @@ namespace emp_ferias.Models
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Password atual")]
         public string OldPassword { get; set; }
 
         [Required]

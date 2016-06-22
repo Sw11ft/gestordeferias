@@ -77,14 +77,14 @@
 
 <div class="content marcacoes-content">
     <!--breadcrumb-->
-    <div class="col-xs-9" style="padding: 0">
+    <div class="col-sm-9" style="padding: 0">
         <ol class="breadcrumb">
             <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
             <li class="active">Marcações</li>
         </ol>
     </div>
     <!--botões-->
-    <div class="col-xs-3" style="padding: 0">
+    <div class="col-sm-3" style="padding: 0">
         <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-round-neutral" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Criar Marcação</button>
         <button onclick="location.href='@Url.Action("Overview", "Marcacoes")'; return false;" class="btn btn-round-success" id="overview-button"><i class="fa fa-calendar-o" aria-hidden="true"></i>&nbsp;Calendário</button>
     </div>
@@ -94,11 +94,11 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <!--action PENDING panel-->
-    <div class="col-xs-12" style="padding: 0">
+    <div class="col-sm-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="col-xs-1"></div>
-                <div class="col-xs-10">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
                     Ação Pendente
                     
                         @{
@@ -114,7 +114,7 @@
                         }
                            
                 </div>
-                <div class="col-xs-1">
+                <div class="col-sm-1">
                     <button button id="table1btn" class="btn-simple" style="float:right; outline: none !important" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-down" aria-hidden="true"></i></button>
                 </div>
             </div>
@@ -212,7 +212,7 @@
     </div>
 
     <!--PREVIOUS panel-->
-    <div class="col-xs-12" style="padding: 0">
+    <div class="col-sm-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
                 Anteriores
@@ -221,117 +221,156 @@
     </div>
 
     <!--previous table-->
-    <table id="previousTable" class="table table-hover marcacoes-table" style="width: 100%">
-        <thead>
-            <tr>
-                <th>
-                    ID
-                </th>
-                <th>
-                    Utilizador
-                </th>
-                <th>
-                    Data de Pedido
-                </th>
-                <th>
-                    Duração
-                </th>
-                <th>
-                    Razão
-                </th>
-                <th>
-                    Notas
-                </th>
-                <th>
-                    Estado <i class="fa fa-info" aria-hidden="true" tabindex="0" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Passe por cima de cada um dos estados das marcações para mais informações"></i>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                if (item.UserNameAprovacao != null)
+    @*<form class="form-inline">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="sr-only" for="searchID">ID</label>
+                <div class="input-group">
+                    <div class="input-group-addon">ID</div>
+                    <select class="form-control" id="searchID">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="sr-only" for="searchID">Utilizador</label>
+                <div class="input-group">
+                    <div class="input-group-addon">Utilizador</div>
+                    <select class="form-control" id="searchUser">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="sr-only" for="searchID">Razão</label>
+                <div class="input-group">
+                    <div class="input-group-addon">Razão</div>
+                    <select class="form-control" id="searchReason">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>*@
+    <br />
+    <div class="table-wrapper col-sm-12">
+        <table id="previousTable" class="table table-hover marcacoes-table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Utilizador
+                    </th>
+                    <th>
+                        Data de Pedido
+                    </th>
+                    <th>
+                        Duração
+                    </th>
+                    <th>
+                        Razão
+                    </th>
+                    <th>
+                        Notas
+                    </th>
+                    <th>
+                        Estado <i class="fa fa-info" aria-hidden="true" tabindex="0" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Passe por cima de cada um dos estados das marcações para mais informações"></i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
                 {
+                    if (item.UserNameAprovacao != null)
+                    {
                
-                    <tr class="bg-info">
+                        <tr class="bg-info">
                     
-                        <td>
-                            @Html.DisplayFor(modelItem => item.id)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UserName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DataPedido)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
-                            <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total:
-                                @{
-                                    var length = (item.DataFim - item.DataInicio).Days +1;
-                                    string lengthstring;
-                                    if (length == 1)
-                                    {
-                                        lengthstring = length + " dia";
-                                    }
-                                    else
-                                    {
-                                        lengthstring = length + " dias";
-                                    }
-                                    } @lengthstring">
-                                <i class="fa fa-info-circle" aria-hidden="true"></i>
-                            </button>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Motivo)
-                        </td>
-                        <td>
-                            @{
-                                if (!(item.Observacoes == null) && !(item.Observacoes.Length == 0))
-                                {
-                                    @item.Observacoes.Substring(0, Math.Min(item.Observacoes.Length, 15))
-                                    if (item.Observacoes.Count() > 15)
-                                    {
-                                        <text>... </text> <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="@item.Observacoes"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-                                    }
-                                }
-                                else
-                                {
-                                    @Html.Label("–", new { @class = "empty-notes" });
-                                }
-                            }
-                        </td>
-                        <td>
-                            @{
-                                if (item.Aprovado)
-                                {
-                                    if (item.DataInicio.Date <= DateTime.Today.Date)
-                                    {
-                                        if (item.DataFim.Date < DateTime.Today.Date)
+                            <td>
+                                @Html.DisplayFor(modelItem => item.id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataPedido)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
+                                <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total:
+                                    @{
+                                        var length = (item.DataFim - item.DataInicio).Days +1;
+                                        string lengthstring;
+                                        if (length == 1)
                                         {
-                                            <span class="label label-default" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Acabou à @{var ii = DateTime.Today - item.DataFim;} <text>@ii.Days</text> dia(s).">Finalizado</span>
+                                            lengthstring = length + " dia";
                                         }
                                         else
                                         {
-                                            <span class="label label-primary" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>@{var ii = item.DataFim - DateTime.Today;} <text>@ii.Days</text> dia(s) restante(s).">Em Progresso</span>
+                                            lengthstring = length + " dias";
+                                        }
+                                        } @lengthstring">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Motivo)
+                            </td>
+                            <td>
+                                @{
+                                    if (!(item.Observacoes == null) && !(item.Observacoes.Length == 0))
+                                    {
+                                        @item.Observacoes.Substring(0, Math.Min(item.Observacoes.Length, 15))
+                                        if (item.Observacoes.Count() > 15)
+                                        {
+                                            <text>... </text> <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="@item.Observacoes"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                                         }
                                     }
                                     else
                                     {
-                                        <span class="label label-info" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Começa em @{var ii = item.DataInicio - DateTime.Today;} <text>@ii.Days</text> dia(s).">Aprovado</span>
+                                        @Html.Label("–", new { @class = "empty-notes" });
                                     }
                                 }
-                                else
-                                {
-                                    <span class="label label-danger"tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Rejeitado por</b> @item.UserNameAprovacao<br><br><b>Reason: </b>@item.RazaoAprovacao">Rejeitado</span>
+                            </td>
+                            <td>
+                                @{
+                                    if (item.Aprovado)
+                                    {
+                                        if (item.DataInicio.Date <= DateTime.Today.Date)
+                                        {
+                                            if (item.DataFim.Date < DateTime.Today.Date)
+                                            {
+                                                <span class="label label-default" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Acabou à @{var ii = DateTime.Today - item.DataFim;} <text>@ii.Days</text> dia(s).">Finalizado</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-primary" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>@{var ii = item.DataFim - DateTime.Today;} <text>@ii.Days</text> dia(s) restante(s).">Em Progresso</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-info" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Começa em @{var ii = item.DataInicio - DateTime.Today;} <text>@ii.Days</text> dia(s).">Aprovado</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger"tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Rejeitado por</b> @item.UserNameAprovacao<br><br><b>Reason: </b>@item.RazaoAprovacao">Rejeitado</span>
+                                    }
                                 }
-                            }
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 @section scripts{
@@ -376,6 +415,7 @@
             }
         })
 
+
         $('#actionPendingTable').DataTable({
             "aoColumns": [
                 null,
@@ -404,7 +444,9 @@
                 }
             }
         })
+
         $('#previousTable').DataTable({
+            "dom": '<"top"<"toolbar">f>rtpil',
             "aoColumns": [
                 null,
                 null,
@@ -430,9 +472,62 @@
                     "sNext":     "Seguinte",
                     "sLast":     "Último"
                 }
-            }
-        });
+            },
+            initComplete: function () {
+                $("div.toolbar").html('<form class="form-inline" style=""> <div class="col-sm-2"> <div class="form-group"> <label class="sr-only" for="searchID">ID</label> <div class="input-group"> <div class="input-group-addon">ID</div><select class="form-control" id="searchID"> <option value=""></option> </select> </div></div></div><div class="col-sm-2"> <div class="form-group"> <label class="sr-only" for="searchID">Utilizador</label> <div class="input-group"> <div class="input-group-addon">Utilizador</div><select class="form-control" id="searchUser"> <option value=""></option> </select> </div></div></div><div class="col-sm-2"> <div class="form-group"> <label class="sr-only" for="searchID">Razão</label> <div class="input-group"> <div class="input-group-addon">Razão</div><select class="form-control" id="searchReason"> <option value=""></option> </select> </div></div></div></form>');
+                $("#previousTable_paginate").addClass("col-sm-4");
+                this.api().columns([0]).every(function () {
+                    var column = this;
+                    var select = $("#searchID")
+                        .on("change", function () {
+                            var val = $.fn.DataTable.util.escapeRegex(
+                                $(this).val()
+                            );
 
+                            column
+                                .search(val ? "^" + val + "$" : "", true, false)
+                                .draw();
+                        });
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="'+d+'">'+d+'</option>')
+                    });
+                })
+                this.api().columns([1]).every(function () {
+                    var column = this;
+                    var select = $("#searchUser")
+                        .on("change", function () {
+                            var val = $.fn.DataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? "^" + val + "$" : "", true, false)
+                                .draw();
+                        });
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="'+d+'">'+d+'</option>')
+                    });
+                })
+                this.api().columns([4]).every(function () {
+                    var column = this;
+                    var select = $("#searchReason")
+                        .on("change", function () {
+                            var val = $.fn.DataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? "^" + val + "$" : "", true, false)
+                                .draw();
+                        });
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="'+d+'">'+d+'</option>')
+                    });
+                })
+            }
+
+        });
+            
     })
 </script>
 }
