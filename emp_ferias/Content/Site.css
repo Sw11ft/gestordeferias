@@ -14,6 +14,21 @@
 */
 header > .container {
     width:70%;
+    padding-right: 0;
+
+}
+@media (max-width: 480px) {
+    header > .container {
+        width: 90%;
+    }
+    .jumbotron > .container-fluid > .body-content {
+        width: 90%;
+    }
+    .content {
+        width: 90%;
+    }
+}
+
 }
 #logoutForm {
     margin-right: 0;
@@ -73,6 +88,7 @@ body {
 }
 .jumbotron {
     background-color: #6f5499;
+    background-image: linear-gradient(170deg,#271b38,#563d7c,#7952b3);
     color: white;
     border-radius: 0 0 !important;
     padding: 0 0 0 0;
@@ -90,9 +106,6 @@ body {
     font-weight: 100;
     text-align: center;
     font-size: 3em;
-}
-.jumbotron container-fluid {
-    width: 70%;
 }
 
 .btn-round-success-bordered {
@@ -143,7 +156,7 @@ th, td {
     text-align: center;
     float: right;
     font-size: 1em;
-    width: 140px;
+    width: 115px;
 }
 #overview-button {
     width: 115px;
@@ -211,6 +224,22 @@ th, td {
     font-weight: bold;
     font-family: 'Roboto',  sans-serif;
 } 
+.btn-round-default {
+    border-radius: 30px 30px 30px 30px !important;
+    width: 90px;
+    height: 40px;
+    text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-color: #6f5499;
+    padding: 5px 9px 5px 9px;
+    height: 35px !important;
+    outline: none !important;
+    background: none;
+    color: #6f5499;
+    font-weight: bold;
+    font-family: 'Roboto',  sans-serif;
+}
 .fc-button {
     border-radius: 30px 30px 30px 30px !important;
     width: 90px;
@@ -246,9 +275,12 @@ th, td {
 .form-control {
     resize: none;
 }
-#rejectTextBox {
+#rejectTextBox, #charactersTextBox {
     border-radius: 4px 4px 0px 0px;
     border-bottom: none;
+}
+#charactersPanel {
+    margin-bottom: 0;
 }
 #rejectButton {
     border-color: red;
@@ -392,4 +424,11 @@ th, td {
 }
 .login-btn :hover,.login-btn:active,.login-btn:focus {
     background: rgba(111, 84, 153, 0.74) !important;
+}
+#change-password-flash {
+    padding: 0 8px 0 8px;
+}
+.expired-info {
+    padding: 5px 5px 5px 5px;
+    width: 90px;
 }

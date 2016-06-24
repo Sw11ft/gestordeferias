@@ -1,0 +1,26 @@
+//
+// BOOTSTRAP EXTENSION: Dropmenu
+// This module extends dropdown module with rich structure, menu positioning and more
+
+// @author: Martin Staněk (https://github.com/icoach)
+// @require: dropdown
+// @bootstrap: 3.2
+// -------------------------------
+
+@libPath: '../../vendor';
+
+// Core variables and mixins
+@import "@{libPath}/bootstrap/less/variables.less";
+@import "@{libPath}/bootstrap/less/mixins.less";
+
+// MODULE DEFINITION
+// -------------------
+@import 'modules/dropmenu-variables';
+@import 'modules/dropmenu-structure';
+@import 'modules/dropmenu-positioning';
+@import 'modules/dropmenu-item';
+@import 'modules/dropmenu-inverse';
+
+// MODULE DEPENDENCIES
+// -------------------
+@import 'modules/table-dropmenu';

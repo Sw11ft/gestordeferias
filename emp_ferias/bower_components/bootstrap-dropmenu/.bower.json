@@ -1,0 +1,36 @@
+{
+  "name": "bootstrap-dropmenu",
+  "description": "Group of extensions for Bootstrap dropdown component",
+  "version": "0.9.0",
+  "keywords": [
+    "dropdown",
+    "menu",
+    "bootstrap",
+    "front-end"
+  ],
+  "main": [
+    "./dist/stylesheets/bootstrap-dropmenu.css"
+  ],
+  "ignore": [
+    "log",
+    "docs",
+    "grunt",
+    ".editorconfig",
+    ".gitignore"
+  ],
+  "dependencies": {
+    "jquery": "~2.0.0",
+    "bootstrap": "~3.3.0"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/skywalkapps/bootstrap-dropmenu",
+  "_release": "0.9.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.9.0",
+    "commit": "02835101cfc58704cbf4b0844dd8ac019efa8bf9"
+  },
+  "_source": "https://github.com/skywalkapps/bootstrap-dropmenu.git",
+  "_target": "~0.9.0",
+  "_originalSource": "bootstrap-dropmenu"
+}

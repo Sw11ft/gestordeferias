@@ -28,11 +28,11 @@ namespace emp_ferias.Controllers
                 MappedViewModel.DataInicio = i.DataInicio;
                 MappedViewModel.DataFim = i.DataFim;
                 MappedViewModel.Motivo = i.Motivo;
-                MappedViewModel.Aprovado = i.Aprovado;
-                if (i.UserAprovacao != null)
+                MappedViewModel.Status = i.Status;
+                if (i.ActionUser != null)
                 {
-                    MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
-                    MappedViewModel.UserNameAprovacao = i.UserAprovacao.UserName;
+                    MappedViewModel.RazaoRejeicao = i.RazaoRejeicao;
+                    MappedViewModel.ActionUserName = i.ActionUser.UserName;
                 }
                 MappedViewModels.Add(MappedViewModel);
             }
@@ -50,31 +50,33 @@ namespace emp_ferias.Controllers
             List<Events> EventList = new List<Events>();
             foreach (var m in Marcacoes)
             {
-                if ((m.UserAprovacao != null && m.UserIdAprovacao != null) && m.Aprovado)
+                if (m.DataFim >= start && m.DataInicio <= end)
                 {
-                    if (m.DataFim >= start && m.DataInicio <= end)
+                    Events newEvent = new Events
                     {
-                        Events newEvent = new Events
-                        {
-                            id = m.Id.ToString(),
-                            title = "#" + m.Id + ": " + m.Motivo,
-                            start = m.DataInicio.ToString("s"),
-                            end = m.DataFim.AddDays(1).ToString("s"),
-                            allDay = true,
+                        id = m.Id.ToString(),
+                        title = "#" + m.Id + ": " + m.Motivo,
+                        start = m.DataInicio.ToString("s"),
+                        end = m.DataFim.AddDays(1).ToString("s"),
+                        allDay = true,
 
-                        };
-                        if (m.DataFim >= DateTime.Today && m.DataInicio <= DateTime.Today)
-                        {
-                            newEvent.color = "#337ab7";
-                            newEvent.textColor = "#ffffff";
-                        }
-                        else
-                        {
-                            newEvent.color = "#5bc0de";
-                            newEvent.textColor = "#ffffff";
-                        }
-                        EventList.Add(newEvent);
+                    };
+                    if (m.DataFim < DateTime.Today)
+                    {
+                        newEvent.color = "#777";
+                        newEvent.textColor = "#ffffff";
                     }
+                    else if (m.DataFim >= DateTime.Today && m.DataInicio <= DateTime.Today)
+                    {
+                        newEvent.color = "#337ab7";
+                        newEvent.textColor = "#ffffff";
+                    }
+                    else
+                    {
+                        newEvent.color = "#5bc0de";
+                        newEvent.textColor = "#ffffff";
+                    }
+                    EventList.Add(newEvent);
                 }
             }
             return EventList;

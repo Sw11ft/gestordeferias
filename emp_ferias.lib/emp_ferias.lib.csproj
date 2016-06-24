@@ -61,6 +61,10 @@
     <Compile Include="Migrations\201606091529309_AddUserName.Designer.cs">
       <DependentUpon>201606091529309_AddUserName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606240901089_overhaul.cs" />
+    <Compile Include="Migrations\201606240901089_overhaul.Designer.cs">
+      <DependentUpon>201606240901089_overhaul.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ServiceMarcacoes.cs" />
@@ -75,6 +79,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606091529309_AddUserName.resx">
       <DependentUpon>201606091529309_AddUserName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606240901089_overhaul.resx">
+      <DependentUpon>201606240901089_overhaul.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

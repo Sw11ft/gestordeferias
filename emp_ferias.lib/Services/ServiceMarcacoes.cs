@@ -26,18 +26,16 @@ namespace emp_ferias.lib.Services
 
             if (m.DataFim < m.DataInicio)
             {
-                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "The end date must be after the start date."});
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de fim tem de ser depois da data de início."});
             }
             if (m.DataInicio <= DateTime.Now)
             {
-                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "The start date must not be before or in the present day." });
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de início não pode ser antes ou no dia de hoje." });
             }
             if (!(Enum.IsDefined(typeof(Motivo),m.Motivo)))
             {
-                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Invalid reason." });
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Motivo inválido." });
             }
-
-
 
             foreach (var i in ExecutionResult)
                 if (i.MessageType == MessageType.Error)
@@ -45,7 +43,7 @@ namespace emp_ferias.lib.Services
 
             m.DataPedido = DateTime.Now;
             m.UserId = _serviceLogin.GetUserID();
-            m.Aprovado = false;
+            m.Status = Status.Pendente;
 
             db.Marcacoes.Add(m);
             db.SaveChanges();
@@ -60,7 +58,7 @@ namespace emp_ferias.lib.Services
 
         public List<Marcacao> Get()
         {
-            return db.Marcacoes.AsNoTracking().Include(x=> x.UserAprovacao).Include(x => x.User).ToList();
+            return db.Marcacoes.AsNoTracking().Include(x=> x.ActionUser).Include(x => x.User).ToList();
         }
 
         public List<ExecutionResult> Approve(int id)
@@ -71,13 +69,13 @@ namespace emp_ferias.lib.Services
 
             if (Approving != null)
             {
-                Approving.Aprovado = true;
-                Approving.UserIdAprovacao = _serviceLogin.GetUserID();
+                Approving.Status = Status.Aprovado;
+                Approving.ActionUserId = _serviceLogin.GetUserID();
                 db.SaveChanges();
             }
             else
             {
-                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Cannot find the database entry." });
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Marcação não encontrada." });
             }
 
             return (ExecutionResult);
@@ -92,17 +90,17 @@ namespace emp_ferias.lib.Services
 
             if (Rejecting != null)
             {
-                m.RazaoAprovacao = m.RazaoAprovacao.Trim();
-                if (string.IsNullOrWhiteSpace(m.RazaoAprovacao) || m.RazaoAprovacao.Length > 100)
-                    ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "The message may not be null, white spaces, or contain more than 100 characters." });
+                m.RazaoRejeicao = m.RazaoRejeicao.Trim();
+                if (string.IsNullOrWhiteSpace(m.RazaoRejeicao) || m.RazaoRejeicao.Length > 100)
+                    ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A razão não deve ser nula, espaços em branco ou ter mais de 100 caracteres." });
 
                 foreach (var i in ExecutionResult)
                     if (i.MessageType == MessageType.Error)
                         return (ExecutionResult);
 
-                Rejecting.Aprovado = false;
-                Rejecting.RazaoAprovacao = m.RazaoAprovacao;
-                Rejecting.UserIdAprovacao = _serviceLogin.GetUserID();
+                Rejecting.Status = Status.Rejeitado;
+                Rejecting.RazaoRejeicao = m.RazaoRejeicao;
+                Rejecting.ActionUserId = _serviceLogin.GetUserID();
                 db.SaveChanges();
             }
             else
@@ -115,63 +113,39 @@ namespace emp_ferias.lib.Services
 
         public List<Marcacao> GetHome(string SenderId)
         {
-            return db.Marcacoes.AsNoTracking().Include(x => x.UserAprovacao).Include(x => x.User).Where(x => x.User.Id == SenderId && x.DataFim >= DateTime.Today.Date && x.UserIdAprovacao != null && x.Aprovado == true).ToList();
+            return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Include(x => x.User).Where(x => x.User.Id == SenderId && x.Status != Status.Rejeitado && x.Status != Status.Expirado).ToList();
         }
 
         public List<Marcacao> GetUserMarcacoes(string SenderId)
         {
-            return db.Marcacoes.AsNoTracking().Include(x => x.UserAprovacao).Include(x => x.User).Where(x => x.User.Id == SenderId).ToList();
+            return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Include(x => x.User).Where(x => x.User.Id == SenderId).ToList();
         }
 
-        public Array GetUserRazaoMarcacao(string SenderId, int DataSet, bool IncludeRejected)
+        public int[] GetUserRazaoMarcacao(string SenderId, DataSet DataSet, bool IncludeRejected)
         {
             var Ferias = 0;
             var Justificada = 0;
             var Injustificada = 0;
 
-            if (DataSet == 1 && !IncludeRejected)
+            if (DataSet == DataSet.PorMarcacao && !IncludeRejected)
             {
-                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null && x.Aprovado == true).ToList();
-
-                foreach (var i in Marcacoes)
-                {
-                    if (i.Motivo == Motivo.Ferias)
-                    {
-                        Ferias++;
-                    }
-                    else if (i.Motivo == Motivo.Justificada)
-                    {
-                        Justificada++;
-                    }
-                    else
-                    {
-                        Injustificada++;
-                    }
-                }
+                return (from m in db.Marcacoes
+                            where m.User.Id == SenderId
+                                && m.Status != Status.Rejeitado
+                                && m.Status != Status.Expirado
+                            group m by m.Motivo into grp
+                            select grp.Count()).ToArray();
             }
-            else if (DataSet == 1 && IncludeRejected)
+            else if (DataSet == DataSet.PorMarcacao && IncludeRejected)
             {
-                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null).ToList();
-
-                foreach (var i in Marcacoes)
-                {
-                    if (i.Motivo == Motivo.Ferias)
-                    {
-                        Ferias++;
-                    }
-                    else if (i.Motivo == Motivo.Justificada)
-                    {
-                        Justificada++;
-                    }
-                    else
-                    {
-                        Injustificada++;
-                    }
-                }
+                return (from m in db.Marcacoes
+                        where m.User.Id == SenderId
+                        group m by m.Motivo into grp
+                        select grp.Count()).ToArray();
             }
-            else if (DataSet == 2 && !IncludeRejected)
+            else if (DataSet == DataSet.PorTotalDeDias && !IncludeRejected)
             {
-                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null && x.Aprovado == true).ToList();
+                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.ActionUser != null && x.Status != Status.Rejeitado).ToList();
 
                 foreach (var i in Marcacoes)
                 {
@@ -191,7 +165,7 @@ namespace emp_ferias.lib.Services
             }
             else
             {
-                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.UserAprovacao != null == true).ToList();
+                List<Marcacao> Marcacoes = db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.User.Id == SenderId && x.ActionUser != null == true).ToList();
 
                 foreach (var i in Marcacoes)
                 {
@@ -212,5 +186,36 @@ namespace emp_ferias.lib.Services
             
             return new[] { Ferias, Justificada, Injustificada };
         } 
+
+        public Marcacao FindById(int MarcId)
+        {
+            return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Include(x => x.User).Where(x => x.Id == MarcId).FirstOrDefault();
+        }
+
+        public void RefreshStatus()
+        {
+            List<Marcacao> Marcacoes = db.Marcacoes.Where(x => x.Status == Status.Aprovado
+                                                                || x.Status == Status.EmProgresso
+                                                                || x.Status == Status.Pendente).ToList();
+            foreach (var i in Marcacoes)
+            {
+                if (i.Status == Status.Pendente)
+                {
+                    if (i.DataInicio <= DateTime.Today)
+                        i.Status = Status.Expirado;
+                }
+                else if (i.Status == Status.EmProgresso)
+                {
+                    if (i.DataFim < DateTime.Today.Date)
+                        i.Status = Status.Finalizado;
+                }
+                else
+                {
+                    if (i.DataInicio <= DateTime.Today)
+                        i.Status = Status.EmProgresso;
+                }
+                db.SaveChanges();
+            }
+        }
     }
 }

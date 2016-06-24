@@ -15,9 +15,9 @@ namespace emp_ferias.Models
         public DateTime DataInicio { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataFim { get; set; }
-        public bool Aprovado { get; set; }
-        public string UserNameAprovacao { get; set; }
-        public string RazaoAprovacao { get; set; }
         public Motivo Motivo { get; set; }
+        public Status Status { get; set; }
+        public string ActionUserName { get; set; }
+        public string RazaoRejeicao { get; set; }
     }
 }

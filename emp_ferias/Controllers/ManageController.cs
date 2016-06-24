@@ -73,11 +73,11 @@ namespace emp_ferias.Controllers
                 MappedMarcacao.DataInicio = i.DataInicio;
                 MappedMarcacao.DataFim = i.DataFim;
                 MappedMarcacao.Motivo = i.Motivo;
-                MappedMarcacao.Aprovado = i.Aprovado;
-                if (i.UserAprovacao != null)
+                MappedMarcacao.Status = i.Status;
+                if (i.ActionUser != null)
                 {
-                    MappedMarcacao.RazaoAprovacao = i.RazaoAprovacao;
-                    MappedMarcacao.UserNameAprovacao = i.UserAprovacao.UserName;
+                    MappedMarcacao.RazaoRejeicao = i.RazaoRejeicao;
+                    MappedMarcacao.ActionUserName = i.ActionUser.UserName;
                 }
                 MappedMarcacoes.Add(MappedMarcacao);
             }
@@ -104,7 +104,7 @@ namespace emp_ferias.Controllers
         }
 
         // GET: /Manage/ChartData
-        public ActionResult ChartData(int DataSet, bool IncludeRejected)
+        public ActionResult ChartData(DataSet DataSet, bool IncludeRejected)
         {
             var RazaoMarcacoes = serviceMarcacoes.GetUserRazaoMarcacao(User.Identity.GetUserId(), DataSet, IncludeRejected);
             return Json(RazaoMarcacoes,JsonRequestBehavior.AllowGet);
@@ -123,10 +123,19 @@ namespace emp_ferias.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (model.NewPassword != model.ConfirmPassword)
             {
+                this.Flash("error", "A nova password e a confirmação não correspondem.");
                 return View(model);
             }
+
+            var VerifyUser = await UserManager.FindAsync(User.Identity.Name, model.OldPassword);
+            if (VerifyUser == null)
+            {
+                this.Flash("error", "Password atual incorreta.");
+                return View(model);
+            } 
+
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
@@ -137,7 +146,7 @@ namespace emp_ferias.Controllers
                 }
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
-            AddErrors(result);
+            this.Flash("error", "Ocorreu um erro.");
             return View(model);
         }
 #region Helpers

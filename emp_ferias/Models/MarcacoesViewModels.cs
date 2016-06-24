@@ -15,7 +15,7 @@ namespace emp_ferias.Models
     {
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
-        public string Observacoes { get; set; }
+        public string Notas { get; set; }
         public Motivo Motivo { get; set; }
     }
 
@@ -27,17 +27,24 @@ namespace emp_ferias.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataInicio { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime DataFim { get; set; } 
-        public string Observacoes { get; set; } 
-        public bool Aprovado { get; set; } 
-        public string UserNameAprovacao { get; set; } 
-        public string RazaoAprovacao { get; set; }
+        public DateTime DataFim { get; set; }
         public Motivo Motivo { get; set; }
+        public string Notas { get; set; } 
+        public Status Status { get; set; } 
+        public string ActionUserName { get; set; } 
+        public string RazaoRejeicao { get; set; }
+    }
+    
+    public class ApproveMarcacaoViewModel
+    {
+        public int marcId { get; set; }
+        public bool sendEmail { get; set; }
     }
 
     public class RejectMarcacaoViewModel
     {
-        public int marcId { get; set; }
+        public int marcRejectId { get; set; }
+        public bool sendEmail { get; set; }
         public string Razao { get; set; }
     }
 

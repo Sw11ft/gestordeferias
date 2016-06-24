@@ -1,5 +1,6 @@
 ﻿@using MvcFlashMessages
 @using System.Globalization
+@using emp_ferias.lib.Classes
 @model emp_ferias.Models.IndexViewModel
 @{
     ViewBag.Title = "Conta";
@@ -18,14 +19,14 @@
         <li class="active">Conta</li>
     </ol>
     @Html.RenderFlash()
-    <div class="col-sm-12" style="padding: 0">
+    <div class="col-md-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
                 Marcações
             </div>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-md-6">
         <form class="form-inline">
             <label>Marcações efetuadas &nbsp;</label>
             <select class="form-control" id="DataSet">
@@ -33,12 +34,12 @@
                 <option value="2">por total de dias</option>
             </select>
             <input type="checkbox" class="chkbox" id="IncludeRejected"/>
-            <label style="font-weight: 400;">Incluir rejeitadas</label>
+            <label style="font-weight: 400;">Incluir rejeitadas e expiradas</label>
         </form>
         <div id="canvas-wrapper" style="max-width:100%; height: auto; margin-top: 10px;">
             <canvas id="doughnut" style="max-width:100%; height:auto"></canvas>
         </div>
-        <div class="col-sm-12" id="progress-wrapper">
+        <div class="col-md-12" id="progress-wrapper">
             <label>Taxa de Aceitação</label>
             <div class="progress" id="accBar">
                 @{
@@ -47,7 +48,7 @@
                     foreach (var i in Model.Marcacoes)
                     {
                         total++;
-                        if (i.Aprovado && i.UserNameAprovacao != null)
+                        if (i.Status != Status.Rejeitado && i.Status != Status.Expirado)
                         {
                             accepted++;
                         }
@@ -65,7 +66,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-md-6">
         <table class="table table-hover marcacoes-table" id="table1">
             <thead>
                 <tr>
@@ -113,30 +114,13 @@
                             @Html.DisplayFor(modelItem => item.Motivo)
                         </td>
                         <td>
-                            @{
-                                if (item.Aprovado)
-                                {
-                                    if (item.DataInicio.Date <= DateTime.Today.Date)
-                                    {
-                                        if (item.DataFim.Date < DateTime.Today.Date)
-                                        {
-                                            <span class="label label-default" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Acabou à @{var ii = DateTime.Today - item.DataFim;} <text>@ii.Days</text> dia(s).">Finalizado</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="label label-primary" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>@{var ii = item.DataFim - DateTime.Today;} <text>@ii.Days</text> dia(s) restante(s).">Em Progresso</span>
-                                            }
-                                        }
-                                    else
-                                    {
-                                        <span class="label label-info" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Aprovado por</b> @item.UserNameAprovacao<br><br>Começa em @{var ii = item.DataInicio - DateTime.Today;} <text>@ii.Days</text> dia(s).">Aprovado</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="label label-danger" tabindex="0" data-toggle="popover" data-placement="top" data-trigger="hover" data-html="true" data-content="<b>Rejeitado por</b> @item.UserNameAprovacao<br><br><b>Reason: </b>@item.RazaoAprovacao">Rejeitado</span>
-                                }
-                            }
+                            <span class="label @(item.Status == Status.EmProgresso ? "label-success"
+                                                   : item.Status == Status.Aprovado ? "label-primary"
+                                                   : item.Status == Status.Expirado ? "label-default"
+                                                   : item.Status == Status.Finalizado ? "label-info"
+                                                   : item.Status == Status.Rejeitado ? "label-danger"
+                                                   : "label-warning"
+                                                   )">@(item.Status == Status.EmProgresso ? Html.Label("Em Progresso") : Html.DisplayFor(x => item.Status))</span>
                         </td>
                     </tr>
                 }
@@ -149,7 +133,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col-sm-12" style="padding: 0">
+    <div class="col-md-12" style="padding: 0">
         <div class="panel panel-default">
             <div class="panel-body">
                 Dados
@@ -180,21 +164,21 @@
 </div>
 
 @section scripts {
-    <script src="~/bower_components/Chart.js/Chart.js"></script>
+    <script src="~/bower_components/Chart.js/dist/Chart.js"></script>
     <script>
         $(document).ready(function () {
             var ctx = document.getElementById("doughnut");
 
-            var SelectedDataSet = 1;
+            var SelectedDataSet = 0;
             var IncludeRejected = false;
             RefreshChart();
 
             $("#DataSet").change(function() {
                 if ($('#DataSet option:selected').val() == "1") {
-                    SelectedDataSet = 1;
+                    SelectedDataSet = 0;
                 }
                 else {
-                    SelectedDataSet = 2;
+                    SelectedDataSet = 1;
                 }
                 RefreshChart();
             });

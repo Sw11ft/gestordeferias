@@ -1,0 +1,21 @@
+//
+// EXTENSION: Dropmenu container inverse colors
+// This module extends module dropmenu-structure to display inversed variant of the container
+
+// @author: Martin Staněk (https://github.com/skywalkapps)
+// @require: dropmenu-structure, dropmenu-inverse
+// --------------------------------------------------
+
+// Dropdown using container
+.dropdown-inverse .dropdown-container {
+  background-color: @dropdown-inverse-bg;
+  border: 1px solid @dropdown-inverse-border;
+  color: @dropdown-inverse-text-color;
+  
+  > .dropdown-toolbar,
+  > .dropdown-footer {
+  	background-color: transparent;
+    border-color: @dropdown-inverse-divider-bg;
+  }
+
+}

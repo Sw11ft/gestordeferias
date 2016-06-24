@@ -80,7 +80,7 @@ namespace emp_ferias.Controllers
 
             if (user != null)
             {
-                await SignInManager.SignInAsync(user, true, model.RememberMe);
+                await SignInManager.SignInAsync(user, false, false);
                 return RedirectToLocal(returnUrl);
             }
             else

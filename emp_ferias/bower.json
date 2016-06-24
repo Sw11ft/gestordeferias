@@ -16,6 +16,11 @@
     "datatables.net": "*",
     "datatables.net-bs": "*",
     "fullcalendar": "*",
-    "Chart.js": "*" 
+    "Chart.js": "*",
+    "bootstrap-dropmenu": "*",
+    "bootstrap-notifications": "*"
+  },
+  "resolutions": {
+    "jquery": ">= 1.7.2"
   }
 }

@@ -22,10 +22,10 @@ namespace emp_ferias.Models
         public DateTime DataInicio { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataFim { get; set; }
-        public bool Aprovado { get; set; }
-        public string UserNameAprovacao { get; set; }
-        public string RazaoAprovacao { get; set; }
         public Motivo Motivo { get; set; }
+        public Status Status { get; set; }
+        public string ActionUserName { get; set; }
+        public string RazaoRejeicao { get; set; }
     }
 
     public class ManageLoginsViewModel
@@ -47,14 +47,13 @@ namespace emp_ferias.Models
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
+        [StringLength(100, MinimumLength = 3)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Password nova")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Confirmar password nova")]
         public string ConfirmPassword { get; set; }
     }
 }

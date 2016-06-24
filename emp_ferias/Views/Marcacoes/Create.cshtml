@@ -1,12 +1,13 @@
-﻿@model emp_ferias.Models.CreateMarcacaoViewModel
+﻿@using MvcFlashMessages
+@model emp_ferias.Models.CreateMarcacaoViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Criar Marcação > Marcações";
 }
 
 <div class="jumbotron">
-    <div class="container-fluid body-content" style="width: 70%">
-        <h1 id="icon"><i class="fa fa-bookmark-o" aria-hidden="true"></i><i class="fa fa-plus" aria-hidden="true" style="font-size: 0.3em;"></i>&nbsp;Criar Marcação</h1>
+    <div class="container-fluid body-content">
+        <h1 id="icon">Criar Marcação</h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
@@ -24,12 +25,11 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-            <div class="form-group form-inline">
-                @Html.Label("De", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+        <div style="width: 50%; margin: 0 auto;">@Html.RenderFlash()</div>
+        <div class="form-horizontal col-lg-offset-3">
+            <div class="form-group col-lg-offset-3">
+                @Html.Label("De", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
                     <div class='input-group date divs_Datas'>
                         @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control" } })
                         <span class="input-group-addon">
@@ -41,9 +41,9 @@
                 </div>
             </div>
 
-            <div class="form-group form-inline">
-                @Html.Label("Até:", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+            <div class="form-group col-lg-offset-3">
+                @Html.Label("Até", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
                     <div class='input-group date divs_Datas'>
                         @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control" } })
                         <span class="input-group-addon">
@@ -56,30 +56,48 @@
             </div>
 
             <div class="form-group">
-                @Html.Label("Observações", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextAreaFor(model => model.Observacoes, new { @class = "form-control", @rows = "3" })
-                    @Html.ValidationMessageFor(model => model.Observacoes, "", new { @class = "text-danger" })
+                @Html.Label("Notas", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
+                    @Html.TextAreaFor(model => model.Notas, new { @class = "form-control", @id="charactersTextBox", @rows = "5" })
+                    <div class="panel panel-default" id="charactersPanel">
+                        <div class="panel-body" style="text-align: center">
+                            <b>Caracteres restantes: </b><span id="characters">100</span>
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Notas, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Motivo, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+                @Html.Label("Notas", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
                     @Html.EnumDropDownListFor(model => model.Motivo, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Motivo, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                <div class="col-lg-offset-2 col-lg-10">
+                    <input id="submit-btn" type="submit" value="Criar" class="btn btn-round-neutral" />
                 </div>
             </div>
         </div>
     }
 
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
 </div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#charactersTextBox').on('change keyup paste click', function () {
+                $('#characters').text(100 - $('#charactersTextBox').val().trim().length);
+
+                 if ($('#charactersTextBox').val().trim().length > 100) {
+                    $('#submit-btn').prop('disabled', true);
+                }
+                else {
+                    $('#submit-btn').prop('disabled', false);
+                }
+            })
+        })
+    </script>    
+}

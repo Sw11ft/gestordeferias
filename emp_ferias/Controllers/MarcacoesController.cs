@@ -12,6 +12,10 @@ using emp_ferias.lib.DAL;
 using emp_ferias.Models;
 using emp_ferias.lib.Services;
 using emp_ferias.Services;
+using MvcFlashMessages;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using System.Net.Mail;
 
 namespace emp_ferias.Controllers
 {
@@ -21,6 +25,20 @@ namespace emp_ferias.Controllers
         ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes(new ServiceLogin());
 
         private EmpFeriasDbContext db = new EmpFeriasDbContext();
+
+        private ApplicationUserManager _userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         private static List<IndexMarcacaoViewModel> MapIndexMarcacaoViewModel(List<Marcacao> Marcacoes)
         {
@@ -34,13 +52,13 @@ namespace emp_ferias.Controllers
                 MappedViewModel.DataPedido = i.DataPedido;
                 MappedViewModel.DataInicio = i.DataInicio;
                 MappedViewModel.DataFim = i.DataFim;
-                MappedViewModel.Observacoes = i.Observacoes;
+                MappedViewModel.Notas = i.Notas;
                 MappedViewModel.Motivo = i.Motivo;
-                MappedViewModel.Aprovado = i.Aprovado;
-                if (i.UserAprovacao != null)
+                MappedViewModel.Status = i.Status;
+                if (i.ActionUser != null)
                 {
-                    MappedViewModel.RazaoAprovacao = i.RazaoAprovacao;
-                    MappedViewModel.UserNameAprovacao = i.UserAprovacao.UserName;
+                    MappedViewModel.RazaoRejeicao = i.RazaoRejeicao;
+                    MappedViewModel.ActionUserName = i.ActionUser.UserName;
                 }
                 MappedViewModels.Add(MappedViewModel);
             }
@@ -61,19 +79,24 @@ namespace emp_ferias.Controllers
             return View(MapIndexMarcacaoViewModel(serviceMarcacoes.Get()));
         }
 
+        public ActionResult Refresh()
+        {
+            serviceMarcacoes.RefreshStatus();
+            return RedirectToAction("Index");
+        }
 
         private static List<Events> MapMarcacoesCalendar(List<Marcacao> Marcacoes, DateTime start, DateTime end)
         {
             List<Events> EventList = new List<Events>();
             foreach (var m in Marcacoes)
             {
-                if ((m.UserAprovacao != null && m.UserIdAprovacao != null) && m.Aprovado) { 
+                if (m.Status != Status.Rejeitado && m.Status != Status.Expirado && m.Status != Status.Pendente) { 
                     if (m.DataFim >= start && m.DataInicio <= end)
                     {
                         Events newEvent = new Events
                         {
                             id = m.Id.ToString(),
-                            title = "#" + m.Id + ": " + m.User.UserName + ", " + m.Motivo,
+                            title = "#" + m.Id + " - " + m.User.UserName + ", " + m.Motivo,
                             start = m.DataInicio.ToString("s"),
                             end = m.DataFim.AddDays(1).ToString("s"),
                             allDay = true,
@@ -140,7 +163,7 @@ namespace emp_ferias.Controllers
                 DataInicio = UserInput.DataInicio,
                 DataFim = UserInput.DataFim,
                 Motivo = UserInput.Motivo,
-                Observacoes = UserInput.Observacoes
+                Notas = UserInput.Notas
             };
         }
 
@@ -150,12 +173,15 @@ namespace emp_ferias.Controllers
         public ActionResult Create(CreateMarcacaoViewModel viewModel)
         {
             var ExecutionResult = serviceMarcacoes.Create(MapViewModel(viewModel));
-
+            bool valid = true;
             foreach (var i in ExecutionResult)
                 if (i.MessageType == MessageType.Error)
-                    ModelState.AddModelError("", i.Message);
+                {
+                    this.Flash("error", i.Message);
+                    valid = false;
+                }
 
-            if (ModelState.IsValid)
+            if (valid)
                 return RedirectToAction("Index");
             else 
                 return View(viewModel);
@@ -165,39 +191,111 @@ namespace emp_ferias.Controllers
         //POST: Marcacoes/Approve
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Approve(int id)
+        public async Task<ActionResult> Approve(ApproveMarcacaoViewModel ApprInfo)
         {
-            var ExecutionResult = serviceMarcacoes.Approve(id);
-
+            var ExecutionResult = serviceMarcacoes.Approve(ApprInfo.marcId);
+            bool ExecutionValid = true;
             foreach (var i in ExecutionResult)
+            {
                 if (i.MessageType == MessageType.Error)
-                    ModelState.AddModelError("", i.Message);
+                {
+                    this.Flash("error", i.Message);
+                    ExecutionValid = false;
+                }
+            }
+            
+            if (!ExecutionValid)
+            {
+                return RedirectToAction("Index");
+            }
+                    
+            if (ApprInfo.sendEmail)
+            {
+                Marcacao Marcacao = serviceMarcacoes.FindById(ApprInfo.marcId);
 
+                if (Marcacao == null)
+                {
+                    this.Flash("error", "Marcação não encontrada.");
+                    return RedirectToAction("Index");
+                }
+
+                var user = UserManager.FindById(Marcacao.UserId);
+
+                var message = new MailMessage();
+                message.From = (new MailAddress("notificacoes@test.com"));
+                message.To.Add(new MailAddress(user.Email));
+                message.Subject = "Marcação #" + ApprInfo.marcId + " aprovada";
+                message.Body = "A sua marcação #" + ApprInfo.marcId + " foi aprovada por " + Marcacao.ActionUser.UserName + ".";
+
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.SendMailAsync(message);
+                    this.Flash("success", "Marcação aprovada e email enviado.");
+                    return RedirectToAction("Index");
+                }
+            }
+
+            this.Flash("Success", "Marcação aprovada.");
             return RedirectToAction("Index");
-
-
         }
 
         private static Marcacao MapRejectViewModel(RejectMarcacaoViewModel RejectionInfo)
         {
             return new Marcacao
             {
-                Id = RejectionInfo.marcId,
-                RazaoAprovacao = RejectionInfo.Razao
+                Id = RejectionInfo.marcRejectId,
+                RazaoRejeicao = RejectionInfo.Razao
             };
         }
 
         //POST: Marcacoes/Reject
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Reject(RejectMarcacaoViewModel RejectionInfo)
-        { 
+        public async Task<ActionResult> Reject(RejectMarcacaoViewModel RejectionInfo)
+        {
             var ExecutionResult = serviceMarcacoes.Reject(MapRejectViewModel(RejectionInfo));
-
+            bool ExecutionValid = true;
             foreach (var i in ExecutionResult)
+            {
                 if (i.MessageType == MessageType.Error)
-                    ModelState.AddModelError("", i.Message);
+                {
+                    this.Flash("error", i.Message);
+                    ExecutionValid = false;
+                }
+            }
 
+            if (!ExecutionValid)
+            {
+                return RedirectToAction("Index");
+            }
+
+            if (RejectionInfo.sendEmail)
+            {
+                Marcacao Marcacao = serviceMarcacoes.FindById(RejectionInfo.marcRejectId);
+
+                if (Marcacao == null)
+                {
+                    this.Flash("error", "Marcação não encontrada.");
+                    return RedirectToAction("Index");
+                }
+
+                var user = UserManager.FindById(Marcacao.UserId);
+
+                var message = new MailMessage();
+                message.From = (new MailAddress("notificacoes@test.com"));
+                message.To.Add(new MailAddress(user.Email));
+                message.Subject = "Marcação #" + RejectionInfo.marcRejectId + " rejeitada";
+                message.Body = "A sua marcação #" + RejectionInfo.marcRejectId + " foi rejeitada por " + Marcacao.ActionUser.UserName + " com a razão '" + RejectionInfo.Razao + "'.";
+
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.SendMailAsync(message);
+                    this.Flash("warning", "Marcação rejeitada e email enviado.");
+                    return RedirectToAction("Index");
+                }
+            }
+
+            this.Flash("warning", "Marcação rejeitada.");
             return RedirectToAction("Index");
         }
 
@@ -215,7 +313,7 @@ namespace emp_ferias.Controllers
                 return HttpNotFound();
             }
             ViewBag.UserId = new SelectList(db.Users, "Id", "Id", marcacao.UserId);
-            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.UserIdAprovacao);
+            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.ActionUser);
             return View(marcacao);
         }
            
@@ -233,7 +331,7 @@ namespace emp_ferias.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.UserId = new SelectList(db.Users, "Id", "Id", marcacao.UserId);
-            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.UserIdAprovacao);
+            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.ActionUserId);
             return View(marcacao);
         }
 
