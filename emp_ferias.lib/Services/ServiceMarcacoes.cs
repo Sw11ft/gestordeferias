@@ -121,6 +121,50 @@ namespace emp_ferias.lib.Services
             return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Include(x => x.User).Where(x => x.User.Id == SenderId).ToList();
         }
 
+        public List<Marcacao> GetUserNotifications(string SenderId)
+        {
+            return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.User.Id == SenderId && !x.UserNotificado && x.Status != Status.Pendente).ToList(); 
+        }
+
+        public List<ExecutionResult> MarkAllAsRead(string SenderId)
+        {
+            List<Marcacao> Marcacoes = db.Marcacoes.Where(x => x.UserId == SenderId && !x.UserNotificado && x.Status != Status.Pendente).ToList();
+
+            List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
+
+            if (Marcacoes.Any())
+            {
+                foreach (var i in Marcacoes)
+                {
+                    i.UserNotificado = true;
+                    db.SaveChanges();
+                }
+            }
+            else
+            {
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Ocorreu um erro." }); 
+            }
+
+            return ExecutionResult;
+        }
+
+        public List<ExecutionResult> MarkAsRead(string SenderId, int MarcId)
+        {
+            Marcacao Marcacao = db.Marcacoes.Where(x => x.UserId == SenderId && !x.UserNotificado && x.Status != Status.Pendente).FirstOrDefault();
+
+            List<ExecutionResult> ExecutionResult = new List<Classes.ExecutionResult>();
+
+            if (Marcacao != null)
+            {
+                Marcacao.UserNotificado = true;
+                db.SaveChanges();
+            }
+            else
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Ocorreu um erro." });
+
+            return ExecutionResult;
+        }
+
         public int[] GetUserRazaoMarcacao(string SenderId, DataSet DataSet, bool IncludeRejected)
         {
             var Ferias = 0;

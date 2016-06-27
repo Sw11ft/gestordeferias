@@ -172,9 +172,11 @@ th, td {
     padding-bottom: 5px;
     text-align: center; 
 }
-.btn-simple {
+.btn-simple, .btn-simple:focus, .btn-simple:active {
     background-color: rgba(0,0,0,.0);
     border: 0;
+    outline: none !important;
+    line
 }
 .btn-round-success {
     border-radius: 30px 30px 30px 30px !important;
@@ -431,4 +433,24 @@ th, td {
 .expired-info {
     padding: 5px 5px 5px 5px;
     width: 90px;
+}
+.dropdown-container {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.media-right {
+    display: table-cell;
+    vertical-align: top;
+    padding-left: 10px;
+    width: 22px;
+}
+.media-body {
+    width: 343px;
+}
+.media-left, .media-right {
+    line-height: 66px;
+}
+.media-right {
+    color: #777;
 }

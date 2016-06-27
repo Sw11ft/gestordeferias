@@ -6,6 +6,7 @@
   "homepage": "",
   "private": true,
   "dependencies": {
+    "jquery": "2.2.4",
     "bootstrap": "*",
     "jquery-validation-unobtrusive": "*",
     "modernizr": "*",
@@ -21,6 +22,6 @@
     "bootstrap-notifications": "*"
   },
   "resolutions": {
-    "jquery": ">= 1.7.2"
+    "jquery": "< 3.0.0"
   }
 }

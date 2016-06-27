@@ -14,8 +14,10 @@
         <link rel="stylesheet" href="~/Content/flash-messages.css" />
         <link rel="stylesheet" href="~/bower_components/bootstrap-dropmenu/dist/stylesheets/bootstrap-dropmenu.min.css" />
         <link rel="stylesheet" href="~/bower_components/bootstrap-notifications/dist/stylesheets/bootstrap-notifications.min.css" />
-        
         <link rel="stylesheet" href="~/Content/Site.css" />
+
+
+
     </head>
     <body>
         <header class="navbar navbar-default navbar-static-top">
@@ -44,7 +46,8 @@
                             </ul>
                         </li>
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav navbar-right" id="navbar-right">
+                        @Html.Action("Index", "NotificationsPartial")
                         @Html.Partial("_LoginPartial")
                     </ul>
                 </div>
@@ -75,7 +78,7 @@
         <script src="~/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
         <script src="~/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
         <script src="~/bower_components/fullcalendar/dist/lang/pt.js"></script>
-
+         
         <script type="text/javascript">
 
             $(function () {
@@ -84,6 +87,41 @@
                     locale: 'pt',
                 });
             });
+
+            $(document).on('click', '.dropdown-container', function (e) {
+                e.stopPropagation();
+            });
+
+            $(".mark-as-read").click(function (e) {
+                console.log("asd");
+                $("#dropdown").remove();
+                $.ajax({
+                    url: '/NotificationsPartial/MarkAsRead?MarcId=' + $(this).attr("id"),
+                    success: function () {
+                        $.ajax({
+                            url: '/NotificationsPartial',
+                            success: function (data) {
+                                $("#navbar-right").prepend(data);
+                                $("#dropdown").addClass("open");
+                            }
+                        });
+                    }
+                })
+            });
+
+
+            function teste(id) {
+
+                
+                $.ajax({
+                    url: '/NotificationsPartial/MarkAsRead?MarcId=' + id,
+                    success: function () {
+                        $("#notification" + id).hide(100);
+                        $("#notification-count").attr("data-count", ($("#notification-count").attr("data-count") - 1));
+                        $("#notification-title").text() = $("#notification-count").attr("data-count");
+                    }
+                })
+            }
 
         </script>
 

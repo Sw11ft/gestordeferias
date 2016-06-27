@@ -1,4 +1,5 @@
 ﻿@using emp_ferias.lib.Classes
+@using MvcFlashMessages
 @model List<emp_ferias.Models.HomeViewModel>
 
 @{
@@ -13,7 +14,7 @@
 
 
 <div class="content" style="width: 70%; height: 100%;">
-
+    @Html.RenderFlash()
     <div class="col-md-8">
         <h2 id="welcome-message">Bem-vindo, @User.Identity.Name! </h2>
         <table class="table table-hover marcacoes-table">
@@ -96,6 +97,6 @@
             });
 
             $('[data-toggle="popover"]').popover();
-        })
+        });
     </script>
 }

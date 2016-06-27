@@ -219,6 +219,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MarcacoesController.cs" />
+    <Compile Include="Controllers\NotificationsPartialController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -229,6 +230,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MarcacoesViewModels.cs" />
+    <Compile Include="Models\NotificationsPartialViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ServiceLogin.cs" />
     <Compile Include="Startup.cs" />
@@ -280,6 +282,7 @@
     <Content Include="Views\Marcacoes\Edit.cshtml" />
     <Content Include="Views\Marcacoes\Index.cshtml" />
     <Content Include="Views\Marcacoes\Overview.cshtml" />
+    <Content Include="Views\Shared\NotificationsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

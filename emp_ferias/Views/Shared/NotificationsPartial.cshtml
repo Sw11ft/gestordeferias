@@ -1,0 +1,49 @@
+﻿@using emp_ferias.lib.Classes
+@model List<emp_ferias.Models.NotificationViewModel>
+@{ 
+    var count = 0;
+    foreach (var i in Model)
+    {
+        count++;
+    }
+}
+
+<li class="dropdown dropdown-notifications" id="dropdown">
+    <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+        <i data-count="@count" id="notification-count" class="fa fa-bell notification-icon" aria-hidden="true"></i>
+    </a>
+    <div class="dropdown-container dropdown-position-bottomright">
+        <div class="dropdown-toolbar">
+            <div class="dropdown-toolbar-actions">
+                @Html.ActionLink("Marcar todas como lidas", "MarkAllAsRead", new { ActionName = ViewContext.RouteData.Values["action"], ControllerName = ViewContext.RouteData.Values["controller"] })
+            </div>
+            <h3 class="dropdown-toolbar-title" id="notification-title">Notificações (@count)</h3>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-left notifications">
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            @foreach (var i in Model)
+            {
+                <li class="notification" id="notification@(i.Id)">
+                    <div class="media">
+                        <div class="media-left" style="line-height: 66px;">
+                            <div class="media-object">
+                                <i class="fa @(i.Status == Status.Expirado ? "fa-ellipsis-h" : i.Status == Status.Rejeitado ? "fa-times" : "fa-check") fa-2x" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <strong class="notification-title">Marcação #@i.Id @(i.Status == Status.Expirado ? "Expirada" : i.Status == Status.Rejeitado ? "Rejeitada" : "Aprovada")</strong>
+                            <p class="notification-desc">@(i.Motivo == Motivo.Ferias ? "Férias" : i.Motivo == Motivo.Injustificada ? "Injustificado" : "Justificado")</p>
+                            <div class="notification-meta">
+                                <small class="timestamp"><strong>@i.DataInicio.ToString("d") - @i.DataFim.ToString("d")</strong> (@((i.DataFim - i.DataInicio).TotalDays.ToString("")) dia(s) no total)</small>
+                            </div>
+                        </div>
+                        <div class="media-right">
+                            <a class="btn-simple" onclick="@string.Format("teste({0})", i.Id)"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                </li>
+            }
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        </ul>
+    </div>
+</li>
