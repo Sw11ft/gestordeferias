@@ -10,16 +10,17 @@
 
 <li class="dropdown dropdown-notifications" id="dropdown">
     <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-        <i data-count="@count" id="notification-count" class="fa fa-bell notification-icon" aria-hidden="true"></i>
+        <i data-count="@count" data-icon id="notification-count" class="fa fa-bell notification-icon" aria-hidden="true"></i>
     </a>
     <div class="dropdown-container dropdown-position-bottomright">
         <div class="dropdown-toolbar">
             <div class="dropdown-toolbar-actions">
-                @Html.ActionLink("Marcar todas como lidas", "MarkAllAsRead", new { ActionName = ViewContext.RouteData.Values["action"], ControllerName = ViewContext.RouteData.Values["controller"] })
+                <a onclick="@string.Format("MarkAllAsRead()")" id="markall"><i class="fa fa-reply-all"></i></a>
+                <a onclick="MarkAllAsRead()" id="markalltext" style="display: none"> Marcar todas como lidas</a>
             </div>
             <h3 class="dropdown-toolbar-title" id="notification-title">Notificações (@count)</h3>
         </div>
-        <ul class="dropdown-menu dropdown-menu-left notifications">
+        <ul class="dropdown-menu dropdown-menu-left notifications" id="notification-list">
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             @foreach (var i in Model)
             {
@@ -38,12 +39,13 @@
                             </div>
                         </div>
                         <div class="media-right">
-                            <a class="btn-simple" onclick="@string.Format("teste({0})", i.Id)"><i class="fa fa-times"></i></a>
+                            <a class="btn-simple" onclick="@string.Format("MarkAsRead({0})", i.Id)"><i class="fa fa-times"></i></a>
                         </div>
                     </div>
                 </li>
             }
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            
         </ul>
     </div>
 </li>

@@ -2,7 +2,7 @@
 @model emp_ferias.Models.CreateMarcacaoViewModel
 
 @{
-    ViewBag.Title = "Criar Marcação > Marcações";
+    ViewBag.Title = "Criar Marcação - Gestor de Férias";
 }
 
 <div class="jumbotron">
@@ -69,7 +69,7 @@
             </div>
 
             <div class="form-group">
-                @Html.Label("Notas", htmlAttributes: new { @class = "control-label col-lg-2" })
+                @Html.Label("Razão", htmlAttributes: new { @class = "control-label col-lg-2" })
                 <div class="col-lg-5">
                     @Html.EnumDropDownListFor(model => model.Motivo, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Motivo, "", new { @class = "text-danger" })

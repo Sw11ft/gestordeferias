@@ -47,7 +47,7 @@ namespace emp_ferias.Controllers
         }
 
         // GET: MarkAllAsRead
-        public ActionResult MarkAllAsRead(string CallerAction, string CallerController)
+        public void MarkAllAsRead()
         {
             List<ExecutionResult> ExecutionResult = serviceMarcacoes.MarkAllAsRead(User.Identity.GetUserId());
 
@@ -55,8 +55,6 @@ namespace emp_ferias.Controllers
             {
                 this.Flash("error", i.Message);
             }
-
-            return RedirectToAction(CallerAction, CallerController);
         }
 
         // GET: MarkAsRead

@@ -80,49 +80,85 @@
         <script src="~/bower_components/fullcalendar/dist/lang/pt.js"></script>
          
         <script type="text/javascript">
-
-            $(function () {
+            $(document).ready(function () {
                 $('.divs_Datas').datetimepicker({
                     format: 'L',
                     locale: 'pt',
+                }); //inicializa o datetimepicker
+
+                emptynotif(); //verificação inicial se existem notificações
+
+                $(document).on('click', '.dropdown-container', function (e) {
+                    e.stopPropagation();
+                }); //previne o dropdown de fechar ao clicar
+
+                $("#markall").on("mouseover", function () {
+                    MouseOverMarkAll();
                 });
+                $("#markalltext").on("mouseout", function () {
+                    MouseOutMarkAll();
+                });
+                //$(".mark-as-read").click(function (e) {
+                //    console.log("asd");
+                //    $("#dropdown").remove();
+                //    $.ajax({
+                //        url: '/NotificationsPartial/MarkAsRead?MarcId=' + $(this).attr("id"),
+                //        success: function () {
+                //            $.ajax({
+                //                url: '/NotificationsPartial',
+                //                success: function (data) {
+                //                    $("#navbar-right").prepend(data);
+                //                    $("#dropdown").addClass("open");
+                //                }
+                //            });
+                //        }
+                //    })
+                //});
             });
 
-            $(document).on('click', '.dropdown-container', function (e) {
-                e.stopPropagation();
-            });
-
-            $(".mark-as-read").click(function (e) {
-                console.log("asd");
-                $("#dropdown").remove();
-                $.ajax({
-                    url: '/NotificationsPartial/MarkAsRead?MarcId=' + $(this).attr("id"),
-                    success: function () {
-                        $.ajax({
-                            url: '/NotificationsPartial',
-                            success: function (data) {
-                                $("#navbar-right").prepend(data);
-                                $("#dropdown").addClass("open");
-                            }
-                        });
-                    }
-                })
-            });
-
-
-            function teste(id) {
-
-                
+            function MarkAsRead(id) {
                 $.ajax({
                     url: '/NotificationsPartial/MarkAsRead?MarcId=' + id,
                     success: function () {
                         $("#notification" + id).hide(100);
                         $("#notification-count").attr("data-count", ($("#notification-count").attr("data-count") - 1));
-                        $("#notification-title").text() = $("#notification-count").attr("data-count");
+                        $("#notification-title").text("Notificações (" + $("#notification-count").attr("data-count") + ")");
+                        emptynotif();
                     }
                 })
+            }; //função que controla o mark as read e o request ajax
+
+            function MarkAllAsRead() {
+                $.ajax({
+                    url: '/NotificationsPartial/MarkAllAsRead',
+                    success: function () {
+                        $(".notification").hide(100);
+                        $("#notification-count").attr("data-count", "0");
+                        $("#notification-title").text("Notificações (0)");
+                        $("#markall").hide();
+                        $("#markalltext").hide();
+                        emptynotif();
+                    }
+                })
+            };
+
+            function emptynotif() {
+                if ($("#notification-count").attr("data-count") == 0) {
+                    $("#notification-list").append('<li class="notification"> <div style="text-align: center"> <i class="fa fa-bell-o fa-4x" style="text-align: center; line-height: 1.5em;"></i><br/> <strong style="text-align:center">Sem notificações a mostrar!</strong> </div></li>');
+                    $("#markall").hide(100);
+                    $("#markalltext").hide(100);
+                }
+            } //faz append a uma row no dropdown de notificações caso este esteja vazio
+
+            function MouseOverMarkAll() {
+                $('#markalltext').show(100);
+                $('#markall').hide(100);
             }
 
+            function MouseOutMarkAll() {
+                $('#markalltext').hide(100);
+                $("#markall").show(100);
+            }
         </script>
 
         @RenderSection("scripts", required: false)

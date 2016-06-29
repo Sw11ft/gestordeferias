@@ -1,6 +1,13 @@
-﻿@model emp_ferias.Models.EditUserViewModel
+﻿@using MvcFlashMessages
+@model emp_ferias.Models.EditUserViewModel
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar Utilizador - Gestor de Férias";
+
+    List<SelectListItem> Role = new List<SelectListItem>();
+
+    Role.Add(new SelectListItem { Text = "Administrador", Value = "Administrador" });
+    Role.Add(new SelectListItem { Text = "Moderador", Value = "Moderador" });
+    Role.Add(new SelectListItem { Text = "Utilizador", Value = "Utilizador", Selected = true });
 }
 
 <style>
@@ -39,7 +46,7 @@
 
 <div class="jumbotron" style="border-radius: 0 0; padding: 0 0 0 0">
     <div class="container-fluid body-content" style="width: 70%">
-        <h1 id="icon"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Edit User</h1>
+        <h1 id="icon">Utilizadores<small> @Model.CurrentUsername</small></h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
@@ -47,32 +54,33 @@
 <div class="content">
     
     <ol class="breadcrumb">
-        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-        <li>@Html.ActionLink("User Panel", "Index", "User")</li>
-        <li class="active">Edit ID: @Html.DisplayFor(model => model.id)</li>
+        <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
+        <li>@Html.ActionLink("Utilizadores", "Index", "User")</li>
+        <li class="active">Editar @Html.DisplayFor(model => model.CurrentUsername)</li>
     </ol>
 
     <br />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.RenderFlash()
 
     @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
 
+        @Html.ValidationSummary()
 
         <div class="row">
 
             <!--DETAILS-->
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h2 class="panel-title">Details</h2>
+                        <h2 class="panel-title">Detalhes</h2>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" style="background-color: white; @(Model.LoggedUser.RoleTests.IsAdmin ?  "height: 200px" : "height: 152px")">
 
                         <!--USERNAME-->
                         <div id="details-left" class="col-md-6">
-                            Username:
+                            Nome de Utilizador:
                         </div>
                         <div id="details-right" class="col-md-6">
                             @Model.CurrentUsername
@@ -101,36 +109,45 @@
                 </div>
             </div>
 
-            <!--SPACER-->
-            <div class="col-md-1"></div>
-
             <!--EDIT-->
             <div class="col-md-7">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h2 class="panel-title">Edit</h2>
+                        <h2 class="panel-title">Editar</h2>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" style="background-color: white;">
                         <fieldset class="form-horizontal">
                             <!--USERNAME-->
-                            <div id="edit-left" class="col-md-2">
-                                Username:
+                            <div id="edit-left" class="col-md-3">
+                                Nome de Utilizador:
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-9">
                                 @Html.TextBoxFor(m => m.NewUsername, new { @class = "form-control" })
                             </div>
                             <br />
 
                             <!--EMAIL-->
-                            <div id="edit-left" class="col-md-2">
+                            <div id="edit-left" class="col-md-3">
                                 Email:
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-9">
                                 @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control" })
                             </div>
                             <br />
+
+                            @if (Model.LoggedUser.RoleTests.IsAdmin)
+                            {
+                              <!--ROLE-->
+                                <div id="edit-left" class="col-md-3">
+                                    Função:
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.NewRole, Role, new { @class = "form-control" })
+                                </div>
+                                <br />
+                            }
                             <div id="submit-btn">
-                                <input type="submit" value="Edit" class="btn btn-default" />
+                                <input type="submit" value="Editar" class="btn btn-default" />
                             </div>
                         </fieldset>
                     </div>
@@ -139,4 +156,3 @@
         </div>
     }
     </div>
-

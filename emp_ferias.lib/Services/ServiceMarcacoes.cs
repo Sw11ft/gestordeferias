@@ -140,11 +140,6 @@ namespace emp_ferias.lib.Services
                     db.SaveChanges();
                 }
             }
-            else
-            {
-                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Ocorreu um erro." }); 
-            }
-
             return ExecutionResult;
         }
 
@@ -159,8 +154,6 @@ namespace emp_ferias.lib.Services
                 Marcacao.UserNotificado = true;
                 db.SaveChanges();
             }
-            else
-                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Ocorreu um erro." });
 
             return ExecutionResult;
         }

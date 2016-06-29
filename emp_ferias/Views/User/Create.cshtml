@@ -1,11 +1,18 @@
-﻿@model emp_ferias.Models.RegisterViewModel
+﻿@using MvcFlashMessages
+@model emp_ferias.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Create User";
+    ViewBag.Title = "Criar Utilizador - Gestor de Férias";
+
+    List<SelectListItem> Role = new List<SelectListItem>();
+
+    Role.Add(new SelectListItem { Text = "Administrador", Value = "Administrador" });
+    Role.Add(new SelectListItem { Text = "Moderador", Value = "Moderador" });
+    Role.Add(new SelectListItem { Text = "Utilizador", Value = "Utilizador", Selected = true });
 }
 
 <div class="jumbotron" style="border-radius: 0 0; padding: 0 0 0 0">
     <div class="container-fluid body-content" style="width: 70%">
-        <h1 id="icon"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Create User</h1>
+        <h1 id="icon">Criar Utilizador</h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
@@ -14,36 +21,45 @@
 
     <ol class="breadcrumb">
         <li>@Html.ActionLink("Home", "Index", "Home")</li>
-        <li>@Html.ActionLink("User Panel", "Index", "User")</li>
-        <li class="active">Create User</li>
+        <li>@Html.ActionLink("Utilizadores", "Index", "User")</li>
+        <li class="active">Criar Utilizador</li>
     </ol>
 
-    @using (Html.BeginForm("Create", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    @Html.RenderFlash()
+
+    @using (Html.BeginForm("Create", "User", FormMethod.Post, new { @class = "form-horizontal col-lg-offset-3", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary("", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            @Html.Label("Nome de Utilizador", new { @class = "col-md-2 control-label" })
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control col-lg-5" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            @Html.Label("Email", new { @class = "col-md-2 control-label" })
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control col-lg-5" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.Label("Password", new { @class = "col-md-2 control-label" })
+            <div class="col-md-5">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control col-lg-5" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            @Html.Label("Confirmar Password", new { @class = "col-md-2 control-label" })
+            <div class="col-md-5">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control col-lg-5" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Função", new { @class = "col-md-2 control-label" })
+            <div class="col-md-5">
+                @Html.DropDownListFor(m => m.Role, Role, new { @class = "form-control col-lg-5" })
             </div>
         </div>
         <div class="form-group">

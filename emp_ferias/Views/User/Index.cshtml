@@ -1,11 +1,12 @@
-﻿@model List<emp_ferias.Models.ApplicationUser>
+﻿@using MvcFlashMessages
+@model emp_ferias.Models.IndexUserViewModel
 @{
-    ViewBag.Title = "User Panel";
+    ViewBag.Title = "Utilizadores - Gestor de Férias";
 }
 
 <div class="jumbotron">
     <div class="container-fluid body-content">
-        <h1 id="icon"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;User Panel</h1>
+        <h1 id="icon">Utilizadores</h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
@@ -14,40 +15,77 @@
 <div class="content">
     <div class="col-md-10">
         <ol class="breadcrumb">
-            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-            <li class="active">User Panel</li>
+            <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
+            <li class="active">Utilizadores</li>
         </ol>
     </div>
+    @Html.RenderFlash()
     <div class="col-md-2">
         <button style="vertical-align: middle; float: right; font-size: 1em;" onclick="location.href='@Url.Action("Create", "User")';return false;" class="btn btn-default"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Create User</button>
     </div>
 
-    <table class="table table-hover" style="font-size:15px">
-        <thead style="font-size:20px">
+    <table class="table table-hover" id="usersTable">
+        <thead>
             <tr>
-                <th>ID</th>
-                <th>Username</th>
+                <th>Função</th>
+                <th>Nome de Utilizador</th>
+                <th>GUID</th>
                 <th>Email</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.UserList)
             {
-                <tr>
-                    <td>
-                        @item.Id
+                <tr class="bg-info">
+                    <td style="color: @(item.Role == "Administrador" ? "#6f5499" : item.Role == "Moderador" ? "red" : "#777")">
+                        <strong>@item.Role</strong>
                     </td>
                     <td>
                         @item.UserName
                     </td>
                     <td>
+                        @item.Id
+                    </td>
+                    <td>
                         @item.Email
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                        @((Model.LoggedUser.RoleTests.IsAdmin) || (Model.LoggedUser.RoleTests.IsMod && item.RoleTests.IsUser) ? Html.ActionLink("Edit", "Edit", new { id = item.Id }) : Html.Display(""))
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+@section scripts {
+    <script>
+        $('#usersTable').DataTable({
+            "aoColumns": [
+                null,
+                null,
+                { "bSortable": false },
+                { "bSortable": false },
+                { "bSortable": false }
+            ],
+            language: {
+                "sProcessing": "A processar...",
+                "sLengthMenu": "Mostrar _MENU_ registos",
+                "sZeroRecords": "Não foram encontrados resultados",
+                "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registos",
+                "sInfoEmpty": "Mostrando 0 a 0 de 0 registos",
+                "sInfoFiltered": "(filtrado de _MAX_ registos no total)",
+                "sInfoPostFix": "",
+                "sSearch": "Procurar:",
+                "sUrl": "",
+                "oPaginate": {
+                    "sFirst": "Primeiro",
+                    "sPrevious": "Anterior",
+                    "sNext": "Seguinte",
+                    "sLast": "Último"
+                }
+            }
+        })
+    </script>        
+}
