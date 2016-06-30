@@ -24,10 +24,7 @@ namespace emp_ferias.Controllers
     {
         ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes(new ServiceLogin());
 
-        private EmpFeriasDbContext db = new EmpFeriasDbContext();
-
         private ApplicationUserManager _userManager;
-
         public ApplicationUserManager UserManager
         {
             get
@@ -40,37 +37,73 @@ namespace emp_ferias.Controllers
             }
         }
 
-        private static List<IndexMarcacaoViewModel> MapIndexMarcacaoViewModel(List<Marcacao> Marcacoes)
+        public UserInfo LoggedUserInfo()
         {
-            List<IndexMarcacaoViewModel> MappedViewModels = new List<IndexMarcacaoViewModel>();
+            UserInfo UserInfo = new UserInfo();
+            ApplicationUser LoggedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            UserInfo.Id = LoggedUser.Id;
+            UserInfo.UserName = LoggedUser.UserName;
+            UserInfo.Email = LoggedUser.Email;
+            UserInfo.Role = UserManager.GetRoles(LoggedUser.Id).FirstOrDefault();
+            if (UserInfo.Role == "Administrador")
+                UserInfo.RoleTests.IsAdmin = true;
+            else if (UserInfo.Role == "Moderador")
+                UserInfo.RoleTests.IsMod = true;
+            else
+                UserInfo.RoleTests.IsUser = true;
+
+            return UserInfo;
+        }
+
+        private IndexMarcacaoViewModel MapIndexMarcacaoViewModel(List<Marcacao> Marcacoes)
+        {
+            List<Marcacao> MappedMarcacoes = new List<Marcacao>();
+            IndexMarcacaoViewModel viewModel = new IndexMarcacaoViewModel();
             foreach (var i in Marcacoes)
             {
-                var MappedViewModel = new IndexMarcacaoViewModel();
+                Marcacao MappedMarcacao = new Marcacao();
 
-                MappedViewModel.id = i.Id;
-                MappedViewModel.UserName = i.User.UserName;
-                MappedViewModel.DataPedido = i.DataPedido;
-                MappedViewModel.DataInicio = i.DataInicio;
-                MappedViewModel.DataFim = i.DataFim;
-                MappedViewModel.Notas = i.Notas;
-                MappedViewModel.Motivo = i.Motivo;
-                MappedViewModel.Status = i.Status;
+                MappedMarcacao.Id = i.Id;
+                MappedMarcacao.User = i.User;
+                MappedMarcacao.DataPedido = i.DataPedido;
+                MappedMarcacao.DataInicio = i.DataInicio;
+                MappedMarcacao.DataFim = i.DataFim;
+                MappedMarcacao.Notas = i.Notas;
+                MappedMarcacao.Motivo = i.Motivo;
+                MappedMarcacao.Status = i.Status;
+                MappedMarcacao.UserNotificado = i.UserNotificado;
                 if (i.ActionUser != null)
                 {
-                    MappedViewModel.RazaoRejeicao = i.RazaoRejeicao;
-                    MappedViewModel.ActionUserName = i.ActionUser.UserName;
+                    MappedMarcacao.RazaoRejeicao = i.RazaoRejeicao;
+                    MappedMarcacao.ActionUser = i.ActionUser;
                 }
-                MappedViewModels.Add(MappedViewModel);
+                MappedMarcacoes.Add(MappedMarcacao);
             }
-            
-            return MappedViewModels;
+
+            viewModel.Marcacoes = MappedMarcacoes;
+            viewModel.LoggedUser = LoggedUserInfo();
+
+            return viewModel;
                  
         }
 
         // GET: Marcacoes
         public ActionResult Index()
         {
-            return View(MapIndexMarcacaoViewModel(serviceMarcacoes.Get()));
+            var viewModel = MapIndexMarcacaoViewModel(serviceMarcacoes.Get());
+            ApplicationUser LoggedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            viewModel.LoggedUser.Id = LoggedUser.Id;
+
+            if (UserManager.IsInRole(LoggedUser.Id, "Administrador"))
+                viewModel.LoggedUser.RoleTests.IsAdmin = true;
+            else if (UserManager.IsInRole(LoggedUser.Id, "Moderador"))
+                viewModel.LoggedUser.RoleTests.IsMod = true;
+            else
+                viewModel.LoggedUser.RoleTests.IsUser = true;
+
+            return View(viewModel);
         }
 
         // GET: Marcacoes/Overview
@@ -79,9 +112,11 @@ namespace emp_ferias.Controllers
             return View(MapIndexMarcacaoViewModel(serviceMarcacoes.Get()));
         }
 
+        [Authorize(Roles="Administrador")]
         public ActionResult Refresh()
         {
             serviceMarcacoes.RefreshStatus();
+            this.Flash("success", "Marcações atualizadas.");
             return RedirectToAction("Index");
         }
 
@@ -136,18 +171,9 @@ namespace emp_ferias.Controllers
         }
 
         // GET: Marcacoes/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Marcacao marcacao = await db.Marcacoes.FindAsync(id);
-            if (marcacao == null)
-            {
-                return HttpNotFound();
-            }
-            return View(marcacao);
+            return View();
         }
 
         // GET: Marcacoes/Create
@@ -211,7 +237,7 @@ namespace emp_ferias.Controllers
                     
             if (ApprInfo.sendEmail)
             {
-                Marcacao Marcacao = serviceMarcacoes.FindById(ApprInfo.marcId);
+                Marcacao Marcacao = serviceMarcacoes.FindById(true, ApprInfo.marcId);
 
                 if (Marcacao == null)
                 {
@@ -271,7 +297,7 @@ namespace emp_ferias.Controllers
 
             if (RejectionInfo.sendEmail)
             {
-                Marcacao Marcacao = serviceMarcacoes.FindById(RejectionInfo.marcRejectId);
+                Marcacao Marcacao = serviceMarcacoes.FindById(true, RejectionInfo.marcRejectId);
 
                 if (Marcacao == null)
                 {
@@ -299,75 +325,59 @@ namespace emp_ferias.Controllers
             return RedirectToAction("Index");
         }
 
-
         // GET: Marcacoes/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Marcacao marcacao = await db.Marcacoes.FindAsync(id);
+                return RedirectToAction("Index");
+
+            Marcacao marcacao = serviceMarcacoes.FindById(false, id);
+
             if (marcacao == null)
             {
-                return HttpNotFound();
+                this.Flash("error", "Marcação não encontrada");
+                return RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Id", marcacao.UserId);
-            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.ActionUser);
+
             return View(marcacao);
         }
-           
+
         // POST: Marcacoes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,UserId,DataPedido,DataInicio,DataFim,Observacoes,Aprovado,UserIdAprovacao,RazaoAprovacao,Motivo")] Marcacao marcacao)
+        public ActionResult Edit(int id)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(marcacao).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Id", marcacao.UserId);
-            ViewBag.UserIdAprovacao = new SelectList(db.Users, "Id", "Id", marcacao.ActionUserId);
-            return View(marcacao);
+            return View();
         }
 
         // GET: Marcacoes/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Marcacao marcacao = await db.Marcacoes.FindAsync(id);
-            if (marcacao == null)
-            {
-                return HttpNotFound();
-            }
-            return View(marcacao);
+
+            return View();
         }
 
         // POST: Marcacoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Marcacao marcacao = await db.Marcacoes.FindAsync(id);
-            db.Marcacoes.Remove(marcacao);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return View();
         }
 
-        protected override void Dispose(bool disposing)
+
+        // GET: Marcacoes/My
+        public ActionResult My()
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            return View(MapIndexMarcacaoViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
+        }
+
+        // GET: Marcacoes/MyTableData
+        public ActionResult MyTableData()
+        {
+            return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
         }
     }
 }

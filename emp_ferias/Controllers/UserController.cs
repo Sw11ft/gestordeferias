@@ -101,10 +101,10 @@ namespace emp_ferias.Controllers
         // GET: User/Edit
         [HttpGet]
         [Authorize(Roles = "Administrador, Moderador")]
-        public async Task<ActionResult> Edit(string id)
+        public ActionResult Edit(string id)
         {
 
-            var user = await UserManager.FindByIdAsync(id);
+            var user = UserManager.FindById(id);
 
             if (user == null)
             {
@@ -122,6 +122,7 @@ namespace emp_ferias.Controllers
 
             viewModel.LoggedUser.Id = User.Identity.GetUserId();
             viewModel.LoggedUser.UserName = User.Identity.GetUserName();
+
             if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrador"))
                 viewModel.LoggedUser.RoleTests.IsAdmin = true;
             else if (UserManager.IsInRole(User.Identity.GetUserId(), "Moderador"))
@@ -145,11 +146,17 @@ namespace emp_ferias.Controllers
         }
 
         //POST: /User/Edit
-        [System.Web.Mvc.HttpPost][Authorize(Roles="Administrador, Moderador")]
+        [HttpPost]
         [Authorize(Roles="Administrador, Moderador")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(EditUserViewModel viewModel)
+        public ActionResult Edit(EditUserViewModel viewModel)
         {
+            if (UserManager.IsInRole(User.Identity.GetUserId(), "Moderador") && (UserManager.IsInRole(viewModel.id, "Administrador") || UserManager.IsInRole(viewModel.id, "Moderador")))
+            {
+                this.Flash("error", "Não tem permissões suficientes para efetuar essa operação.");
+                return RedirectToAction("Index");
+            }
+
             if (viewModel.id == null)
             {
                 this.Flash("error", "Ocorreu um erro. Utilizador não encontrado.");
@@ -157,7 +164,7 @@ namespace emp_ferias.Controllers
             }
             
 
-            var user = await UserManager.FindByIdAsync(viewModel.id);
+            var user =  UserManager.FindById(viewModel.id);
 
             var vm = GetViewModel(user);
 
@@ -165,8 +172,14 @@ namespace emp_ferias.Controllers
             user.Email = viewModel.NewEmail;
             
             IdentityResult result = UserManager.Update(user);
-            UserManager.RemoveFromRole(user.Id, UserManager.GetRoles(user.Id).FirstOrDefault());
-            UserManager.AddToRole(user.Id, viewModel.NewRole);
+
+            if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrador"))
+            {
+                if (UserManager.GetRoles(user.Id).FirstOrDefault() != null) //previne uma exception caso o utilizador não tenha role por alguma razão
+                    UserManager.RemoveFromRole(user.Id, UserManager.GetRoles(user.Id).FirstOrDefault());
+
+                UserManager.AddToRole(user.Id, viewModel.NewRole);
+            }
 
             if (!result.Succeeded)
             {
@@ -180,6 +193,7 @@ namespace emp_ferias.Controllers
         }
 
         // GET: User/Create
+        [Authorize(Roles="Administrador")]
         public ActionResult Create()
         {
             return View();
@@ -189,6 +203,7 @@ namespace emp_ferias.Controllers
        // POST: /User/Create
        [System.Web.Mvc.HttpPost]
        [ValidateAntiForgeryToken]
+       [Authorize(Roles="Administrador")]
        public async Task<ActionResult> Create(RegisterViewModel model)
         {
             if (ModelState.IsValid)

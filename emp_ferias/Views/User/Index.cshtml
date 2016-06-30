@@ -13,16 +13,20 @@
 
 
 <div class="content">
-    <div class="col-md-10">
+    <div class="col-md-@(Model.LoggedUser.RoleTests.IsAdmin ? "10" : "12")" style="padding-left: 0px; padding-right: 0px;">
         <ol class="breadcrumb">
             <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
             <li class="active">Utilizadores</li>
         </ol>
     </div>
     @Html.RenderFlash()
-    <div class="col-md-2">
-        <button style="vertical-align: middle; float: right; font-size: 1em;" onclick="location.href='@Url.Action("Create", "User")';return false;" class="btn btn-default"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Create User</button>
-    </div>
+    @if (Model.LoggedUser.RoleTests.IsAdmin)
+    {
+        <div class="col-md-2" id="create-new-button-wrapper">
+            <button onclick="location.href='@Url.Action("Create", "User")';return false;" class="btn btn-round-default" id="create-user-button"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Criar Utilizador</button>
+        </div>
+    }
+    
 
     <table class="table table-hover" id="usersTable">
         <thead>

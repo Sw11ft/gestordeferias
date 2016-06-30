@@ -1,8 +1,8 @@
 ﻿@using MvcFlashMessages
 @using emp_ferias.lib.Classes
-@model List<emp_ferias.Models.IndexMarcacaoViewModel>
+@model emp_ferias.Models.IndexMarcacaoViewModel
 @{
-    ViewBag.Title = "Índice > Marcações";
+    ViewBag.Title = "Marcações - Gestor de Férias";
 }
 <style>
     .flash-message, .flash-messages {
@@ -74,11 +74,17 @@
     </div>
 </div>
 <!--END MODAL--> 
-
+<link rel="stylesheet" href="~/bower_components/bootstrap-notifications/dist/stylesheets/bootstrap-notifications.min.css" />
 <!--jumbotron-->
 <div class="jumbotron">
     <div class="container-fluid body-content">
-        <h1 id="icon">Marcações&nbsp; <button class="btn-simple" style="font-size: 0.8em" onclick="location.href='@Url.Action("Refresh", "Marcacoes")'; return false;"><i class="fa fa-refresh" aria-hidden="true"></i></button></h1>
+        <h1 id="icon">
+            Marcações&nbsp;
+            @if (Model.LoggedUser.RoleTests.IsAdmin)
+            {
+                <button class="btn-simple" style="font-size: 0.8em" onclick="location.href='@Url.Action("Refresh", "Marcacoes")'; return false;"><i data-count="Admin" class="fa fa-refresh notification-icon"></i></button>
+            }
+        </h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
@@ -101,131 +107,134 @@
     
     @Html.RenderFlash()
 
-    <!--action PENDING panel-->
-    <div class="col-md-12" style="padding: 0">
-        <div class="panel panel-default" data-toggle="collapse" data-trigger="click" data-target="#table1">
-            <div class="panel-body">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    Ação Pendente
-                        @{
-                            var i = 0;
-                            foreach (var item in Model)
-                            {
-                                if (item.Status == Status.Pendente)
+    @if (Model.LoggedUser.RoleTests.IsAdmin || Model.LoggedUser.RoleTests.IsMod)
+    {    
+        <!--action PENDING panel-->
+        <div class="col-md-12" style="padding: 0">
+            <div class="panel panel-default" data-toggle="collapse" data-trigger="click" data-target="#table1">
+                <div class="panel-body">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        Ação Pendente
+                            @{
+                                var i = 0;
+                                foreach (var item in Model.Marcacoes)
                                 {
-                                    i++;
+                                    if (item.Status == Status.Pendente)
+                                    {
+                                        i++;
+                                    }
                                 }
+                                <span class="badge @(i == 0 ? "":"bg-primary")" id="pendingAmount"><text>@i</text></span>
                             }
-                            <span class="badge @(i == 0 ? "":"bg-primary")" id="pendingAmount"><text>@i</text></span>
-                        }
                            
-                </div>
-                <div class="col-md-1">
-                    <button button id="table1btn" class="btn-simple" style="float:right; outline: none !important" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-down" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-md-1">
+                        <button button id="table1btn" class="btn-simple" style="float:right; outline: none !important" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-down" aria-hidden="true"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!--pending table-->
-    <div class="collapse" id="table1" style="width: 100%">
-        <table class="table table-hover marcacoes-table" id="actionPendingTable" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>
-                        ID
-                    </th>
-                    <th>
-                        Utilizador
-                    </th>
-                    <th>
-                        Data de Pedido
-                    </th>
-                    <th>
-                        Duração
-                    </th>
-                    <th>
-                        Razão
-                    </th>
-                    <th>
-                        Notas
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    if (item.Status == Status.Pendente)
+        <!--pending table-->
+        <div class="collapse" id="table1" style="width: 100%">
+            <table class="table table-hover marcacoes-table" id="actionPendingTable" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Utilizador
+                        </th>
+                        <th>
+                            Data de Pedido
+                        </th>
+                        <th>
+                            Duração
+                        </th>
+                        <th>
+                            Razão
+                        </th>
+                        <th>
+                            Notas
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Marcacoes)
                     {
-                        <tr class="bg-info">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.id)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UserName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DataPedido)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
-                                <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total: 
-                                @{
-                                    var length = (item.DataFim - item.DataInicio).Days +1;
-                                    string lengthstring;
-                                    if (length == 1)
-                                    {
-                                        lengthstring = length + " dia";
-                                    }
-                                    else
-                                    {
-                                        lengthstring = length + " dias";
-                                    }
-                                    } @lengthstring"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-                            </td>
-                            <td>
-                                @(item.Motivo == Motivo.Ferias ? Html.Name("Férias") : Html.DisplayFor(modelItem => item.Motivo)) 
-                            </td>
-                            <td>
-                                @{
-                                    if (!(item.Notas == null) && !(item.Notas.Length == 0))
-                                    {
-                                        @item.Notas.Substring(0, Math.Min(item.Notas.Length, 25))
-                                            if (item.Notas.Count() > 25)
-                                            {
-                                               <text>... </text> <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="@item.Notas"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                        if (item.Status == Status.Pendente)
+                        {
+                            <tr class="bg-info">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DataPedido)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
+                                    <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total: 
+                                    @{
+                                        var length = (item.DataFim - item.DataInicio).Days +1;
+                                        string lengthstring;
+                                        if (length == 1)
+                                        {
+                                            lengthstring = length + " dia";
+                                        }
+                                        else
+                                        {
+                                            lengthstring = length + " dias";
+                                        }
+                                        } @lengthstring"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                </td>
+                                <td>
+                                    @(item.Motivo == Motivo.Ferias ? Html.Name("Férias") : Html.DisplayFor(modelItem => item.Motivo)) 
+                                </td>
+                                <td>
+                                    @{
+                                        if (!(item.Notas == null) && !(item.Notas.Length == 0))
+                                        {
+                                            @item.Notas.Substring(0, Math.Min(item.Notas.Length, 25))
+                                                if (item.Notas.Count() > 25)
+                                                {
+                                                   <text>... </text> <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="@item.Notas"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @Html.Label("–", new { @class = "empty-notes" });
                                         }
                                     }
-                                    else
-                                    {
-                                        @Html.Label("–", new { @class = "empty-notes" });
-                                    }
-                                }
 
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <button id="@(item.id)" class="btn btn-round-success" type="button" data-toggle="modal" data-target="#approve">Aprovar</button>
-                                    <button id="@(item.id)" class="btn btn-round-danger" type="button" data-toggle="modal" data-target="#reject">Rejeitar</button>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button id="@(item.Id)" class="btn btn-round-success" type="button" data-toggle="modal" data-target="#approve">Aprovar</button>
+                                        <button id="@(item.Id)" class="btn btn-round-danger" type="button" data-toggle="modal" data-target="#reject">Rejeitar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <!--PREVIOUS panel-->
-    <div class="col-md-12" style="padding: 0">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                Anteriores
+                </tbody>
+            </table>
+        </div>
+        <!--PREVIOUS panel-->
+        <div class="col-md-12" style="padding: 0">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    Anteriores
+                </div>
             </div>
         </div>
-    </div>
-    <br />
+        <br />
+    }
+
     <div class="table-wrapper col-md-12">
         <table id="previousTable" class="table table-hover marcacoes-table" style="width: 100%">
             <thead>
@@ -254,7 +263,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Marcacoes)
                 {
                     if (item.Status != Status.Pendente)
                     {
@@ -262,10 +271,10 @@
                         <tr class="bg-info">
                     
                             <td>
-                                @Html.DisplayFor(modelItem => item.id)
+                                @Html.DisplayFor(modelItem => item.Id)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserName)
+                                @Html.DisplayFor(modelItem => item.User.UserName)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.DataPedido)
@@ -315,6 +324,12 @@
                                                    : item.Status == Status.Rejeitado ? "label-danger"
                                                    : "label-warning"
                                                    )">@(item.Status == Status.EmProgresso ? Html.Label("Em Progresso") : Html.DisplayFor(x => item.Status))</span>
+                            </td>
+                            <td>
+                                @if (item.Status == Status.Pendente && item.User.Id == Model.LoggedUser.Id)
+                                {
+                                    <a href="@Html.Action("Edit","Marcacoes", new { id = item.Id})"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                }
                             </td>
                         </tr>
                     }
@@ -480,7 +495,6 @@
             }
 
         });
-            
     })
 </script>
 }

@@ -1,0 +1,114 @@
+﻿@using MvcFlashMessages
+@using System.Globalization
+@using emp_ferias.lib.Classes
+@model emp_ferias.Models.IndexMarcacaoViewModel
+@{
+    ViewBag.Title = "Minhas Marcações - Gestor de Férias";
+}
+
+<div class="jumbotron">
+    <div class="container-fluid body-content" style="width: 70%">
+        <h1 id="icon">Marcações <small style="text-transform: uppercase">@Model.LoggedUser.UserName</small></h1>
+        <p class="lead container body-content jumbotron-description"></p>
+    </div>
+</div>
+
+<div class="content">
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
+        <li>@Html.ActionLink("Marcações", "Index", "Marcacoes")</li>
+        <li class="active">Minhas Marcações</li>
+    </ol>
+    @Html.RenderFlash()     
+    <form class="form-inline">
+        <label>Filtrar de &nbsp;</label>
+        <div class="input-group divs_Datas data_my">
+            <input type="text" class="form-control" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <label>&nbsp; até &nbsp;</label>
+        <div class="input-group divs_Datas data_my">
+            <input type="text" class="form-control" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <label>&nbsp; no campo &nbsp;</label>
+        <select class="form-control">
+            <option>Data de Pedido</option>
+            <option>Duração</option>
+        </select>
+        <button type="button" class="btn btn-round-default">OK</button>
+        
+            
+            
+    </form>
+    <div id="MyTable_loading">
+        <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+    </div>
+
+    <table class="table table-hover marcacoes-table" id="MyTable" data-url="@Url.Action("MyTableData")">
+    </table>
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            var table = $("#MyTable")
+            $.ajax({
+                url: table.data("url"),
+                type: "GET",
+                cache: false,
+                context: table,
+                beforeSend: function () {
+                    $("#MyTable_loading").show();
+                },
+                complete: function () {
+                    $("#MyTable_loading").hide();
+                },
+                success: function (result) {
+                    this.html(result);
+                    $('[data-toggle="popover"]').popover();
+                    table.DataTable({
+                        "info": false,
+                        "searching": false,
+                        "dom": "tlp",
+                        "aoColumns": [
+                            null,
+                            { "bSortable": false },
+                            { "bSortable": false },
+                            null,
+                            { "bSortable": false },
+                            null
+                        ],
+                        language: { 
+                            "sProcessing":   "A processar...",
+                            "sLengthMenu":   "Mostrar _MENU_ registos",
+                            "sZeroRecords":  "Não foram encontrados resultados",
+                            "sInfo":         "Mostrando _START_ a _END_ de _TOTAL_ registos",
+                            "sInfoEmpty":    "Mostrando 0 a 0 de 0 registos",
+                            "sInfoFiltered": "(filtrado de _MAX_ registos no total)",
+                            "sInfoPostFix":  "",
+                            "sSearch":       "Procurar:",
+                            "sUrl":          "",
+                            "oPaginate": {
+                                "sFirst":    "Primeiro",
+                                "sPrevious": "Anterior",
+                                "sNext":     "Seguinte",
+                                "sLast":     "Último"
+                            }
+                        }
+                    })
+                
+                },
+                error: function () {
+                    alert("error");
+                }
+            })
+        })
+    </script>
+
+}
+

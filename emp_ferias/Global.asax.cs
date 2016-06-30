@@ -33,7 +33,7 @@ namespace emp_ferias
         {
             if (filterContext.HttpContext.Request.IsAuthenticated)
             {
-                filterContext.Result = new System.Web.Mvc.HttpStatusCodeResult((int)System.Net.HttpStatusCode.Forbidden);
+                filterContext.Result = new HttpStatusCodeResult((int)System.Net.HttpStatusCode.Forbidden);
             }
             else
             {

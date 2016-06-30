@@ -31,7 +31,7 @@
                 @Html.Label("De", htmlAttributes: new { @class = "control-label col-lg-2" })
                 <div class="col-lg-5">
                     <div class='input-group date divs_Datas'>
-                        @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", @id = "dtMin" } })
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -45,7 +45,7 @@
                 @Html.Label("Até", htmlAttributes: new { @class = "control-label col-lg-2" })
                 <div class="col-lg-5">
                     <div class='input-group date divs_Datas'>
-                        @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", @id = "dtMax" } })
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -87,17 +87,17 @@
 </div>
 @section scripts {
     <script>
-        $(document).ready(function () {
+        $(function () {
             $('#charactersTextBox').on('change keyup paste click', function () {
                 $('#characters').text(100 - $('#charactersTextBox').val().trim().length);
 
-                 if ($('#charactersTextBox').val().trim().length > 100) {
+                if ($('#charactersTextBox').val().trim().length > 100) {
                     $('#submit-btn').prop('disabled', true);
                 }
                 else {
                     $('#submit-btn').prop('disabled', false);
                 }
-            })
-        })
+            });
+        });
     </script>    
 }

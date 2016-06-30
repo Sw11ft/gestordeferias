@@ -52,7 +52,7 @@ namespace emp_ferias.lib.Classes
         public Status Status { get; set; } //estado da marcação, enum
         public string ActionUserId { get; set; } //id de quem tomou uma ação sobre a marcação
         public string RazaoRejeicao { get; set; } //preenchido caso não seja aprovado
-        public bool UserNotificado { get; set; }
+        public bool UserNotificado { get; set; } //bool para saber se o utilizador já foi notificado e viu a notif
         
 
         [ForeignKey("UserId")]

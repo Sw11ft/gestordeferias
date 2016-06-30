@@ -21,19 +21,10 @@ namespace emp_ferias.Models
 
     public class IndexMarcacaoViewModel
     {
-        public int id { get; set; }
-        public string UserName { get; set; }
-        public DateTime DataPedido { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime DataInicio { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime DataFim { get; set; }
-        public Motivo Motivo { get; set; }
-        public string Notas { get; set; } 
-        public Status Status { get; set; } 
-        public string ActionUserName { get; set; } 
-        public string RazaoRejeicao { get; set; }
+        public UserInfo LoggedUser { get; set; } = new UserInfo();
+        public List<Marcacao> Marcacoes { get; set; } = new List<Marcacao>();
     }
+    
     
     public class ApproveMarcacaoViewModel
     {
@@ -46,6 +37,12 @@ namespace emp_ferias.Models
         public int marcRejectId { get; set; }
         public bool sendEmail { get; set; }
         public string Razao { get; set; }
+    }
+
+    public class MyMarcacaoViewModel
+    {
+        public UserInfo UserInfo { get; set; } = new UserInfo();
+        public List<Marcacao> Marcacoes { get; set; } = new List<Marcacao>();
     }
 
     public class Events

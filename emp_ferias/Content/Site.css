@@ -157,6 +157,9 @@ th, td {
     padding-bottom: 5px;
     text-align: center; 
 }
+.btn:focus,.btn:active {
+   outline: none !important;
+}
 .btn-simple, .btn-simple:focus, .btn-simple:active {
     background-color: rgba(0,0,0,.0);
     border: 0;
@@ -442,4 +445,82 @@ th, td {
 }
 .col-md-10 {
     padding-left: 0;
+}
+#create-user-button {
+    vertical-align: middle; 
+    float: right;
+    width: 140px; 
+    margin-right: 0px;
+    height: 28px;
+}
+#create-new-button-wrapper {
+    padding-right: 0px;
+    padding-left: 0px;
+    height: 28px;
+}
+.pagination > li > a {
+    border-color: #6f5499;
+}
+.pagination > li > a:focus:active, paginate_button.previous.disabled > a:focus:active, paginate_button.next.disabled > a:focus:active {
+    outline: none !important;
+}
+.pagination > li > a:hover {
+    border-color: #6f5499;
+    background-color: #337ab7;
+    color: white;
+}
+.paginate_button.previous > a {
+    border-radius: 30px 0 0 30px !important;
+    border-color: #6f5499;
+    color: #6f5499;
+    width: 90px;
+    text-align: center !important;
+}
+.paginate_button.previous.disabled > a {
+    border-radius: 30px 0 0 30px;
+    width: 90px;
+    border-color: #777;
+    color: #777;
+    text-align: center !important;
+}
+.paginate_button.next > a {
+    border-top-right-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+    border-color: #6f5499;
+    color: #6f5499;
+    width: 90px;
+    text-align: center;
+}
+.paginate_button.next.disabled > a {
+    border-top-right-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+    border-color: #777;
+    color: #777;
+    width: 90px;
+    text-align: center;
+}
+#icon > small {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 35px;
+    vertical-align: central;
+}
+#MyTable_length {
+    display: inline-block;
+    float:left;
+}
+#MyTable_paginate {
+    display:inline-block;
+    float:right;
+}
+#MyTable_loading {
+    width: 100%;
+    height: 200px;
+    font-size: 3em;
+    color: #6f5499;
+    text-align: center;
+    line-height: 200px;
+}
+
+.data-my {
+    padding-bottom: 5px;
 }

@@ -111,6 +111,27 @@ namespace emp_ferias.lib.Services
             return (ExecutionResult);
         }   
 
+        //public List<ExecutionResult> Edit (int id)
+        //{
+        //    List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
+
+        //    Marcacao m = db.Marcacoes.Find(id);
+
+
+        //    if (m.DataFim < m.DataInicio)
+        //    {
+        //        ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de fim tem de ser depois da data de início." });
+        //    }
+        //    if (m.DataInicio <= DateTime.Now)
+        //    {
+        //        ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de início não pode ser antes ou no dia de hoje." });
+        //    }
+        //    if (!(Enum.IsDefined(typeof(Motivo), m.Motivo)))
+        //    {
+        //        ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Motivo inválido." });
+        //    }
+        //}
+
         public List<Marcacao> GetHome(string SenderId)
         {
             return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Include(x => x.User).Where(x => x.User.Id == SenderId && x.Status != Status.Rejeitado && x.Status != Status.Expirado).ToList();
@@ -224,10 +245,14 @@ namespace emp_ferias.lib.Services
             return new[] { Ferias, Justificada, Injustificada };
         } 
 
-        public Marcacao FindById(int MarcId)
+        public Marcacao FindById(bool IncludeActionUser, int? MarcId)
         {
-            return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Include(x => x.User).Where(x => x.Id == MarcId).FirstOrDefault();
+            if (IncludeActionUser)
+                return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Include(x => x.User).Where(x => x.Id == MarcId).FirstOrDefault();
+            else
+                return db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.Id == MarcId).FirstOrDefault();
         }
+
 
         public void RefreshStatus()
         {
