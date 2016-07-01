@@ -10,12 +10,17 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using emp_ferias.Models;
 using MvcFlashMessages;
+using System.Web.Caching;
+using emp_ferias.lib.Services;
+using emp_ferias.Services;
 
 namespace emp_ferias.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes(new ServiceLogin());
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -73,6 +78,7 @@ namespace emp_ferias.Controllers
             {
                 return View(model);
             }
+            //Cache.Add("LastUpdate", DateTime.Now, null, DateTime.Now.AddHours(6), Cache.NoSlidingExpiration, CacheItemPriority.NotRemovable);
 
             //  var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 

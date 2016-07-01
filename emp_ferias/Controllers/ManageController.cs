@@ -110,6 +110,7 @@ namespace emp_ferias.Controllers
             return Json(RazaoMarcacoes,JsonRequestBehavior.AllowGet);
         }
 
+
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()

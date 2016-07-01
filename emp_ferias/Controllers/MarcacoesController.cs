@@ -16,6 +16,7 @@ using MvcFlashMessages;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Net.Mail;
+using System.Globalization;
 
 namespace emp_ferias.Controllers
 {
@@ -375,9 +376,26 @@ namespace emp_ferias.Controllers
         }
 
         // GET: Marcacoes/MyTableData
-        public ActionResult MyTableData()
+        public ActionResult MyTableData(string fromDate, string toDate, fieldSelect fieldSelect)
         {
-            return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
+                DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
+                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, parsedToDate, fieldSelect)));
+            }
+            else if (!string.IsNullOrEmpty(fromDate))
+            {
+                DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
+                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, null, fieldSelect)));
+            }
+            else if (!string.IsNullOrEmpty(toDate))
+            {
+                DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
+                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, parsedToDate, fieldSelect)));
+            }
+            else
+                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, null, fieldSelect)));
         }
     }
 }

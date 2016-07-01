@@ -55,7 +55,7 @@
                         @item.Email
                     </td>
                     <td>
-                        @((Model.LoggedUser.RoleTests.IsAdmin) || (Model.LoggedUser.RoleTests.IsMod && item.RoleTests.IsUser) ? Html.ActionLink("Edit", "Edit", new { id = item.Id }) : Html.Display(""))
+                        @((Model.LoggedUser.RoleTests.IsAdmin) || (Model.LoggedUser.RoleTests.IsMod && item.RoleTests.IsUser) ? Html.ActionLink("Editar", "Edit", new { id = item.Id }) : Html.Display(""))
                     </td>
                 </tr>
             }

@@ -147,6 +147,45 @@ namespace emp_ferias.lib.Services
             return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.User.Id == SenderId && !x.UserNotificado && x.Status != Status.Pendente).ToList(); 
         }
 
+        public List<Marcacao> GetMyMarcacoes (string senderId, DateTime? fromDate, DateTime? toDate, fieldSelect fieldSelect)
+        {
+            if (fieldSelect == fieldSelect.Pedido)
+            {
+                if (fromDate == null && toDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
+                else if (fromDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido <= toDate && x.UserId == senderId).ToList();
+                else if (toDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido >= fromDate && x.UserId == senderId).ToList();
+                else
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido >= fromDate && x.DataPedido <= toDate).ToList();
+            }
+            else if (fieldSelect == fieldSelect.PorDataInicio)
+            {
+                if (fromDate == null && toDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
+                else if (fromDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= DateTime.MinValue && x.DataInicio <= toDate && x.UserId == senderId).ToList();
+                else if (toDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= fromDate && x.DataInicio <= DateTime.MaxValue && x.UserId == senderId).ToList();
+                else
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= fromDate && x.DataInicio <= toDate).ToList();
+            }
+            else if (fieldSelect == fieldSelect.PorDataFim)
+            {
+                if (fromDate == null && toDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
+                else if (fromDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= DateTime.MinValue && x.DataFim <= toDate && x.UserId == senderId).ToList();
+                else if (toDate == null)
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= fromDate && x.DataFim <= DateTime.MaxValue && x.UserId == senderId).ToList();
+                else
+                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= fromDate && x.DataFim <= toDate).ToList();
+            }        
+            else
+                return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList(); //if something fails then just display this and pretend nothing has happened
+        }
+
         public List<ExecutionResult> MarkAllAsRead(string SenderId)
         {
             List<Marcacao> Marcacoes = db.Marcacoes.Where(x => x.UserId == SenderId && !x.UserNotificado && x.Status != Status.Pendente).ToList();
@@ -253,17 +292,16 @@ namespace emp_ferias.lib.Services
                 return db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.Id == MarcId).FirstOrDefault();
         }
 
-
         public void RefreshStatus()
         {
             List<Marcacao> Marcacoes = db.Marcacoes.Where(x => x.Status == Status.Aprovado
-                                                                || x.Status == Status.EmProgresso
-                                                                || x.Status == Status.Pendente).ToList();
+                                                            || x.Status == Status.EmProgresso
+                                                            || x.Status == Status.Pendente).ToList();
             foreach (var i in Marcacoes)
             {
                 if (i.Status == Status.Pendente)
                 {
-                    if (i.DataInicio <= DateTime.Today)
+                    if (i.DataInicio <= DateTime.Today.Date)
                         i.Status = Status.Expirado;
                 }
                 else if (i.Status == Status.EmProgresso)
@@ -273,11 +311,11 @@ namespace emp_ferias.lib.Services
                 }
                 else
                 {
-                    if (i.DataInicio <= DateTime.Today)
+                    if (i.DataInicio <= DateTime.Today.Date)
                         i.Status = Status.EmProgresso;
                 }
-                db.SaveChanges();
             }
+            db.SaveChanges();
         }
     }
 }

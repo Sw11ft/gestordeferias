@@ -520,7 +520,9 @@ th, td {
     text-align: center;
     line-height: 200px;
 }
-
 .data-my {
     padding-bottom: 5px;
+}
+#filter-Limpar {
+    float: right;
 }
