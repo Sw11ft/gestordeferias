@@ -443,7 +443,7 @@ th, td {
 #notification-list {
     width: 448px;
 }
-.col-md-10 {
+.col-md-10, .col-md-6 {
     padding-left: 0;
 }
 #create-user-button {
@@ -523,6 +523,49 @@ th, td {
 .data-my {
     padding-bottom: 5px;
 }
-#filter-Limpar {
+#notas-input {
+    width: 80%;
+}
+#filter-OK, #filter-Limpar {
     float: right;
 }
+#filterPanel {
+    border-width: 0px;
+    border-radius: 0 0 10px 10px;
+}
+#filterPanel-header {
+    border-width: 0px;
+    border-radius: 10px 10px 0 0;
+    background-color: #6f5499;
+    color: white;
+    font-weight:bold;
+}
+#filters-body {
+    width: 500px;
+}
+#fromDate-input, #toDate-input {
+    width: 170px;
+}
+#fromDate {
+    float: left;
+}
+#toDate {
+    float:right;
+}
+#dateFilter-label {
+    line-height: 34px;
+}
+#filters-dates {
+    text-align: center;
+}
+#filters-header {
+    background-color: #6f5499;
+    color: white;
+}
+.filters-divider {
+    margin: 10px -15px 10px -15px;
+}
+.filterDateInput {
+    width: 140px !important;
+}
+

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace emp_ferias.lib.Services
             {
                 ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de fim tem de ser depois da data de início."});
             }
-            if (m.DataInicio <= DateTime.Now)
+            if (m.DataInicio <= DateTime.UtcNow)
             {
                 ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de início não pode ser antes ou no dia de hoje." });
             }
@@ -41,7 +42,7 @@ namespace emp_ferias.lib.Services
                 if (i.MessageType == MessageType.Error)
                     return(ExecutionResult);
 
-            m.DataPedido = DateTime.Now;
+            m.DataPedido = DateTime.UtcNow;
             m.UserId = _serviceLogin.GetUserID();
             m.Status = Status.Pendente;
 
@@ -122,7 +123,7 @@ namespace emp_ferias.lib.Services
         //    {
         //        ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de fim tem de ser depois da data de início." });
         //    }
-        //    if (m.DataInicio <= DateTime.Now)
+        //    if (m.DataInicio <= DateTime.UtcNow)
         //    {
         //        ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "A data de início não pode ser antes ou no dia de hoje." });
         //    }
@@ -147,43 +148,77 @@ namespace emp_ferias.lib.Services
             return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.User.Id == SenderId && !x.UserNotificado && x.Status != Status.Pendente).ToList(); 
         }
 
-        public List<Marcacao> GetMyMarcacoes (string senderId, DateTime? fromDate, DateTime? toDate, fieldSelect fieldSelect)
+        public List<Marcacao> GetMyMarcacoes (string SenderId, int? id, Motivo? Motivo, Status? Status, DateTime? pedido_fromDate, DateTime? pedido_toDate, DateTime? inicio_fromDate, DateTime? inicio_toDate, DateTime? fim_fromDate, DateTime? fim_toDate)
         {
-            if (fieldSelect == fieldSelect.Pedido)
-            {
-                if (fromDate == null && toDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
-                else if (fromDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido <= toDate && x.UserId == senderId).ToList();
-                else if (toDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido >= fromDate && x.UserId == senderId).ToList();
-                else
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido >= fromDate && x.DataPedido <= toDate).ToList();
-            }
-            else if (fieldSelect == fieldSelect.PorDataInicio)
-            {
-                if (fromDate == null && toDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
-                else if (fromDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= DateTime.MinValue && x.DataInicio <= toDate && x.UserId == senderId).ToList();
-                else if (toDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= fromDate && x.DataInicio <= DateTime.MaxValue && x.UserId == senderId).ToList();
-                else
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= fromDate && x.DataInicio <= toDate).ToList();
-            }
-            else if (fieldSelect == fieldSelect.PorDataFim)
-            {
-                if (fromDate == null && toDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
-                else if (fromDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= DateTime.MinValue && x.DataFim <= toDate && x.UserId == senderId).ToList();
-                else if (toDate == null)
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= fromDate && x.DataFim <= DateTime.MaxValue && x.UserId == senderId).ToList();
-                else
-                    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= fromDate && x.DataFim <= toDate).ToList();
-            }        
-            else
-                return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList(); //if something fails then just display this and pretend nothing has happened
+            var query = db.Marcacoes.AsQueryable().Include(x => x.ActionUser); 
+
+            if (!string.IsNullOrEmpty(SenderId))
+                query = query.Where(x => x.UserId == SenderId);
+
+            if (id.HasValue)
+                query = query.Where(x => x.Id == id);
+
+            if (Motivo.HasValue)
+                query = query.Where(x => x.Motivo == Motivo);
+
+            if (Status.HasValue)
+                query = query.Where(x => x.Status == Status);
+             
+            if (pedido_fromDate.HasValue)
+                query = query.Where(x => x.DataPedido >= pedido_fromDate);
+
+            if (pedido_toDate.HasValue)
+                query = query.Where(x => x.DataPedido <= pedido_toDate);
+
+            if (inicio_fromDate.HasValue)
+                query = query.Where(x => x.DataInicio >= inicio_fromDate);
+
+            if (inicio_toDate.HasValue)
+                query = query.Where(x => x.DataInicio <= inicio_toDate);
+
+            if (fim_fromDate.HasValue)
+                query = query.Where(x => x.DataFim >= fim_fromDate);
+
+            if (fim_toDate.HasValue)
+                query = query.Where(x => x.DataFim <= fim_toDate);
+
+
+            return query.ToList();
+            //if (fieldSelect == fieldSelect.Pedido)
+            //{
+            //    if (fromDate == null && toDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
+            //    else if (fromDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido <= toDate && x.UserId == senderId).ToList();
+            //    else if (toDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido >= fromDate && x.UserId == senderId).ToList();
+            //    else
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataPedido >= fromDate && x.DataPedido <= toDate).ToList();
+            //}
+            //else if (fieldSelect == fieldSelect.PorDataInicio)
+            //{
+            //    if (fromDate == null && toDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
+            //    else if (fromDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= DateTime.MinValue && x.DataInicio <= toDate && x.UserId == senderId).ToList();
+            //    else if (toDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= fromDate && x.DataInicio <= DateTime.MaxValue && x.UserId == senderId).ToList();
+            //    else
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataInicio >= fromDate && x.DataInicio <= toDate).ToList();
+            //}
+            //else if (fieldSelect == fieldSelect.PorDataFim)
+            //{
+            //    if (fromDate == null && toDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList();
+            //    else if (fromDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= DateTime.MinValue && x.DataFim <= toDate && x.UserId == senderId).ToList();
+            //    else if (toDate == null)
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= fromDate && x.DataFim <= DateTime.MaxValue && x.UserId == senderId).ToList();
+            //    else
+            //        return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.DataFim >= fromDate && x.DataFim <= toDate).ToList();
+            //}        
+            //else
+            //    return db.Marcacoes.AsNoTracking().Include(x => x.ActionUser).Where(x => x.UserId == senderId).ToList(); //if something fails then just display this and pretend nothing has happened
         }
 
         public List<ExecutionResult> MarkAllAsRead(string SenderId)
@@ -292,6 +327,12 @@ namespace emp_ferias.lib.Services
                 return db.Marcacoes.AsNoTracking().Include(x => x.User).Where(x => x.Id == MarcId).FirstOrDefault();
         }
 
+        public void RefreshMarcStatus()
+        {
+            if (!MemoryCache.Default.Contains("RefreshMarcStatus"))
+                RefreshStatus();
+        }
+
         public void RefreshStatus()
         {
             List<Marcacao> Marcacoes = db.Marcacoes.Where(x => x.Status == Status.Aprovado
@@ -316,6 +357,9 @@ namespace emp_ferias.lib.Services
                 }
             }
             db.SaveChanges();
+
+            if (!MemoryCache.Default.Contains("RefreshMarcStatus"))
+                MemoryCache.Default.Add("RefreshMarcStatus", "", DateTimeOffset.Now.AddHours(6));
         }
     }
 }

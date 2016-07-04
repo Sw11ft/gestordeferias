@@ -376,26 +376,37 @@ namespace emp_ferias.Controllers
         }
 
         // GET: Marcacoes/MyTableData
-        public ActionResult MyTableData(string fromDate, string toDate, fieldSelect fieldSelect)
+        public ActionResult MyTableData(int? id, Motivo? Motivo, Status? Status, DateTime? pedido_fromDate, DateTime? pedido_toDate, DateTime? inicio_fromDate, DateTime? inicio_toDate, DateTime? fim_fromDate, DateTime? fim_toDate)
         {
-            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
-            {
-                DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
-                DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
-                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, parsedToDate, fieldSelect)));
-            }
-            else if (!string.IsNullOrEmpty(fromDate))
-            {
-                DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
-                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, null, fieldSelect)));
-            }
-            else if (!string.IsNullOrEmpty(toDate))
-            {
-                DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
-                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, parsedToDate, fieldSelect)));
-            }
-            else
-                return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, null, fieldSelect)));
+            #region nvm
+            //if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            //{
+            //    DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
+            //    DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
+            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, parsedToDate, fieldSelect)));
+            //}
+            //else if (!string.IsNullOrEmpty(fromDate))
+            //{
+            //    DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
+            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, null, fieldSelect)));
+            //}
+            //else if (!string.IsNullOrEmpty(toDate))
+            //{
+            //    DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
+            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, parsedToDate, fieldSelect)));
+            //}
+            //else
+            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, null, fieldSelect)));
+            #endregion
+            //return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), id, Motivo, Status,
+            //                   string.IsNullOrEmpty(pedido_fromDate) ? (DateTime?)null : DateTime.Parse(pedido_fromDate, new CultureInfo("pt-PT")),
+            //                   string.IsNullOrEmpty(pedido_toDate) ? (DateTime?)null : DateTime.Parse(pedido_toDate, new CultureInfo("pt-PT")),
+            //                   string.IsNullOrEmpty(inicio_fromDate) ? (DateTime?)null : DateTime.Parse(inicio_fromDate, new CultureInfo("pt-PT")),
+            //                   string.IsNullOrEmpty(inicio_toDate) ? (DateTime?)null : DateTime.Parse(inicio_toDate, new CultureInfo("pt-PT")),
+            //                   string.IsNullOrEmpty(fim_fromDate) ? (DateTime?)null : DateTime.Parse(fim_fromDate, new CultureInfo("pt-PT")),
+            //                   string.IsNullOrEmpty(fim_toDate) ? (DateTime?)null : DateTime.Parse(fim_toDate, new CultureInfo("pt-PT")))));
+
+            return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), id, Motivo, Status, pedido_fromDate, pedido_toDate, inicio_fromDate, inicio_toDate, fim_fromDate, fim_toDate)));
         }
     }
 }

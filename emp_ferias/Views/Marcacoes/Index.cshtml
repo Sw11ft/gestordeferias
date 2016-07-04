@@ -325,12 +325,6 @@
                                                    : "label-warning"
                                                    )">@(item.Status == Status.EmProgresso ? Html.Label("Em Progresso") : Html.DisplayFor(x => item.Status))</span>
                             </td>
-                            <td>
-                                @if (item.Status == Status.Pendente && item.User.Id == Model.LoggedUser.Id)
-                                {
-                                    <a href="@Html.Action("Edit","Marcacoes", new { id = item.Id})"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                }
-                            </td>
                         </tr>
                     }
                 }

@@ -6,6 +6,106 @@
     ViewBag.Title = "Minhas Marcações - Gestor de Férias";
 }
 
+<div class="modal fade" id="filters" tabindex="-1" role="dialog" aria-labelledby="filters">
+    <div class="modal-dialog modal-sm" role="document" id="filters-body">
+        <div class="modal-content">
+            <div class="modal-header" id="filters-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="filters-title">Filtros</h4>
+            </div>
+            <div class="modal-body" style="text-align: left">
+
+                <label id="ID-label">ID</label>
+                <input type="number" class="form-control" id="ID-input" />
+
+                <hr class="filters-divider" />
+
+                <label>Razão</label>
+                <select class="form-control" id="motivoSelect">
+                    <option value=""></option>
+                    <option value="0">Férias</option>
+                    <option value="1">Justificada</option>
+                    <option value="2">Injustificada</option>
+                </select>
+                
+                <hr class="filters-divider"/>
+
+                <label>Estado</label>
+                <select class="form-control" id="statusSelect">
+                    <option value=""></option>
+                    <option value="1">Rejeitado</option>
+                    <option value="2">Expirado</option>
+                    <option value="3">Finalizado</option>
+                    <option value="4">Em Progresso</option>
+                    <option value="5">Aprovado</option>
+                </select> 
+
+                <hr class="filters-divider" />
+
+                <label>Data de Pedido</label>
+                <div class="form-inline" id="filters-dates">
+                    <div class="input-group divs_Datas data_my " id="pedido-fromDate">
+                        <input type="text" class="form-control filterDateInput" id="pedido-fromDate-input" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <label id="dateFilter-label">&nbsp; até &nbsp;</label>
+                    <div class="input-group divs_Datas data_my" id="pedido-toDate">
+                        <input type="text" class="form-control filterDateInput" id="pedido-toDate-input" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <hr class="filters-divider" />
+
+                <label>Data de Inicio</label>
+                <div class="form-inline" id="filters-dates">
+                    <div class="input-group divs_Datas data_my" id="inicio-fromDate">
+                        <input type="text" class="form-control filterDateInput" id="inicio-fromDate-input" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <label id="dateFilter-label">&nbsp; até &nbsp;</label>
+                    <div class="input-group divs_Datas data_my" id="inicio-toDate">
+                        <input type="text" class="form-control filterDateInput" id="inicio-toDate-input" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <hr class="filters-divider" />
+
+                <label>Data de Fim</label>
+                <div class="form-inline" id="filters-dates">
+                    <div class="input-group divs_Datas data_my" id="fim-fromDate">
+                        <input type="text" class="form-control filterDateInput" id="fim-fromDate-input" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <label id="dateFilter-label">&nbsp; até &nbsp;</label>
+                    <div class="input-group divs_Datas data_my" id="fim-toDate">
+                        <input type="text" class="form-control filterDateInput" id="fim-toDate-input" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div> 
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeModalButton" class="btn btn-round-neutral" data-dismiss="modal">Cancelar</button>
+                <button type="button" value="Aprovar" class="btn btn-round-success" onclick="FillTable()" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="jumbotron">
     <div class="container-fluid body-content" style="width: 70%">
         <h1 id="icon">Marcações <small style="text-transform: uppercase">@Model.LoggedUser.UserName</small></h1>
@@ -19,33 +119,43 @@
         <li>@Html.ActionLink("Marcações", "Index", "Marcacoes")</li>
         <li class="active">Minhas Marcações</li>
     </ol>
-    @Html.RenderFlash()     
-    <form class="form-inline">
-        <label>Filtrar de &nbsp;</label>
-        <div class="input-group divs_Datas data_my" id="fromDate">
-            <input type="text" class="form-control" id="fromDate-input"/>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
+    @Html.RenderFlash()
+    <div class="panel panel-default" id="filterPanel">
+        <div class="panel-heading" id="filterPanel-header">
+            <h3 class="panel-title">Filtros</h3>
         </div>
-        <label>&nbsp; até &nbsp;</label>
-        <div class="input-group divs_Datas data_my" id="toDate">
-            <input type="text" class="form-control" id="toDate-input"/>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
+        <div class="panel-body bg-info">
+            <form class="form-inline" id="form-1">
+                <div class="col-md-2">
+                    
+                </div>
+                
+                <div class="col-md-2">
+                    
+                </div>
+                <div class="col-md-2">
+                    
+                </div>
+                <div class="col-md-6" id="notas-group">
+                    <label> Notas incluem &nbsp;</label>
+                    <input type="text" class="form-control" id="notas-input"/> 
+                </div>
+            </form>
+            <form class="form-inline" id="form-2">
+                <div class="col-md-8">
+                   
+                </div>
+                
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-round-default" id="filter-Limpar" onclick="CleanButton()">Limpar</button>
+                    <button type="button" class="btn btn-round-default" id="filter-OK" data-toggle="modal" data-target="#filters">Editar</button>
+                </div>
+                
+            </form>
+            
         </div>
-        <label>&nbsp; no campo &nbsp;</label>
-        <select class="form-control" id="fieldSelect">
-            <option value="0">Data de Pedido</option>
-            <option value="1">Data de Inicio</option>
-            <option value="2">Data de Fim</option>
-        </select>
-        <button type="button" class="btn btn-round-default" id="filter-OK" onclick="FillTable()">OK</button>
-        <button type="button" class="btn btn-round-default" id="filter-Limpar" onclick="CleanButton()">Limpar</button>
-            
-            
-    </form>
+    </div>     
+    
     <div id="MyTable_loading">
         <i class="fa fa-cog fa-spin fa-3x fa-fw" id="tableState-symbol"></i>
     </div>
@@ -55,19 +165,64 @@
 </div>
 
 @section scripts {
+    <script src="~/bower_components/numbox/numbox.min.js"></script>
     <script>
         $(function () {
-            FillTable(); 
+            $("#ID-input").NumBox({ type: "integer", separator: "", min: 1 });
+            FillTable();
         })
         function FillTable() {
+            if ($("#pedido-fromDate").data("DateTimePicker").date() == null) {
+                var pedido_fromDate = null;    
+            }
+            else {
+                var pedido_fromDate = $("#pedido-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            }
+            if ($("#pedido-toDate").data("DateTimePicker").date() == null) {
+                var pedido_toDate = null;    
+            }
+            else {
+                var pedido_toDate = $("#pedido-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            }
+            if ($("#inicio-fromDate").data("DateTimePicker").date() == null) {
+                var inicio_fromDate = null;    
+            }
+            else {
+                var inicio_fromDate = $("#inicio-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            }
+            if ($("#inicio-toDate").data("DateTimePicker").date() == null) {
+                var inicio_toDate = null;    
+            }
+            else {
+                var inicio_toDate = $("#inicio-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            }
+            if ($("#fim-fromDate").data("DateTimePicker").date() == null) {
+                var fim_fromDate = null;    
+            }
+            else {
+                var fim_fromDate = $("#fim-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            }
+            if ($("#fim-toDate").data("DateTimePicker").date() == null) {
+                var fim_toDate = null;    
+            }
+            else {
+                var fim_toDate = $("#fim-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            }
+             
             var table = $("#MyTable");
             $.ajax({
                 url: "/Marcacoes/MyTableData",
                 type: "GET",
                 data: {
-                    "fromDate": $("#fromDate-input").val(),
-                    "toDate": $("#toDate-input").val(),
-                    "fieldSelect": $("#fieldSelect").val(),
+                    "id": $("#ID-input").NumBox("getRaw"),
+                    "Motivo": $("#motivoSelect").val(),
+                    "Status": $("#statusSelect").val(),
+                    "pedido_fromDate": pedido_fromDate,
+                    "pedido_toDate": pedido_toDate,
+                    "inicio_fromDate": inicio_fromDate,
+                    "inicio_toDate": inicio_toDate,
+                    "fim_fromDate": fim_fromDate,
+                    "fim_toDate": fim_toDate
                 },
                 cache: false,
                 context: table,

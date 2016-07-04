@@ -32,13 +32,6 @@ namespace emp_ferias.lib.Classes
         PorMarcacao,
         PorTotalDeDias
     }
-
-    public enum fieldSelect
-    {
-        Pedido,
-        PorDataInicio,
-        PorDataFim
-    }
     #endregion
 
     [Table("Marcacoes")]
