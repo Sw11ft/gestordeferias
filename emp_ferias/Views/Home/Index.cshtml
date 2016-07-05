@@ -6,14 +6,21 @@
     ViewBag.Title = "Página Inicial";
 }
 
-<div class="jumbotron" style="background-image: linear-gradient(315deg,#271b38,#563d7c,#7952b3)">
+<div class="jumbotron">
     <div class="container-fluid body-content">
         <div class="icon-bg"><span class="fa fa-paperclip" aria-hidden="true"></span></div>
     </div>
 </div>
 
 
-<div class="content" style="width: 70%; height: 100%;">
+<div class="content">
+
+    <div class="regionHeader overflow panel panel-default no-margin-top">
+        <div class="regionHeader-header panel-heading">
+            <h3 class="panel-title">Bem-vindo, <strong>@User.Identity.Name!</strong></h3>
+        </div>
+    </div> 
+
     @Html.RenderFlash()
     <div class="col-md-8">
         <h2 id="welcome-message">Bem-vindo, @User.Identity.Name! </h2>

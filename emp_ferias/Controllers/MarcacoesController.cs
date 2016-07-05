@@ -140,17 +140,17 @@ namespace emp_ferias.Controllers
                         };
                         if (m.DataFim < DateTime.Today)
                         {
-                            newEvent.color = "#777";
+                            newEvent.color = "#FF9500";
                             newEvent.textColor = "#ffffff";
                         }
                         else if (m.DataFim >= DateTime.Today && m.DataInicio <= DateTime.Today)
                         {
-                            newEvent.color = "#337ab7";
+                            newEvent.color = "#4cd964";
                             newEvent.textColor = "#ffffff";
                         }
                         else
                         {
-                            newEvent.color = "#5bc0de";
+                            newEvent.color = "#2C93FF";
                             newEvent.textColor = "#ffffff";
                         }
                         EventList.Add(newEvent);
@@ -330,17 +330,28 @@ namespace emp_ferias.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-                return RedirectToAction("Index");
+                return RedirectToAction("My");
 
-            Marcacao marcacao = serviceMarcacoes.FindById(false, id);
+            Marcacao Marcacao = serviceMarcacoes.FindById(false, id);
 
-            if (marcacao == null)
+            if (Marcacao == null)
             {
                 this.Flash("error", "Marcação não encontrada");
-                return RedirectToAction("Index");
+                return RedirectToAction("My");
             }
 
-            return View(marcacao);
+            if (Marcacao.UserId != User.Identity.GetUserId())
+            {
+                this.Flash("error", "Não tem permissões para efetuar esta operação.");
+                return RedirectToAction("My");
+            }
+            if (Marcacao.Status != Status.Pendente)
+            {
+                this.Flash("error", "Não é possível editar a marcação pois já foi tomada uma ação sobre ela.");
+                return RedirectToAction("My");
+            }
+
+            return View(Marcacao);
         }
 
         // POST: Marcacoes/Edit/5
@@ -348,9 +359,33 @@ namespace emp_ferias.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Marcacao Marcacao)
         {
-            return View();
+            if (Marcacao.UserId != User.Identity.GetUserId())
+            {
+                this.Flash("error", "Não tem permissões para efetuar esta operação.");
+                return RedirectToAction("My");
+            }
+            if (Marcacao.Status != Status.Pendente)
+            {
+                this.Flash("error", "Não é possível editar a marcação pois já foi tomada uma ação sobre ela.");
+                return RedirectToAction("My"); 
+            }
+
+            List<ExecutionResult> ExecutionResult = serviceMarcacoes.Edit(Marcacao);
+            var valid = true;
+
+            foreach (var i in ExecutionResult)
+                if (i.MessageType == MessageType.Error)
+                {
+                    this.Flash("error", i.Message);
+                    valid = false;
+                }
+
+            if (valid) this.Flash("success", "Marcação editada com sucesso.");
+            else return View(Marcacao);
+
+            return RedirectToAction("My");
         }
 
         // GET: Marcacoes/Delete/5
@@ -372,40 +407,12 @@ namespace emp_ferias.Controllers
         // GET: Marcacoes/My
         public ActionResult My()
         {
-            return View(MapIndexMarcacaoViewModel(serviceMarcacoes.GetUserMarcacoes(User.Identity.GetUserId())));
+            return View(MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyPendingMarcacoes(User.Identity.GetUserId())));
         }
 
         // GET: Marcacoes/MyTableData
         public ActionResult MyTableData(int? id, Motivo? Motivo, Status? Status, DateTime? pedido_fromDate, DateTime? pedido_toDate, DateTime? inicio_fromDate, DateTime? inicio_toDate, DateTime? fim_fromDate, DateTime? fim_toDate)
         {
-            #region nvm
-            //if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
-            //{
-            //    DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
-            //    DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
-            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, parsedToDate, fieldSelect)));
-            //}
-            //else if (!string.IsNullOrEmpty(fromDate))
-            //{
-            //    DateTime parsedFromDate = DateTime.Parse(fromDate.ToString(), new CultureInfo("pt-PT"));
-            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), parsedFromDate, null, fieldSelect)));
-            //}
-            //else if (!string.IsNullOrEmpty(toDate))
-            //{
-            //    DateTime parsedToDate = DateTime.Parse(toDate.ToString(), new CultureInfo("pt-PT"));
-            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, parsedToDate, fieldSelect)));
-            //}
-            //else
-            //    return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), null, null, fieldSelect)));
-            #endregion
-            //return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), id, Motivo, Status,
-            //                   string.IsNullOrEmpty(pedido_fromDate) ? (DateTime?)null : DateTime.Parse(pedido_fromDate, new CultureInfo("pt-PT")),
-            //                   string.IsNullOrEmpty(pedido_toDate) ? (DateTime?)null : DateTime.Parse(pedido_toDate, new CultureInfo("pt-PT")),
-            //                   string.IsNullOrEmpty(inicio_fromDate) ? (DateTime?)null : DateTime.Parse(inicio_fromDate, new CultureInfo("pt-PT")),
-            //                   string.IsNullOrEmpty(inicio_toDate) ? (DateTime?)null : DateTime.Parse(inicio_toDate, new CultureInfo("pt-PT")),
-            //                   string.IsNullOrEmpty(fim_fromDate) ? (DateTime?)null : DateTime.Parse(fim_fromDate, new CultureInfo("pt-PT")),
-            //                   string.IsNullOrEmpty(fim_toDate) ? (DateTime?)null : DateTime.Parse(fim_toDate, new CultureInfo("pt-PT")))));
-
             return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), id, Motivo, Status, pedido_fromDate, pedido_toDate, inicio_fromDate, inicio_toDate, fim_fromDate, fim_toDate)));
         }
     }

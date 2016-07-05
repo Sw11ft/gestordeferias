@@ -6,28 +6,26 @@
 
 <div class="jumbotron">
     <div class="container-fluid body-content">
-        <h1 id="icon">Utilizadores</h1>
+        <h1 id="icon">Utilizadores&nbsp;
+        @if (Model.LoggedUser.RoleTests.IsAdmin)
+            {
+            <button class="btn-simple" style="font-size: 0.8em" onclick="location.href='@Url.Action("Create", "User")'; return false;"><i data-count="Admin" class="fa fa-user-plus notification-icon"></i></button>
+        }
+        </h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
 
 
 <div class="content">
-    <div class="col-md-@(Model.LoggedUser.RoleTests.IsAdmin ? "10" : "12")" style="padding-left: 0px; padding-right: 0px;">
-        <ol class="breadcrumb">
+        <ol class="overflow breadcrumb">
             <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
             <li class="active">Utilizadores</li>
         </ol>
-    </div>
-    @Html.RenderFlash()
-    @if (Model.LoggedUser.RoleTests.IsAdmin)
-    {
-        <div class="col-md-2" id="create-new-button-wrapper">
-            <button onclick="location.href='@Url.Action("Create", "User")';return false;" class="btn btn-round-default" id="create-user-button"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Criar Utilizador</button>
-        </div>
-    }
     
-
+    @Html.RenderFlash()
+    
+    <br />
     <table class="table table-hover" id="usersTable">
         <thead>
             <tr>
@@ -42,7 +40,7 @@
             @foreach (var item in Model.UserList)
             {
                 <tr class="bg-info">
-                    <td style="color: @(item.Role == "Administrador" ? "#6f5499" : item.Role == "Moderador" ? "red" : "#777")">
+                    <td style="color: @(item.Role == "Administrador" ? "#2C93FF" : item.Role == "Moderador" ? "red" : "#777")">
                         <strong>@item.Role</strong>
                     </td>
                     <td>

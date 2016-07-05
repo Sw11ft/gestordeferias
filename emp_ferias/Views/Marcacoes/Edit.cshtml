@@ -1,108 +1,105 @@
-﻿@model emp_ferias.lib.Classes.Marcacao
+﻿@using MvcFlashMessages
+@model emp_ferias.lib.Classes.Marcacao
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar Marcação - Gestor de Férias";
 }
 
-<h2>Edit</h2>
+<div class="jumbotron">
+    <div class="container-fluid body-content">
+        <h1 id="icon">Editar Marcação <small id="MyTitleSmall"><span class="label label-info">@Model.Id</span></small></h1>
+        <p class="lead container body-content jumbotron-description"></p>
+    </div>
+</div>
+
+<div class="content">
+    <ol class="breadcrumb overflow no-margin-bottom no-margin-top">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Marcações", "Index", "Marcacoes")</li>
+        <li>@Html.ActionLink("Minhas Marcações", "My", "Marcacoes")</li>
+        <li class="active">Editar Marcação @Model.Id</li>
+    </ol>
 
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Marcacao</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+    @using (Html.BeginForm("Edit", "Marcacao", FormMethod.Post, new { @class = "top15" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.UserId)
+        @Html.RenderFlash()
+        <div class="form-horizontal col-lg-offset-3">
+            <div class="form-group col-lg-offset-3">
+                @Html.Label("De", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
+                    <div class='input-group date divs_Datas'>
+                        @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", @id = "dtMin" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.DataInicio, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserId, "UserId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("UserId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataPedido, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DataPedido, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DataPedido, "", new { @class = "text-danger" })
+            <div class="form-group col-lg-offset-3">
+                @Html.Label("Até", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
+                    <div class='input-group date divs_Datas'>
+                        @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", @id = "dtMax" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.DataFim, "", new { @class = "text-danger" })
+
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataInicio, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DataInicio, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.Label("Notas", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
+                    @Html.TextAreaFor(model => model.Notas, new { @class = "form-control", @id = "charactersTextBox", @rows = "5" })
+                    <div class="panel panel-default" id="charactersPanel">
+                        <div class="panel-body" style="text-align: center">
+                            <b>Caracteres restantes: </b><span id="characters">100</span>
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Notas, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataFim, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DataFim, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.Label("Razão", htmlAttributes: new { @class = "control-label col-lg-2" })
+                <div class="col-lg-5">
+                    @Html.EnumDropDownListFor(model => model.Motivo, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Motivo, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Observacoes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Observacoes, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Observacoes, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Aprovado, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Aprovado)
-                    @Html.ValidationMessageFor(model => model.Aprovado, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <input id="submit-btn" type="submit" value="Editar" class="btn btn-round-primary" />
                 </div>
             </div>
         </div>
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserIdAprovacao, "UserIdAprovacao", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("UserIdAprovacao", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.UserIdAprovacao, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RazaoAprovacao, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RazaoAprovacao, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RazaoAprovacao, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Motivo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.Motivo, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Motivo, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
+@section scripts {
+    <script>
+        $(function () {
+            $('#characters').text(100 - $('#charactersTextBox').val().trim().length);
 
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+            $('#charactersTextBox').on('change keyup paste click', function () {
+                $('#characters').text(100 - $('#charactersTextBox').val().trim().length);
+
+                if ($('#charactersTextBox').val().trim().length > 100) {
+                    $('#submit-btn').prop('disabled', true);
+                }
+                else {
+                    $('#submit-btn').prop('disabled', false);
+                }
+            });
+        });
+    </script>
+}

@@ -14,7 +14,7 @@
 
 <div class="content">
 
-    <ol class="breadcrumb">
+    <ol class="overflow breadcrumb">
         <li>@Html.ActionLink("Home", "Index", "Home")</li>
         <li>@Html.ActionLink("Marcações", "Index", "Marcacoes")</li>
         <li class="active">Criar Marcação</li>
@@ -24,9 +24,8 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-
-        <div style="width: 50%; margin: 0 auto;">@Html.RenderFlash()</div>
-        <div class="form-horizontal col-lg-offset-3">
+        @Html.RenderFlash()
+        <div class="form-horizontal col-lg-offset-3 top15">
             <div class="form-group col-lg-offset-3">
                 @Html.Label("De", htmlAttributes: new { @class = "control-label col-lg-2" })
                 <div class="col-lg-5">
@@ -78,7 +77,7 @@
 
             <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10">
-                    <input id="submit-btn" type="submit" value="Criar" class="btn btn-round-neutral" />
+                    <input id="submit-btn" type="submit" value="Criar" class="btn btn-round-default" />
                 </div>
             </div>
         </div>

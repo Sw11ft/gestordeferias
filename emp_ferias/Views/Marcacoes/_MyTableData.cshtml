@@ -76,7 +76,7 @@
                     <span class="label @(item.Status == Status.EmProgresso ? "label-success"
                                                        : item.Status == Status.Aprovado ? "label-primary"
                                                        : item.Status == Status.Expirado ? "label-default"
-                                                       : item.Status == Status.Finalizado ? "label-info"
+                                                       : item.Status == Status.Finalizado ? "label-warning"
                                                        : item.Status == Status.Rejeitado ? "label-danger"
                                                        : "label-warning"
                                                        )">@(item.Status == Status.EmProgresso ? Html.Label("Em Progresso") : Html.DisplayFor(x => item.Status))</span>

@@ -34,12 +34,13 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-left">
                         <li><a href="@Url.Action("Index", "Home")">Página Inicial</a></li>
-                        <li><a href="@Url.Action("Index", "User")">Painel de Utilizadores</a></li>
+                        <li><a href="@Url.Action("Index", "User")">Utilizadores</a></li>
                         <li><a href="@Url.Action("Index", "Role")">Painel de Funções</a></li>
                         <li class="dropdown">
                             <a href="@Url.Action("Index", "Marcacoes")" class="dropdown-toggle" data-toggle="dropdown" data-trigger="hover" role="button" aria-haspopup="false" aria-expanded="false">Marcações <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="@Url.Action("Index", "Marcacoes")">Índice</a></li>
+                                <li><a href="@Url.Action("My", "Marcacoes")">Minhas Marcações</a></li>
                                 <li><a href="@Url.Action("Overview", "Marcacoes")">Calendário</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="@Url.Action("Create", "Marcacoes")"><i class="fa fa-bookmark-o" aria-hidden="true"></i><i class="fa fa-plus" aria-hidden="true" style="font-size: 0.3em;"></i>&nbsp;Criar Marcação</a></li>
@@ -66,7 +67,7 @@
             </div>
         </div>
         
-        <script src="~/bower_components/jquery/dist/jquery.js"></script>
+        <script src="~/bower_components/jquery/jquery.js"></script>
         <script src="~/bower_components/jquery-validation/dist/jquery.validate.js"></script>
         <script src="~/bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
         <script src="~/bower_components/jquery-validation/dist/jquery.validate.date.js"></script>
@@ -78,7 +79,6 @@
         <script src="~/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
         <script src="~/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
         <script src="~/bower_components/fullcalendar/dist/lang/pt.js"></script>
-        <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
                 $('.divs_Datas').datetimepicker({
@@ -116,6 +116,10 @@
                 //    })
                 //});
             });
+
+            function HideFlash(element) {
+                $(element).parent().slideUp(200);
+            }
 
             function MarkAsRead(id) {
                 $.ajax({

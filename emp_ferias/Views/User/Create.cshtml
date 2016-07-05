@@ -19,7 +19,7 @@
 
 <div class="content">
 
-    <ol class="breadcrumb">
+    <ol class="overflow breadcrumb">
         <li>@Html.ActionLink("Home", "Index", "Home")</li>
         <li>@Html.ActionLink("Utilizadores", "Index", "User")</li>
         <li class="active">Criar Utilizador</li>
@@ -27,32 +27,35 @@
 
     @Html.RenderFlash()
 
-    @using (Html.BeginForm("Create", "User", FormMethod.Post, new { @class = "form-horizontal col-lg-offset-3", role = "form" }))
+    @using (Html.BeginForm("Create", "User", FormMethod.Post, new { @class = "form-horizontal col-lg-offset-3 top15", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary("", new { @class = "text-danger" })
         <div class="form-group">
             @Html.Label("Nome de Utilizador", new { @class = "col-md-2 control-label" })
             <div class="col-md-5">
                 @Html.TextBoxFor(m => m.UserName, new { @class = "form-control col-lg-5" })
+                @Html.ValidationMessageFor(m => m.UserName)
             </div>
         </div>
         <div class="form-group">
             @Html.Label("Email", new { @class = "col-md-2 control-label" })
             <div class="col-md-5">
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control col-lg-5" })
+                @Html.ValidationMessageFor(m => m.Email)
             </div>
         </div>
         <div class="form-group">
             @Html.Label("Password", new { @class = "col-md-2 control-label" })
             <div class="col-md-5">
                 @Html.PasswordFor(m => m.Password, new { @class = "form-control col-lg-5" })
+                @Html.ValidationMessageFor(m => m.Password)
             </div>
         </div>
         <div class="form-group">
             @Html.Label("Confirmar Password", new { @class = "col-md-2 control-label" })
             <div class="col-md-5">
                 @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control col-lg-5" })
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
             </div>
         </div>
 
@@ -60,6 +63,7 @@
             @Html.Label("Função", new { @class = "col-md-2 control-label" })
             <div class="col-md-5">
                 @Html.DropDownListFor(m => m.Role, Role, new { @class = "form-control col-lg-5" })
+                @Html.ValidationMessageFor(m => m.Role)
             </div>
         </div>
         <div class="form-group">

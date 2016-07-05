@@ -14,18 +14,17 @@
 </div>
 
 <div class="content">
-    <ol class="breadcrumb">
+    <ol class="overflow breadcrumb">
         <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
         <li class="active">Conta</li>
     </ol>
     @Html.RenderFlash()
-    <div class="col-md-12" style="padding: 0">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                Marcações
-            </div>
+    <div class="overflow panel panel-default regionHeader" style="margin-top: 0px;">
+        <div class="panel-heading regionHeader-header">
+            <h3 class="panel-title">Marcações</h3>
         </div>
-    </div>
+    </div>  
+
     <div class="col-md-6">
         <form class="form-inline">
             <label>Marcações efetuadas &nbsp;</label>
@@ -60,7 +59,7 @@
                 <div class="progress-bar progress-bar-success" style="width: @acceptedString" data-toggle="tooltip" data-placement="left" title="@accepted (@acceptedString) marcações aceites.">
                     <span class="sr-only">@acceptedString</span>
                 </div>
-                <div class="progress-bar progress-bar-danger" style="width: @rejectedString" data-toggle="tooltip" data-placement="right" title="@(total-accepted) (@rejectedString) marcações rejeitadas.">
+                <div class="progress-bar progress-bar-warning" style="width: @rejectedString" data-toggle="tooltip" data-placement="right" title="@(total-accepted) (@rejectedString) marcações rejeitadas.">
                     <span class="sr-only">@rejectedString</span>
                 </div>
             </div>
@@ -117,9 +116,9 @@
                             <span class="label @(item.Status == Status.EmProgresso ? "label-success"
                                                    : item.Status == Status.Aprovado ? "label-primary"
                                                    : item.Status == Status.Expirado ? "label-default"
-                                                   : item.Status == Status.Finalizado ? "label-info"
+                                                   : item.Status == Status.Finalizado ? "label-warning"
                                                    : item.Status == Status.Rejeitado ? "label-danger"
-                                                   : "label-warning"
+                                                   : "label-default"
                                                    )">@(item.Status == Status.EmProgresso ? Html.Label("Em Progresso") : Html.DisplayFor(x => item.Status))</span>
                         </td>
                     </tr>
@@ -133,13 +132,12 @@
             </tbody>
         </table>
     </div>
-    <div class="col-md-12" style="padding: 0">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                Dados
-            </div>
+    <br />
+    <div class="regionHeader overflow panel panel-default no-margin-top">
+        <div class="panel-heading regionHeader-header" >
+            <h3 class="panel-title">Dados</h3>
         </div>
-    </div>
+    </div>  
     <table id="#userdata" align="center" style="width: 40%">
         <tr>
             <td class="userinfo-left"><label class="userinfo">ID</label></td>
@@ -212,14 +210,14 @@
                                     label: '# de dias',
                                     data: data,
                                     backgroundColor: [
-                                        'rgba(51, 122, 183, 0.7)',
-                                        'rgba(92, 184, 92, 0.7)',
-                                        'rgba(217, 83, 79, 0.7)'
+                                        'rgba(44, 147, 255, 1)',
+                                        'rgba(76, 217, 100, 1)',
+                                        'rgba(255, 152, 0, 1)'
                                     ],
                                     borderColor: [
-                                        'rgba(51, 122, 183, 1)',
-                                        'rgba(92, 184, 92, 1)',
-                                        'rgba(217, 83, 79, 0.7)'
+                                        'rgba(44, 147, 255, 0.7)',
+                                        'rgba(76, 217, 100, 0.7)',
+                                        'rgba(255, 152, 0, 0.7)'
                                     ],
                                     borderWidth: 1
                                 }]

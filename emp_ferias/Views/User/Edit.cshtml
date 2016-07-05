@@ -46,17 +46,17 @@
 
 <div class="jumbotron" style="border-radius: 0 0; padding: 0 0 0 0">
     <div class="container-fluid body-content" style="width: 70%">
-        <h1 id="icon">Utilizadores<small> @Model.CurrentUsername</small></h1>
+        <h1 id="icon">Utilizador <small id="MyTitleSmall"><span class="label label-info">@Model.CurrentUsername</span></small></h1>
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
 
 <div class="content">
     
-    <ol class="breadcrumb">
+    <ol class="overflow breadcrumb">
         <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
         <li>@Html.ActionLink("Utilizadores", "Index", "User")</li>
-        <li class="active">Editar @Html.DisplayFor(model => model.CurrentUsername)</li>
+        <li class="active">Editar <strong>@Html.DisplayFor(model => model.CurrentUsername)</strong></li>
     </ol>
 
     <br />
@@ -66,41 +66,39 @@
     {
         @Html.AntiForgeryToken()
 
-        @Html.ValidationSummary()
-
         <div class="row">
 
             <!--DETAILS-->
             <div class="col-md-5">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="panel panel-default" id="filterPanel">
+                    <div class="panel-heading" id="filterPanel-header">
                         <h2 class="panel-title">Detalhes</h2>
                     </div>
-                    <div class="panel-body" style="background-color: white; @(Model.LoggedUser.RoleTests.IsAdmin ?  "height: 200px" : "height: 152px")">
+                    <div class="panel-body bg-info @(Model.LoggedUser.RoleTests.IsAdmin ?  "height: 200px" : "height: 152px")">
 
                         <!--USERNAME-->
                         <div id="details-left" class="col-md-6">
-                            Nome de Utilizador:
+                            Nome de Utilizador
                         </div>
                         <div id="details-right" class="col-md-6">
-                            @Model.CurrentUsername
+                            <code>@Model.CurrentUsername</code>
                         </div>
                         <br />
 
                         <!--EMAIL-->
                         <div id="details-left" class="col-md-6">
-                            Email:
+                            Email
                         </div>
                         <div id="details-right" class="col-md-6">
-                            @Model.CurrentEmail
+                            <code>@Model.CurrentEmail</code>
                         </div>
 
                         <!--ID-->
                         <div id="details-left" class="col-md-6">
-                            ID:
+                            ID
                         </div>
                         <div id="details-right" class="col-md-6">
-                            @Model.id
+                            <code>@Model.id</code>
                         </div>
 
                         <br />
@@ -111,27 +109,29 @@
 
             <!--EDIT-->
             <div class="col-md-7">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="panel panel-default" id="filterPanel">
+                    <div class="panel-heading" id="filterPanel-header">
                         <h2 class="panel-title">Editar</h2>
                     </div>
-                    <div class="panel-body" style="background-color: white;">
+                    <div class="panel-body bg-info">
                         <fieldset class="form-horizontal">
                             <!--USERNAME-->
                             <div id="edit-left" class="col-md-3">
-                                Nome de Utilizador:
+                                Nome de Utilizador
                             </div>
                             <div class="col-md-9">
                                 @Html.TextBoxFor(m => m.NewUsername, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.NewUsername, "", new { @class = "text-danger"})
                             </div>
                             <br />
 
                             <!--EMAIL-->
                             <div id="edit-left" class="col-md-3">
-                                Email:
+                                Email
                             </div>
                             <div class="col-md-9">
                                 @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.NewEmail, "", new { @class = "text-danger" })
                             </div>
                             <br />
 
@@ -139,15 +139,16 @@
                             {
                               <!--ROLE-->
                                 <div id="edit-left" class="col-md-3">
-                                    Função:
+                                    Função
                                 </div>
                                 <div class="col-md-9">
                                     @Html.DropDownListFor(m => m.NewRole, Role, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.NewRole, "", new { @class = "text-danger" })
                                 </div>
                                 <br />
                             }
                             <div id="submit-btn">
-                                <input type="submit" value="Editar" class="btn btn-default" />
+                                <input type="submit" value="Editar" class="btn btn-round-primary"  style="margin-bottom: 5px;"/>
                             </div>
                         </fieldset>
                     </div>

@@ -5,9 +5,8 @@
     ViewBag.Title = "Marcações - Gestor de Férias";
 }
 <style>
-    .flash-message, .flash-messages {
-        margin: 35px 0px 0px 0px;
-        margin-bottom: 0px !important;
+    .breadcrumb > li:last-child::before {
+        content: ""    
     }
 </style>
 <!-- APPROVE MODAL -->
@@ -30,7 +29,7 @@
                 
                         @Html.AntiForgeryToken()
                         <div class="form-horizontal">
-                            <button type="button" id="closeModalButton" class="btn btn-round-neutral" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="closeModalButton" class="btn btn-round-default" data-dismiss="modal">Cancelar</button>
                             <input name="approve" type="submit" value="Aprovar" class="btn btn-round-success" />
                         </div>
             
@@ -65,7 +64,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-horizontal">
-                        <button id="closeModalButton" type="button" class="btn btn-round-neutral" data-dismiss="modal">Cancelar</button>
+                        <button id="closeModalButton" type="button" class="btn btn-round-default" data-dismiss="modal">Cancelar</button>
                         <input id="rejectButton" name="reject" type="submit" value="Rejeitar" class="btn btn-round-danger" />
                     </div>
                 </div>
@@ -74,7 +73,6 @@
     </div>
 </div>
 <!--END MODAL--> 
-<link rel="stylesheet" href="~/bower_components/bootstrap-notifications/dist/stylesheets/bootstrap-notifications.min.css" />
 <!--jumbotron-->
 <div class="jumbotron">
     <div class="container-fluid body-content">
@@ -89,52 +87,40 @@
     </div>
 </div>
 
-<div class="content marcacoes-content">
+<div class="content">
     <!--breadcrumb-->
-    <div class="col-md-9" style="padding: 0">
-        <ol class="breadcrumb">
+        <ol class="overflow breadcrumb">
             <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
             <li class="active">Marcações</li>
+            <li class="pull-right">@Html.ActionLink("Calendário","Overview")</li>
+            <li class="pull-right">@Html.ActionLink("Criar Marcação","Create")</li>
         </ol>
-    </div>
     <!--botões-->
-    <div class="col-md-3" style="padding: 0">
-        <button onclick="location.href='@Url.Action("Create", "Marcacoes")'; return false;" class="btn btn-round-neutral" id="create-new-button"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Criar Nova</button>
-        <button onclick="location.href='@Url.Action("Overview", "Marcacoes")'; return false;" class="btn btn-round-default" id="overview-button"><i class="fa fa-calendar-o" aria-hidden="true"></i>&nbsp;Calendário</button>
-    </div>
-    
-    <br />
     
     @Html.RenderFlash()
 
     @if (Model.LoggedUser.RoleTests.IsAdmin || Model.LoggedUser.RoleTests.IsMod)
     {    
         <!--action PENDING panel-->
-        <div class="col-md-12" style="padding: 0">
-            <div class="panel panel-default" data-toggle="collapse" data-trigger="click" data-target="#table1">
-                <div class="panel-body">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
+            <div class="regionHeader overflow panel panel-default no-margin-top" data-toggle="collapse" data-trigger="click" data-target="#table1">
+                <div class="regionHeader-header panel-heading">
+                    <h3 class="panel-title">
                         Ação Pendente
-                            @{
-                                var i = 0;
-                                foreach (var item in Model.Marcacoes)
+                        @{
+                            var i = 0;
+                            foreach (var item in Model.Marcacoes)
+                            {
+                                if (item.Status == Status.Pendente)
                                 {
-                                    if (item.Status == Status.Pendente)
-                                    {
-                                        i++;
-                                    }
+                                    i++;
                                 }
-                                <span class="badge @(i == 0 ? "":"bg-primary")" id="pendingAmount"><text>@i</text></span>
                             }
-                           
-                    </div>
-                    <div class="col-md-1">
-                        <button button id="table1btn" class="btn-simple" style="float:right; outline: none !important" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-down" aria-hidden="true"></i></button>
-                    </div>
+                            <span class="badge" id="pendingAmount"><text>@i</text></span>
+                        }
+                        <button button id="table1btn" class="btn-simple" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-down" aria-hidden="true"></i></button>
+                    </h3>
                 </div>
             </div>
-        </div>
         <!--pending table-->
         <div class="collapse" id="table1" style="width: 100%">
             <table class="table table-hover marcacoes-table" id="actionPendingTable" style="width: 100%">
@@ -320,7 +306,7 @@
                                 <span class="label @(item.Status == Status.EmProgresso ? "label-success" 
                                                    : item.Status == Status.Aprovado ? "label-primary" 
                                                    : item.Status == Status.Expirado ? "label-default"
-                                                   : item.Status == Status.Finalizado ? "label-info"
+                                                   : item.Status == Status.Finalizado ? "label-warning"
                                                    : item.Status == Status.Rejeitado ? "label-danger"
                                                    : "label-warning"
                                                    )">@(item.Status == Status.EmProgresso ? Html.Label("Em Progresso") : Html.DisplayFor(x => item.Status))</span>

@@ -68,7 +68,7 @@ namespace emp_ferias.Controllers
                     }
                     else if (m.DataFim >= DateTime.Today && m.DataInicio <= DateTime.Today)
                     {
-                        newEvent.color = "#337ab7";
+                        newEvent.color = "#2C93FF";
                         newEvent.textColor = "#ffffff";
                     }
                     else

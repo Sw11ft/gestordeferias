@@ -1,7 +1,7 @@
-﻿@model List<emp_ferias.Models.IndexMarcacaoViewModel>
+﻿@model emp_ferias.Models.IndexMarcacaoViewModel
 
 @{
-    ViewBag.Title = "Calendário > Marcações";
+    ViewBag.Title = "Calendário - Gestor de Férias";
 }
 
 <div class="jumbotron">
@@ -13,7 +13,7 @@
 
 <div class="content">
 
-    <ol class="breadcrumb">
+    <ol class="overflow bottom15 breadcrumb">
         <li>@Html.ActionLink("Página Inicial", "Index", "Home")</li>
         <li>@Html.ActionLink("Marcações", "Index", "Marcacoes")</li>
         <li class="active">Calendário</li>
@@ -22,13 +22,13 @@
     <div id="calendar"></div>
     <br />
     <div class="col-md-4 text-center"> 
-        <span class="label label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Finalizado <br />
+        <span class="label label-warning">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Finalizado <br />
     </div>
     <div class="col-md-4 text-center">
-        <span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Em Progresso <br />
+        <span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Em Progresso <br />
     </div>
     <div class="col-md-4 text-center">
-        <span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Aprovado <br />
+        <span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Aprovado <br />
     </div>
     <br />
 

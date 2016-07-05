@@ -13,9 +13,12 @@ namespace emp_ferias.Models
 
     public class CreateMarcacaoViewModel
     {
+        [Required(ErrorMessage = "O campo para a data de início é obrigatório.")]
         public DateTime DataInicio { get; set; }
+        [Required(ErrorMessage = "O campo para a data de fim é obrigatório.")]
         public DateTime DataFim { get; set; }
         public string Notas { get; set; }
+        [Required(ErrorMessage = "O campo para a motivo é obrigatório.")]
         public Motivo Motivo { get; set; }
     }
 

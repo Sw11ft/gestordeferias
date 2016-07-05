@@ -6,7 +6,7 @@
   "homepage": "",
   "private": true,
   "dependencies": {
-    "jquery": "2.2.4",
+    "jquery": "*",
     "bootstrap": "*",
     "jquery-validation-unobtrusive": "*",
     "modernizr": "*",
@@ -19,9 +19,7 @@
     "fullcalendar": "*",
     "Chart.js": "*",
     "bootstrap-dropmenu": "*",
-    "bootstrap-notifications": "*"
-  },
-  "resolutions": {
-    "jquery": "< 3.0.0"
+    "bootstrap-notifications": "*",
+    "bootstrap-tagsinput": "*"
   }
 }
