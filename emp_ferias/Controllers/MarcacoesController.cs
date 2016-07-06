@@ -388,19 +388,16 @@ namespace emp_ferias.Controllers
             return RedirectToAction("My");
         }
 
-        // GET: Marcacoes/Delete/5
-        public ActionResult Delete(int? id)
-        {
-
-            return View();
-        }
-
         // POST: Marcacoes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
-            return View();
+            List<ExecutionResult> ExecutionResult = serviceMarcacoes.Delete(User.Identity.GetUserId(), id);
+
+            foreach (var i in ExecutionResult)
+                if (i.MessageType == MessageType.Error)
+                    this.Flash("error", i.Message);
+
+            return RedirectToAction("My"); 
         }
 
 
@@ -414,6 +411,11 @@ namespace emp_ferias.Controllers
         public ActionResult MyTableData(int? id, Motivo? Motivo, Status? Status, DateTime? pedido_fromDate, DateTime? pedido_toDate, DateTime? inicio_fromDate, DateTime? inicio_toDate, DateTime? fim_fromDate, DateTime? fim_toDate)
         {
             return PartialView("_MyTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetMyMarcacoes(User.Identity.GetUserId(), id, Motivo, Status, pedido_fromDate, pedido_toDate, inicio_fromDate, inicio_toDate, fim_fromDate, fim_toDate)));
+        }
+
+        public ActionResult IndexTableData(int? id, string userName, Motivo? Motivo, Status? Status, DateTime? pedido_fromDate, DateTime? pedido_toDate, DateTime? inicio_fromDate, DateTime? inicio_toDate, DateTime? fim_fromDate, DateTime? fim_toDate)
+        {
+            return PartialView("_IndexTableData", MapIndexMarcacaoViewModel(serviceMarcacoes.GetIndexMarcacoes(User.Identity.GetUserId(), id, userName, Motivo, Status, pedido_fromDate, pedido_toDate, inicio_fromDate, inicio_toDate, fim_fromDate, fim_toDate)));
         }
     }
 }

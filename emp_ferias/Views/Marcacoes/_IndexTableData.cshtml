@@ -1,0 +1,94 @@
+﻿@using emp_ferias.lib.Classes
+@model emp_ferias.Models.IndexMarcacaoViewModel
+<thead>
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Utilizador
+        </th>
+        <th>
+            Data de Pedido
+        </th>
+        <th>
+            Duração
+        </th>
+        <th>
+            Razão
+        </th>
+        <th>
+            Notas
+        </th>
+        <th>
+            Estado
+        </th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var item in Model.Marcacoes)
+    {
+        if (item.Status != Status.Pendente)
+        {
+               
+            <tr class="bg-info">
+                    
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataPedido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataInicio) – @Html.DisplayFor(modelItem => item.DataFim)
+                    <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="Total:
+                        @{
+                            var length = (item.DataFim - item.DataInicio).Days +1;
+                            string lengthstring;
+                            if (length == 1)
+                            {
+                                lengthstring = length + " dia";
+                            }
+                            else
+                            {
+                                lengthstring = length + " dias";
+                            }
+                            } @lengthstring">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    </button>
+                </td>
+                <td>
+                    @(item.Motivo == Motivo.Ferias ? Html.Name("Férias") : Html.DisplayFor(modelItem => item.Motivo)) 
+                </td>
+                <td>
+                    @{
+                        if (!(item.Notas == null) && !(item.Notas.Length == 0))
+                        {
+                            @item.Notas.Substring(0, Math.Min(item.Notas.Length, 15))
+                            if (item.Notas.Count() > 15)
+                            {
+                                <text>... </text> <button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="@item.Notas"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                            }
+                        }
+                        else
+                        {
+                            @Html.Label("–", new { @class = "empty-notes" });
+                        }
+                    }
+                </td>
+                <td>
+                    <span class="label @(item.Status == Status.EmProgresso ? "label-success" 
+                                        : item.Status == Status.Aprovado ? "label-primary" 
+                                        : item.Status == Status.Expirado ? "label-default"
+                                        : item.Status == Status.Finalizado ? "label-warning"
+                                        : item.Status == Status.Rejeitado ? "label-danger"
+                                        : "label-warning"
+                                        )">@(item.Status == Status.EmProgresso ? Html.Label("Em Progresso") : Html.DisplayFor(x => item.Status))</span>
+                </td>
+            </tr>
+        }
+    }
+</tbody>

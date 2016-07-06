@@ -52,11 +52,6 @@ namespace emp_ferias.lib.Services
 
         }
 
-        public void Update()
-        {
-
-        }
-
         public List<Marcacao> Get()
         {
             return db.Marcacoes.AsNoTracking().Include(x=> x.ActionUser).Include(x => x.User).ToList();
@@ -141,7 +136,36 @@ namespace emp_ferias.lib.Services
 
             return ExecutionResult;
         }
-        
+
+        public List<ExecutionResult> Delete (string SenderId, int id)
+        {
+            List<ExecutionResult> ExecutionResult = new List<ExecutionResult>();
+
+            Marcacao Deleting = db.Marcacoes.Find(id);
+
+            if (Deleting != null)
+            {
+                
+                if (SenderId != Deleting.UserId)
+                {
+                    ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Não tem permissões para efetuar esta operação." });
+                    return ExecutionResult;
+                }
+
+                if (Deleting.Status != Status.Pendente)
+                {
+                    ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Apenas é possível alterar marcações pendentes." });
+                    return ExecutionResult;
+                }
+
+                db.Marcacoes.Remove(Deleting);
+                db.SaveChanges();
+            }
+            else
+                ExecutionResult.Add(new ExecutionResult() { MessageType = MessageType.Error, Message = "Marcação não encontrada." });
+
+            return (ExecutionResult);
+        }
 
         public List<Marcacao> GetHome(string SenderId)
         {
@@ -174,6 +198,46 @@ namespace emp_ferias.lib.Services
             if (Status.HasValue)
                 query = query.Where(x => x.Status == Status);
              
+            if (pedido_fromDate.HasValue)
+                query = query.Where(x => x.DataPedido >= pedido_fromDate);
+
+            if (pedido_toDate.HasValue)
+                query = query.Where(x => x.DataPedido <= pedido_toDate);
+
+            if (inicio_fromDate.HasValue)
+                query = query.Where(x => x.DataInicio >= inicio_fromDate);
+
+            if (inicio_toDate.HasValue)
+                query = query.Where(x => x.DataInicio <= inicio_toDate);
+
+            if (fim_fromDate.HasValue)
+                query = query.Where(x => x.DataFim >= fim_fromDate);
+
+            if (fim_toDate.HasValue)
+                query = query.Where(x => x.DataFim <= fim_toDate);
+
+            return query.ToList();
+        }
+
+        public List<Marcacao> GetIndexMarcacoes(string SenderId, int? id, string userName, Motivo? Motivo, Status? Status, DateTime? pedido_fromDate, DateTime? pedido_toDate, DateTime? inicio_fromDate, DateTime? inicio_toDate, DateTime? fim_fromDate, DateTime? fim_toDate)
+        {
+            var query = db.Marcacoes.AsQueryable().Include(x => x.ActionUser);
+
+            if (!string.IsNullOrEmpty(SenderId))
+                query = query.Where(x => x.UserId == SenderId);
+
+            if (!string.IsNullOrEmpty(userName))
+                query = query.Where(x => x.User.UserName.Contains(userName.Trim()));
+
+            if (id.HasValue)
+                query = query.Where(x => x.Id == id);
+
+            if (Motivo.HasValue)
+                query = query.Where(x => x.Motivo == Motivo);
+
+            if (Status.HasValue)
+                query = query.Where(x => x.Status == Status);
+
             if (pedido_fromDate.HasValue)
                 query = query.Where(x => x.DataPedido >= pedido_fromDate);
 

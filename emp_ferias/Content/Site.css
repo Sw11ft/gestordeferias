@@ -96,15 +96,6 @@ body {
     text-align: center;
     font-size: 3em;
 }
-.btn-round-success-bordered {
-    background-color: rgba(0,0,0,.0);
-    font-weight: 400;
-    border-color: #05ae0e;
-    border-width: 1px;
-    border-radius: 30px !important;
-    opacity: 0.95;
-    padding: 9px 18px;
-}
 table {
     width: 100%;
 }
@@ -174,12 +165,27 @@ th, td {
     text-align: center;
     margin-right: 5px;
     margin-left: 5px;
-    border-color: #05ae0e;
+    border-color: #FF9500;
     padding: 5px 9px 5px 9px;
     height: 35px !important;
     outline: none !important;
     background: none;
-    color: #05ae0e;
+    color: #FF9500;
+    font-weight: bold;
+}
+.btn-round-warning {
+    border-radius: 30px 30px 30px 30px !important;
+    width: 90px;
+    height: 40px;
+    text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-color: #FF9500;
+    padding: 5px 9px 5px 9px;
+    height: 35px !important;
+    outline: none !important;
+    background: none;
+    color: #FF9500;
     font-weight: bold;
 }
 .btn-round-danger {
@@ -492,6 +498,9 @@ th, td {
     width: 90px;
     text-align: center;
 }
+#MyTable {
+    margin-top: 0 !important;
+}
 #MyTable_length {
     display: inline-block;
     float:left;
@@ -508,6 +517,9 @@ th, td {
     text-align: center;
     line-height: 200px;
 }
+#MyTable > thead > tr > th:first-child, #MyTable > thead > tr > th:last-child {
+    border-radius: 0 !important;
+}
 .data-my {
     padding-bottom: 5px;
 }
@@ -519,12 +531,12 @@ th, td {
 }
 #filterPanel {
     border-width: 0px;
-    border-radius: 0 0 10px 10px;
-    margin-top: 0px;
+    border-radius: 0 0 0 0 !important;
+    margin: 0 !important;
 }
 #filterPanel-header {
     border-width: 0px;
-    border-radius: 10px 10px 0 0;
+    border-radius: 0;
     background-color: #2C93FF;
     color: white;
     font-weight:bold;
@@ -586,11 +598,9 @@ th, td {
 #filters-shortcut {
     cursor:pointer;
 }
-#filtertags {
-    line-height: 35px;
-}
 .label-left, .label-right {
     font-size: 0.9em;
+    float:left;
 }
 .label-left {
     border-radius: 5px 0 0 5px;
@@ -639,7 +649,6 @@ th, td {
 	margin-top: 0px !important;
 	margin-bottom: 0px !important;
 }
-
 .no-margin-top {
     margin-top: 0px !important;
 }
@@ -657,4 +666,89 @@ th, td {
 }
 .top15 {
     margin-top: 15px;
+}
+.label-o {
+    padding: 0.2em 0.6em 0.2em;
+    border: 1px solid #999999;
+    border-radius: 3px;
+    color: #999999;
+    background-color: #ffffff;
+    font-weight: 500;
+    font-size: 11px;
+}
+#myPending > thead > tr > th:first-child, #myPending > thead > tr > th:last-child {
+    border-radius: 0 !important;
+}
+#tablePanel {
+    margin-bottom: 0 !important;
+    margin-top: 15px !important;
+    border-radius: 10px 10px 0px 0px !important; 
+    height: 25px;
+    line-height: 25px;
+}
+#tablePanel > div {
+    border-radius: 10px 10px 0px 0px !important;    
+}
+#tablePanel > div > h3 {
+    line-height: 25px;
+}
+#previousTable {
+    margin-top: 0px !important;
+}
+#previousTable > thead > tr > th:first-child, #previousTable > thead > tr > th:last-child {
+    border-radius: 0 !important;
+}
+#previousTable_length {
+    display: inline-block;
+    float:left;
+}
+#previousTable_paginate {
+    display:inline-block;
+    float:right;
+}
+#previousTable_loading {
+    width: 100%;
+    height: 200px;
+    font-size: 3em;
+    color: #2C93FF;
+    text-align: center;
+    line-height: 200px;
+}
+#previousTable_next:focus, #previousTable_next:active, #previousTable_previous:focus, #previousTable_previous:active, .paginate-button:focus, .paginate-button:active {
+    outline: none;
+} 
+#table1 {
+    background-color: rgba(0, 0, 0, 0.03)
+}
+#actionPending-panel {
+    margin-bottom: 0 !important;
+}
+#actionPendingTable_length, #actionPendingTable_info {
+    float:left;
+}
+#delete-header {
+    background-color: #FF9500;
+    color: white;
+}
+.modal-content {
+    border-radius: 10px;
+}
+.modal-header {
+    border-radius: 9px 9px 0 0;
+}
+#filtertags {
+    float:left;
+    text-align:left;
+    line-height: 27px;
+    padding: 0;
+}
+#filterbuttons {
+    float:right;
+    text-align:right;
+    padding: 0;
+    height: auto;
+}
+.tag-wrapper {
+    height: 21.28px;
+    line-height: 20.28px;
 }

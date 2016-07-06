@@ -5,6 +5,23 @@
 @{
     ViewBag.Title = "Minhas Marcações - Gestor de Férias";
 }
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="delete">
+    <div class="modal-dialog modal-sm" role="document" id="delete-body">
+        <div class="modal-content">
+            <div class="modal-header" id="delete-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="filters-title">Apagar marcação</h4>
+            </div>
+            <div class="modal-body" style="text-align: left">
+            Tem a certeza que pretende apagar a marcação?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeModalButton" class="btn btn-round-default" data-dismiss="modal">Cancelar</button>
+                <button id="deletebtn" data-id="0" type="button" value="Apagar" class="btn btn-round-warning" onclick="location.href='/Marcacoes/Delete/' + this.getAttribute('data-id')" data-dismiss="modal">Apagar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="filters" tabindex="-1" role="dialog" aria-labelledby="filters">
     <div class="modal-dialog modal-sm" role="document" id="filters-body">
@@ -121,19 +138,18 @@
     </ol>
     @Html.RenderFlash()
 
-    <div class="regionHeader overflow panel panel-default no-margin-top">
+    <div class="regionHeader panel panel-default no-margin-top" id="tablePanel">
         <div class="regionHeader-header panel-heading">
             <h3 class="panel-title">Pendentes</h3>
         </div>
     </div>  
 
-    <table class="table table-hover marcacoes-table" style="width: 100%">
+    <table class="table table-hover marcacoes-table" id="myPending">
         <thead>
             <tr>
                 <th>
                     ID
                 </th>
-
                 <th>
                     Data de Pedido
                 </th>
@@ -154,7 +170,6 @@
             @foreach (var item in Model.Marcacoes)
             {             
                 <tr class="bg-info">
-                    
                     <td>
                         @Html.DisplayFor(modelItem => item.Id)
                     </td>
@@ -198,15 +213,25 @@
                             }
                         }
                     </td>
-                    <td>
+                    <td width="70">
                         <a href="@Url.Action("Edit", new {id = item.Id})" data-trigger="hover" data-toggle="popover" data-placement="right" data-content="Editar"><i style="font-size: 1.5em;" class="fa fa-pencil"></i></a>
+                        &nbsp;
+                        <a id="@item.Id" onclick="SetId(this.id)" data-toggle="modal" data-target="#delete">
+                            <i data-trigger="hover" data-toggle="popover" data-placement="right" data-content="Apagar" style="font-size: 1.5em;" class="fa fa-times"></i>
+                        </a>
                     </td>
+                </tr>
+            }
+            @if (!Model.Marcacoes.Any())
+            {
+                <tr class="bg-info">
+                    <td colspan="6" class="text-center" style="border-radius: 0 0 10px 10px;"> Não tem marcações pendentes. @Html.ActionLink("Criar uma nova.","Create")</td>
                 </tr>
             }
         </tbody>
     </table>
     
-    <div class="overflow regionHeader panel panel-default ">
+    <div class="regionHeader panel panel-default" id="tablePanel">
         <div class="regionHeader-header panel-heading">
             <h3 class="panel-title">Anteriores</h3>
         </div>
@@ -217,24 +242,61 @@
             <h3 class="panel-title">Filtros</h3>
         </div>
         <div class="panel-body bg-info">
-            <div id="filtertags" class="pull-left">
-                Sem filtros definidos. 
-                <a id="filters-shortcut" data-toggle="modal" data-target="#filters">Editar.</a>
+            <div id="filtertags" class="col-md-10 pull-left">
+                <span id="filtertags-nofilter">
+                    Sem filtros definidos.
+                    <a id="filters-shortcut" data-toggle="modal" data-target="#filters">Editar.</a>
+                </span>
+
                 <div class="tag-wrapper">
-                    <span class="label label-success label-left">ID</span><span class="label label-primary label-right">
-                        12&thinsp;
+                    <span class="label label-success label-left">Dt. Pedido (min.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="pedido-fromDate-val">12/12/2016</span>
                         <i class="fa fa-times removetag"></i>&thinsp;
                     </span>
                 </div>
+
                 <div class="tag-wrapper">
-                    <span class="label label-success label-left">Data de Inicio</span><span class="label label-primary label-right">
-                        27/02/2016&thinsp;
+                    <span class="label label-success label-left">Dt. Pedido (max.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="pedido-toDate-val">12/12/2016</span>
                         <i class="fa fa-times removetag"></i>&thinsp;
                     </span>
                 </div>
-                
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Inicio (min.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="inicio-fromDate-val">12/12/2016</span>
+                        <i class="fa fa-times removetag"></i>&thinsp;
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Inicio (max.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="inicio-toDate-val">12/12/2016</span>
+                        <i class="fa fa-times removetag"></i>&thinsp;
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Fim (min.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="fim-fromDate-val">12/12/2016</span>
+                        <i class="fa fa-times removetag"></i>&thinsp;
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Inicio (max.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="fim-toDate-val">12/12/2016</span>
+                        <i class="fa fa-times removetag"></i>&thinsp;
+                    </span>
+                </div>
             </div>
-            <div class="col-md-4 pull-right">
+            <div class="col-md-2 pull-right" id="filterbuttons">
                 <button type="button" class="btn btn-round-primary" id="filter-Limpar" onclick="CleanButton()">Limpar</button>
                 <button type="button" class="btn btn-round-primary" id="filter-OK" data-toggle="modal" data-target="#filters">Editar</button>
             </div>
@@ -264,37 +326,49 @@
                 var pedido_fromDate = null;    
             }
             else {
-                var pedido_fromDate = $("#pedido-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+                var pedido_fromDate = $("#pedido-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+                $("#filtertags-nofilter").hide()
+                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Pedido (min.)</span><span class="label label-primary label-right">' + $("#pedido-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
             }
             if ($("#pedido-toDate").data("DateTimePicker").date() == null) {
                 var pedido_toDate = null;    
             }
             else {
-                var pedido_toDate = $("#pedido-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+                var pedido_toDate = $("#pedido-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+                $("#filtertags-nofilter").hide()
+                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Pedido (max.)</span><span class="label label-primary label-right">' + $("#pedido-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
             }
             if ($("#inicio-fromDate").data("DateTimePicker").date() == null) {
                 var inicio_fromDate = null;    
             }
             else {
-                var inicio_fromDate = $("#inicio-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+                var inicio_fromDate = $("#inicio-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+                $("#filtertags-nofilter").hide()
+                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Inicio (min.)</span><span class="label label-primary label-right">' + $("#inicio-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
             }
             if ($("#inicio-toDate").data("DateTimePicker").date() == null) {
                 var inicio_toDate = null;    
             }
             else {
-                var inicio_toDate = $("#inicio-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+                var inicio_toDate = $("#inicio-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+                $("#filtertags-nofilter").hide()
+                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Inicio (max.)</span><span class="label label-primary label-right">' + $("#inicio-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
             }
             if ($("#fim-fromDate").data("DateTimePicker").date() == null) {
                 var fim_fromDate = null;    
             }
             else {
-                var fim_fromDate = $("#fim-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+                var fim_fromDate = $("#fim-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+                $("#filtertags-nofilter").hide()
+                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Fim (min.)</span><span class="label label-primary label-right">' + $("#fim-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
             }
             if ($("#fim-toDate").data("DateTimePicker").date() == null) {
                 var fim_toDate = null;    
             }
             else {
-                var fim_toDate = $("#fim-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+                var fim_toDate = $("#fim-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+                $("#filtertags-nofilter").hide()
+                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Fim (max.)</span><span class="label label-primary label-right">' + $("#fim-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
             }
              
             var table = $("#MyTable");
@@ -368,6 +442,9 @@
             $("#toDate-input").val("");
             FillTable();
         }
+        function SetId(id) {
+            $("#deletebtn").attr("data-id", id);
+        };
     </script>
 
 }

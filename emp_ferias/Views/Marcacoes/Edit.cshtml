@@ -21,7 +21,7 @@
     </ol>
 
 
-    @using (Html.BeginForm("Edit", "Marcacao", FormMethod.Post, new { @class = "top15" }))
+    @using (Html.BeginForm("Edit", "Marcacoes", FormMethod.Post, new { @class = "top15" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.UserId)

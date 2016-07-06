@@ -3,7 +3,7 @@
 @model List<emp_ferias.Models.HomeViewModel>
 
 @{
-    ViewBag.Title = "Página Inicial";
+    ViewBag.Title = "Página Inicial - Gestor de Férias";
 }
 
 <div class="jumbotron">
@@ -23,7 +23,7 @@
 
     @Html.RenderFlash()
     <div class="col-md-8">
-        <h2 id="welcome-message">Bem-vindo, @User.Identity.Name! </h2>
+        <h2 id="welcome-message">Próximas marcações</h2>
         <table class="table table-hover marcacoes-table">
             <thead>
                 <tr>

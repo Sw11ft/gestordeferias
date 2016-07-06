@@ -286,6 +286,7 @@
     <Content Include="Views\Shared\NotificationsPartial.cshtml" />
     <Content Include="Views\Marcacoes\My.cshtml" />
     <Content Include="Views\Marcacoes\_MyTableData.cshtml" />
+    <Content Include="Views\Marcacoes\_IndexTableData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
