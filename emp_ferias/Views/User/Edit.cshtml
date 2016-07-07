@@ -5,9 +5,30 @@
 
     List<SelectListItem> Role = new List<SelectListItem>();
 
-    Role.Add(new SelectListItem { Text = "Administrador", Value = "Administrador" });
-    Role.Add(new SelectListItem { Text = "Moderador", Value = "Moderador" });
-    Role.Add(new SelectListItem { Text = "Utilizador", Value = "Utilizador", Selected = true });
+    if (Model.CurrentRole == "Administrador")
+    {
+        Role.Add(new SelectListItem { Text = "Administrador", Value = "Administrador", Selected = true });
+    }
+    else
+    {
+        Role.Add(new SelectListItem { Text = "Administrador", Value = "Administrador" });
+    }
+    if (Model.CurrentRole == "Moderador")
+    {
+        Role.Add(new SelectListItem { Text = "Moderador", Value = "Moderador", Selected = true });
+    }
+    else
+    {
+        Role.Add(new SelectListItem { Text = "Moderador", Value = "Moderador" });
+    }
+    if (Model.CurrentRole == "Utilizador")
+    {
+        Role.Add(new SelectListItem { Text = "Utilizador", Value = "Utilizador", Selected = true });
+    }
+    else
+    {
+        Role.Add(new SelectListItem { Text = "Utilizador", Value = "Utilizador" });
+    }
 }
 
 <style>

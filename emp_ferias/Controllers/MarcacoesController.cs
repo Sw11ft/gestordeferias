@@ -171,12 +171,6 @@ namespace emp_ferias.Controllers
             return Json(EventArray, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: Marcacoes/Details/5
-        public ActionResult Details(int? id)
-        {
-            return View();
-        }
-
         // GET: Marcacoes/Create
         public ActionResult Create()
         {
@@ -354,9 +348,7 @@ namespace emp_ferias.Controllers
             return View(Marcacao);
         }
 
-        // POST: Marcacoes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Marcacoes/Edit/5      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Marcacao Marcacao)
@@ -387,19 +379,6 @@ namespace emp_ferias.Controllers
 
             return RedirectToAction("My");
         }
-
-        // POST: Marcacoes/Delete/5
-        public ActionResult Delete(int id)
-        {
-            List<ExecutionResult> ExecutionResult = serviceMarcacoes.Delete(User.Identity.GetUserId(), id);
-
-            foreach (var i in ExecutionResult)
-                if (i.MessageType == MessageType.Error)
-                    this.Flash("error", i.Message);
-
-            return RedirectToAction("My"); 
-        }
-
 
         // GET: Marcacoes/My
         public ActionResult My()

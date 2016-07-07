@@ -35,7 +35,7 @@
                             <strong class="notification-title">Marcação #@i.Id @(i.Status == Status.Expirado ? "Expirada" : i.Status == Status.Rejeitado ? "Rejeitada" : "Aprovada")</strong>
                             <p class="notification-desc">@(i.Motivo == Motivo.Ferias ? "Férias" : i.Motivo == Motivo.Injustificada ? "Injustificado" : "Justificado")</p>
                             <div class="notification-meta">
-                                <small class="timestamp"><strong>@i.DataInicio.ToString("d") - @i.DataFim.ToString("d")</strong> (@((i.DataFim - i.DataInicio).TotalDays.ToString("")) dia(s) no total)</small>
+                                <small class="timestamp"><strong>@i.DataInicio.ToString("d") - @i.DataFim.ToString("d")</strong> (@(((i.DataFim - i.DataInicio).TotalDays + 1).ToString("")) dia(s) no total)</small>
                             </div>
                         </div>
                         <div class="media-right">

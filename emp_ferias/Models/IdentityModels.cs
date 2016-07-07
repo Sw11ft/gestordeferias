@@ -33,6 +33,11 @@ namespace emp_ferias.Models
         {
             return new ApplicationDbContext();
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 
     public class IndexUserViewModel
@@ -60,11 +65,12 @@ namespace emp_ferias.Models
 
     public class EditUserViewModel
     {
+        public string id { get; set; }
         public UserInfo LoggedUser { get; set; } = new UserInfo();
         public string CurrentUsername { get; set; }
         [EmailAddress]
         public string CurrentEmail { get; set; }
-        public string id { get; set; }
+        public string CurrentRole { get; set; }
         [Required(ErrorMessage = "O campo para o novo nome de utilizador é obrigatório.")]
         public string NewUsername { get; set; }
         [Required(ErrorMessage = "O campo para o novo endereço de Email é obrigatório.")]
@@ -82,5 +88,28 @@ namespace emp_ferias.Models
         public string Name { get; set; }
     }
     
+    public class UserModalViewModel
+    {
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string Role { get; set; }
+        public string Email { get; set; }
+        public int FeriasDiasUteisAno { get; set; }
+        public int FeriasAno { get; set; }
+        public int JustificadasDiasUteisAno { get; set; }
+        public int JustificadasAno { get; set; }
+        public int InjustificadasDiasUteisAno { get; set; }
+        public int InjustificadasAno { get; set; }
+        public int TotalFeriasDiasUteis { get; set; }
+        public int TotalFerias { get; set; }
+        public int TotalJustificadasDiasUteis { get; set; }
+        public int TotalJustificadas { get; set; }
+        public int TotalInjustificadasDiasUteis { get; set; }
+        public int TotalInjustificadas { get; set; }
+        public int TotalMarcacoes { get; set; }
+        public int TotalRejeitadas { get; set; }
+        public int TotalExpiradas { get; set; }
+        public int TotalAprovadas { get; set; }
+    }
     
 }

@@ -3,6 +3,48 @@
 @{
     ViewBag.Title = "Utilizadores - Gestor de Férias";
 }
+<script>
+    function UpdateModal(id) {
+        $.ajax({
+            url: "/User/UserModalData",
+            type: "GET",
+            data: {
+                "id": id 
+            },
+            beforeSend: function () {
+                $("#UserModal-progressicon").show();
+                $("#UserModal-userinfo").hide();
+            },
+            success: function (result) {
+                $("#UserModal-userinfo").html(result);
+                $("#UserModal-progressicon").hide();
+                $("#UserModal-userinfo").show();
+                alert(result)
+            },
+        });
+    }
+</script>
+<div class="modal fade" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="UserModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="UserModal-title"></h4>
+            </div>
+            <div class="modal-body" id="UserModal-body">
+            <div id="UserModal-progressicon">
+                <i class="fa fa-cog fa-spin fa-3x fa-fw" id="tableState-symbol"></i>
+            </div>
+            <div class="UserModal-userinfo">
+
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-round-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="jumbotron">
     <div class="container-fluid body-content">
@@ -15,7 +57,6 @@
         <p class="lead container body-content jumbotron-description"></p>
     </div>
 </div>
-
 
 <div class="content">
         <ol class="overflow breadcrumb">
@@ -44,7 +85,14 @@
                         <strong>@item.Role</strong>
                     </td>
                     <td>
-                        @item.UserName
+                        @if (Model.LoggedUser.RoleTests.IsAdmin || Model.LoggedUser.RoleTests.IsMod)
+                        {
+                            <a onclick="UpdateModal(this.getAttribute('data-userid'))" data-userid="@item.Id" class="UserName" data-toggle="modal" data-target="#UserModal">@item.UserName</a> 
+                        }
+                        else
+                        {
+                            @item.UserName
+                        }
                     </td>
                     <td>
                         @item.Id
@@ -52,8 +100,14 @@
                     <td>
                         @item.Email
                     </td>
-                    <td>
-                        @((Model.LoggedUser.RoleTests.IsAdmin) || (Model.LoggedUser.RoleTests.IsMod && item.RoleTests.IsUser) ? Html.ActionLink("Editar", "Edit", new { id = item.Id }) : Html.Display(""))
+                    
+                    <td width="30">
+                        @if (Model.LoggedUser.RoleTests.IsAdmin || (Model.LoggedUser.RoleTests.IsMod && item.RoleTests.IsUser))
+                        {
+                            <a href="@Url.Action("Edit", new {id = item.Id})" data-trigger="hover" data-toggle="popover" data-placement="right" data-content="Editar">
+                                <i style="font-size: 1.5em;" class="fa fa-pencil"></i>
+                            </a>
+                        }
                     </td>
                 </tr>
             }

@@ -108,7 +108,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="closeModalButton" class="btn btn-round-default" data-dismiss="modal">Cancelar</button>
-                <button type="button" value="Aprovar" class="btn btn-round-success" onclick="FillTable()" data-dismiss="modal">OK</button>
+                <button type="button" value="Aprovar" class="btn btn-round-success" onclick='FillTable()' data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -119,7 +119,7 @@
     <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approve">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="approve-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="approvetitle">Aprovar Marcação</h4>
                 </div>
@@ -149,7 +149,7 @@
     <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="reject modal">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="delete-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="rejecttitle">Rejeitar Marcação </h4>
                 </div>
@@ -166,12 +166,13 @@
                             </div>
                         </div>
                         @Html.Hidden("marcRejectId", new { id = "marcRejectId" })
+                        <br />
                         @Html.CheckBox("sendEmail", new { id = "sendEmail", @checked = "checked" }) Notificar por email
                     </div>
                     <div class="modal-footer">
                         <div class="form-horizontal">
                             <button id="closeModalButton" type="button" class="btn btn-round-default" data-dismiss="modal">Cancelar</button>
-                            <input id="rejectButton" name="reject" type="submit" value="Rejeitar" class="btn btn-round-danger" />
+                            <input id="rejectButton" name="reject" type="submit" value="Rejeitar" class="btn btn-round-warning" />
                         </div>
                     </div>
                 }
@@ -209,7 +210,7 @@
     @if (Model.LoggedUser.RoleTests.IsAdmin || Model.LoggedUser.RoleTests.IsMod)
     {    
         <!--action PENDING panel-->
-        <div id="actionPending-panel" class="regionHeader overflow panel panel-default no-margin-top" data-toggle="collapse" data-trigger="click" data-target="#table1">
+        <div id="actionPending-panel" class="regionHeader panel panel-default">
                 <div class="regionHeader-header panel-heading">
                     <h3 class="panel-title">
                         Ação Pendente
@@ -224,12 +225,12 @@
                             }
                             <span class="badge" id="pendingAmount"><text>@i</text></span>
                         }
-                        <button button id="table1btn" class="btn-simple" data-toggle="collapse" data-target="#table1"><i id="collapse-btn" class="fa fa-caret-down" aria-hidden="true"></i></button>
+                        <button onclick="Toggle()" id="table1btn" style="height: 10px;" class="btn-simple pull-left"><i id="collapse-btn" class="fa fa-minus" aria-hidden="true"></i></button>
                     </h3>
                 </div>
             </div>
         <!--pending table-->
-        <div class="regionHeader overflow panel panel-default no-margin-top collapse" id="table1">
+        <div id="table1">
             <table class="table table-hover marcacoes-table" id="actionPendingTable" style="width: 100%">
                 <thead>
                     <tr>
@@ -305,10 +306,10 @@
                                     }
 
                                 </td>
-                                <td>
+                                <td width="200px">
                                     <div class="btn-group">
                                         <button id="@(item.Id)" class="btn btn-round-success" type="button" data-toggle="modal" data-target="#approve">Aprovar</button>
-                                        <button id="@(item.Id)" class="btn btn-round-danger" type="button" data-toggle="modal" data-target="#reject">Rejeitar</button>
+                                        <button id="@(item.Id)" class="btn btn-round-warning" type="button" data-toggle="modal" data-target="#reject">Rejeitar</button>
                                     </div>
                                 </td>
                             </tr>
@@ -317,6 +318,7 @@
                 </tbody>
             </table>
         </div>
+        <div id="actionPending-panel-bottom" class="panel panel-default"></div>
     }
     <!--PREVIOUS panel-->
     <div class="regionHeader panel panel-default no-margin-top" id="tablePanel">
@@ -329,24 +331,82 @@
             <h3 class="panel-title">Filtros</h3>
         </div>
         <div class="panel-body bg-info">
-            <div id="filtertags" class="pull-left">
-                Sem filtros definidos.
-                <a id="filters-shortcut" data-toggle="modal" data-target="#filters">Editar.</a>
+            <div id="filtertags" class="col-md-10 pull-left">
+                <span id="filtertags-nofilter">
+                    Sem filtros definidos.
+                    <a id="filters-shortcut" data-toggle="modal" data-target="#filters">Editar.</a>
+                </span>
                 <div class="tag-wrapper">
-                    <span class="label label-success label-left">ID</span><span class="label label-primary label-right">
-                        12&thinsp;
-                        <i class="fa fa-times removetag"></i>&thinsp;
-                    </span>
-                </div>
-                <div class="tag-wrapper">
-                    <span class="label label-success label-left">Data de Inicio</span><span class="label label-primary label-right">
-                        27/02/2016&thinsp;
-                        <i class="fa fa-times removetag"></i>&thinsp;
+                    <span class="label label-success label-left">ID</span>
+                    <span class="label label-primary label-right">
+                        <span id="id-val"></span>
                     </span>
                 </div>
 
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Nome</span>
+                    <span class="label label-primary label-right">
+                        <span id="name-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Razão</span>
+                    <span class="label label-primary label-right">
+                        <span id="motivo-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Estado</span>
+                    <span class="label label-primary label-right">
+                        <span id="status-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Pedido (min.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="pedido-fromDate-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Pedido (max.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="pedido-toDate-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Inicio (min.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="inicio-fromDate-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Inicio (max.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="inicio-toDate-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Fim (min.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="fim-fromDate-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Dt. Fim (max.)</span>
+                    <span class="label label-primary label-right">
+                        <span id="fim-toDate-val"></span>
+                    </span>
+                </div>
             </div>
-            <div class="col-md-4 pull-right">
+            <div class="col-md-2 pull-right" id="filterbuttons">
                 <button type="button" class="btn btn-round-primary" id="filter-Limpar" onclick="CleanButton()">Limpar</button>
                 <button type="button" class="btn btn-round-primary" id="filter-OK" data-toggle="modal" data-target="#filters">Editar</button>
             </div>
@@ -364,26 +424,23 @@
 <script src="~/bower_components/numbox/numbox.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $(".tag-wrapper").hide();
         $("#ID-input").NumBox({ type: "integer", separator: "", min: 1 });
         if ($('#pendingAmount').text() == '0') {
-            $('#table1btn').hide();
+            $("#table1").hide();
+            $("#actionPending-panel-bottom").show();
+        }
+        else {
+            $("#actionPending-panel-bottom").hide();
         }
 
-        $('#table1').on('show.bs.collapse', function () {
-            $('#collapse-btn').addClass('fa-caret-up').removeClass('fa-caret-down');
-        })
-
-        $('#table1').on('hide.bs.collapse', function () {
-            $('#collapse-btn').addClass('fa-caret-down').removeClass('fa-caret-up');
-        })
 
         $('[data-toggle="popover"]').popover();
 
         $('.modal').on('show.bs.modal', function (e) {
             var $trigger = $(e.relatedTarget);
-            $('#approvetitle').text("Aprovar marcação #" + $trigger.attr('id'));
-            $('#rejecttitle').text("Rejeitar marcação #" + $trigger.attr('id'));
-            $('#dismisstitle').text("Ignorar marcação #" + $trigger.attr('id'));
+            $('#approvetitle').text("Aprovar Marcação #" + $trigger.attr('id'));
+            $('#rejecttitle').text("Rejeitar Marcação #" + $trigger.attr('id'));
             $('#marcId').attr("value", $trigger.attr('id'));
             $('#marcRejectId').attr("value", $trigger.attr('id'));
             $('#marcRejectId').attr("value", $trigger.attr('id'));
@@ -407,6 +464,7 @@
         })
 
         $('#actionPendingTable').DataTable({
+            "dom": "tlp",
             "aoColumns": [
                 null,
                 null,
@@ -434,48 +492,104 @@
                 }
             }
         })
-
         FillTable();
-        $(".removetag").click(function (e) {
-            $(this).parent().parent().remove();
-        });
     });
     function FillTable() {
-        if ($("#pedido-fromDate").data("DateTimePicker").date() == null) {
-            var pedido_fromDate = null;    
+        if (!(0 === $("#ID-input").NumBox("getRaw").length)) {
+            $("#filtertags-nofilter").hide()
+            $("#id-val").text($("#ID-input").NumBox("getRaw"));
+            $("#id-val").parent().parent().show();
         }
         else {
-            var pedido_fromDate = $("#pedido-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            $("#id-val").parent().parent().hide();
         }
-        if ($("#pedido-toDate").data("DateTimePicker").date() == null) {
-            var pedido_toDate = null;    
-        }
-        else {
-            var pedido_toDate = $("#pedido-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
-        }
-        if ($("#inicio-fromDate").data("DateTimePicker").date() == null) {
-            var inicio_fromDate = null;    
+        if (!($("#userName-input").val() == "")) {
+            $("#filtertags-nofilter").hide();
+            $("#name-val").text($("#userName-input").val());
+            $("#name-val").parent().parent().show();
         }
         else {
-            var inicio_fromDate = $("#inicio-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            $("#name-val").parent().parent().hide();
         }
-        if ($("#inicio-toDate").data("DateTimePicker").date() == null) {
-            var inicio_toDate = null;    
-        }
-        else {
-            var inicio_toDate = $("#inicio-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
-        }
-        if ($("#fim-fromDate").data("DateTimePicker").date() == null) {
-            var fim_fromDate = null;    
+        if (!$("#motivoSelect").val() == "") {
+            $("#filtertags-nofilter").hide();
+            $("#motivo-val").text($("#motivoSelect option:selected").text())
+            $("#motivo-val").parent().parent().show();
         }
         else {
-            var fim_fromDate = $("#fim-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            $("#motivo-val").parent().parent().hide();
         }
-        if ($("#fim-toDate").data("DateTimePicker").date() == null) {
-            var fim_toDate = null;    
+        if (!$("#statusSelect").val() == "") {
+            $("#filtertags-nofilter").hide();
+            $("#status-val").text($("#statusSelect option:selected").text())
+            $("#status-val").parent().parent().show();
         }
         else {
-            var fim_toDate = $("#fim-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD"); 
+            $("#status-val").parent().parent().hide();
+        }
+        if ($("#pedido-fromDate-input").val() == "") {
+            var pedido_fromDate = null;
+            $("#pedido-fromDate-val").parent().parent().hide();
+        }
+        else {
+            var pedido_fromDate = $("#pedido-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+            $("#filtertags-nofilter").hide()
+            $("#pedido-fromDate-val").text($("#pedido-fromDate-input").val());
+            $("#pedido-fromDate-val").parent().parent().show();
+        }
+        if ($("#pedido-toDate-input").val() == "") {
+            var pedido_toDate = null;
+            $("#pedido-toDate-val").parent().parent().hide();
+        }
+        else {
+            var pedido_toDate = $("#pedido-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+            $("#filtertags-nofilter").hide()
+            $("#pedido-toDate-val").text($("#pedido-toDate-input").val());
+            $("#pedido-toDate-val").parent().parent().show();
+        }
+        if ($("#inicio-fromDate-input").val() == "") {
+            var inicio_fromDate = null;
+            $("#inicio-fromDate-val").parent().parent().hide();
+        }
+        else {
+            var inicio_fromDate = $("#inicio-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+            $("#filtertags-nofilter").hide()
+            $("#inicio-fromDate-val").text($("#inicio-fromDate-input").val());
+            $("#inicio-fromDate-val").parent().parent().show();
+        }
+        if ($("#inicio-toDate-input").val() == "") {
+            var inicio_toDate = null;
+            $("#inicio-toDate-val").parent().parent().hide();
+        }
+        else {
+            var inicio_toDate = $("#inicio-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+            $("#filtertags-nofilter").hide()
+            $("#inicio-toDate-val").text($("#inicio-toDate-input").val());
+            $("#inicio-toDate-val").parent().parent().show();
+        }
+        if ($("#fim-fromDate-input").val() == "") {
+            var fim_fromDate = null;
+            $("#fim-fromDate-val").parent().parent().hide();
+        }
+        else {
+            var fim_fromDate = $("#fim-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+            $("#filtertags-nofilter").hide()
+            $("#fim-fromDate-val").text($("#fim-fromDate-input").val());
+            $("#fim-fromDate-val").parent().parent().show();
+        }
+        if ($("#fim-toDate-input").val() == "") {
+            var fim_toDate = null;
+            $("#fim-toDate-val").parent().parent().hide();
+        }
+        else {
+            var fim_toDate = $("#fim-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
+            $("#filtertags-nofilter").hide()
+            $("#fim-toDate-val").text($("#fim-toDate-input").val());
+            $("#fim-toDate-val").parent().parent().show();
+        }
+            
+        if ($(".tag-wrapper").is(":visible") == false) {
+            $("#filtertags-nofilter").show()
         }
              
         var table = $("#previousTable");
@@ -547,9 +661,29 @@
         });
     };
     function CleanButton() {
-        $("#fromDate-input").val("");
-        $("#toDate-input").val("");
+        $("#ID-input").val("")
+        $("#userName-input").val("")
+        $("#motivoSelect").val("")
+        $("#statusSelect").val("")
+        $("#pedido-fromDate-input").val("");
+        $("#pedido-toDate-input").val("");
+        $("#inicio-fromDate-input").val("");
+        $("#inicio-toDate-input").val("");
+        $("#fim-fromDate-input").val("");
+        $("#fim-toDate-input").val("");
         FillTable();
     };
+    function Toggle() {
+        $("#actionPending-panel-bottom").slideToggle(100);
+        $("#table1").slideToggle(200, function () {
+            if ($("#table1").is(":visible")) {
+                $("#collapse-btn").removeClass("fa-plus").addClass("fa-minus");
+            }
+            else {
+                $("#collapse-btn").removeClass("fa-minus").addClass("fa-plus");
+            }
+        });
+    }
+
 </script>
 }

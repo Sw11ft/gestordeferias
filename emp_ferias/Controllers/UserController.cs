@@ -9,6 +9,9 @@ using System.Web;
 using System.Net;
 using System.Web.Mvc;
 using MvcFlashMessages;
+using emp_ferias.lib.Services;
+using emp_ferias.Services;
+using emp_ferias.lib.Classes;
 
 namespace emp_ferias.Controllers
 {
@@ -118,7 +121,7 @@ namespace emp_ferias.Controllers
                 return RedirectToAction("Index");
             }
 
-            EditUserViewModel viewModel = GetViewModel(user);
+            EditUserViewModel viewModel = GetViewModel(user, UserManager.GetRoles(user.Id).FirstOrDefault()) ;
 
             viewModel.LoggedUser.Id = User.Identity.GetUserId();
             viewModel.LoggedUser.UserName = User.Identity.GetUserName();
@@ -133,12 +136,13 @@ namespace emp_ferias.Controllers
             return View(viewModel);
         }
 
-        public static EditUserViewModel GetViewModel(ApplicationUser user)
+        public static EditUserViewModel GetViewModel(ApplicationUser user, string Role)
         {
             return new EditUserViewModel()
             {
                 CurrentEmail = user.Email,
                 CurrentUsername = user.UserName,
+                CurrentRole = Role,
                 id = user.Id,
                 NewEmail = user.Email,
                 NewUsername = user.UserName,
@@ -166,7 +170,7 @@ namespace emp_ferias.Controllers
 
             var user =  UserManager.FindById(viewModel.id);
 
-            var vm = GetViewModel(user);
+            var vm = GetViewModel(user, UserManager.GetRoles(user.Id).FirstOrDefault());
 
             user.UserName = viewModel.NewUsername;
             user.Email = viewModel.NewEmail;
@@ -200,11 +204,11 @@ namespace emp_ferias.Controllers
         }
 
 
-       // POST: /User/Create
-       [System.Web.Mvc.HttpPost]
-       [ValidateAntiForgeryToken]
-       [Authorize(Roles="Administrador")]
-       public async Task<ActionResult> Create(RegisterViewModel model)
+        // POST: /User/Create
+        [System.Web.Mvc.HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles="Administrador")]
+        public async Task<ActionResult> Create(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -221,12 +225,45 @@ namespace emp_ferias.Controllers
             return View(model);
         }
 
-        private void AddErrors(IdentityResult result)
+
+        [HttpGet]
+        [Authorize(Roles="Administrador, Moderador")]
+        public ActionResult UserModalData(string id)
         {
-            foreach (var error in result.Errors)
+            ServiceMarcacoes serviceMarcacoes = new ServiceMarcacoes(new ServiceLogin());
+
+            ApplicationUser User = UserManager.FindById(id);
+            int[] Ferias = serviceMarcacoes.CalcDays(User.Id, false, Motivo.Ferias);
+            int[] Justificada = serviceMarcacoes.CalcDays(User.Id, false, Motivo.Justificada);
+            int[] Injustificada = serviceMarcacoes.CalcDays(User.Id, false, Motivo.Injustificada);
+            int[] Status = serviceMarcacoes.CalcStatus(User.Id);
+
+            UserModalViewModel VM = new UserModalViewModel()
             {
-                ModelState.AddModelError("", error);
-            }
+                Id = User.Id,
+                UserName = User.UserName,
+                Role = UserManager.GetRoles(User.Id).FirstOrDefault(),
+                Email = User.Email,
+                FeriasDiasUteisAno = Ferias[0],
+                FeriasAno = Ferias[2],
+                JustificadasDiasUteisAno = Justificada[0],
+                JustificadasAno = Justificada[2],
+                InjustificadasDiasUteisAno = Injustificada[0],
+                InjustificadasAno = Injustificada[2],
+                TotalFeriasDiasUteis = Ferias[1],
+                TotalFerias = Ferias[3],
+                TotalJustificadasDiasUteis = Justificada[1],
+                TotalJustificadas = Justificada[3],
+                TotalInjustificadasDiasUteis = Injustificada[1],
+                TotalInjustificadas = Injustificada[3],
+                TotalMarcacoes = Status[3],
+                TotalRejeitadas = Status[1],
+                TotalExpiradas = Status[2],
+                TotalAprovadas = Status[0]
+            };
+
+            return PartialView("_UserModalData", VM);
         }
+
     }
 }

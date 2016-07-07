@@ -214,7 +214,9 @@
                         }
                     </td>
                     <td width="70">
-                        <a href="@Url.Action("Edit", new {id = item.Id})" data-trigger="hover" data-toggle="popover" data-placement="right" data-content="Editar"><i style="font-size: 1.5em;" class="fa fa-pencil"></i></a>
+                        <a href="@Url.Action("Edit", new {id = item.Id})" data-trigger="hover" data-toggle="popover" data-placement="right" data-content="Editar">
+                            <i style="font-size: 1.5em;" class="fa fa-pencil"></i>
+                        </a>
                         &nbsp;
                         <a id="@item.Id" onclick="SetId(this.id)" data-toggle="modal" data-target="#delete">
                             <i data-trigger="hover" data-toggle="popover" data-placement="right" data-content="Apagar" style="font-size: 1.5em;" class="fa fa-times"></i>
@@ -249,50 +251,65 @@
                 </span>
 
                 <div class="tag-wrapper">
+                    <span class="label label-success label-left">ID</span>
+                    <span class="label label-primary label-right">
+                        <span id="id-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Razão</span>
+                    <span class="label label-primary label-right">
+                        <span id="motivo-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
+                    <span class="label label-success label-left">Estado</span>
+                    <span class="label label-primary label-right">
+                        <span id="status-val"></span>
+                    </span>
+                </div>
+
+                <div class="tag-wrapper">
                     <span class="label label-success label-left">Dt. Pedido (min.)</span>
                     <span class="label label-primary label-right">
-                        <span id="pedido-fromDate-val">12/12/2016</span>
-                        <i class="fa fa-times removetag"></i>&thinsp;
+                        <span id="pedido-fromDate-val"></span>
                     </span>
                 </div>
 
                 <div class="tag-wrapper">
                     <span class="label label-success label-left">Dt. Pedido (max.)</span>
                     <span class="label label-primary label-right">
-                        <span id="pedido-toDate-val">12/12/2016</span>
-                        <i class="fa fa-times removetag"></i>&thinsp;
+                        <span id="pedido-toDate-val"></span>
                     </span>
                 </div>
 
                 <div class="tag-wrapper">
                     <span class="label label-success label-left">Dt. Inicio (min.)</span>
                     <span class="label label-primary label-right">
-                        <span id="inicio-fromDate-val">12/12/2016</span>
-                        <i class="fa fa-times removetag"></i>&thinsp;
+                        <span id="inicio-fromDate-val"></span>
                     </span>
                 </div>
 
                 <div class="tag-wrapper">
                     <span class="label label-success label-left">Dt. Inicio (max.)</span>
                     <span class="label label-primary label-right">
-                        <span id="inicio-toDate-val">12/12/2016</span>
-                        <i class="fa fa-times removetag"></i>&thinsp;
+                        <span id="inicio-toDate-val"></span>
                     </span>
                 </div>
 
                 <div class="tag-wrapper">
                     <span class="label label-success label-left">Dt. Fim (min.)</span>
                     <span class="label label-primary label-right">
-                        <span id="fim-fromDate-val">12/12/2016</span>
-                        <i class="fa fa-times removetag"></i>&thinsp;
+                        <span id="fim-fromDate-val"></span>
                     </span>
                 </div>
 
                 <div class="tag-wrapper">
-                    <span class="label label-success label-left">Dt. Inicio (max.)</span>
+                    <span class="label label-success label-left">Dt. Fim (max.)</span>
                     <span class="label label-primary label-right">
-                        <span id="fim-toDate-val">12/12/2016</span>
-                        <i class="fa fa-times removetag"></i>&thinsp;
+                        <span id="fim-toDate-val"></span>
                     </span>
                 </div>
             </div>
@@ -315,6 +332,7 @@
     <script src="~/bower_components/numbox/numbox.min.js"></script>
     <script>
         $(function () {
+            $(".tag-wrapper").hide();
             $("#ID-input").NumBox({ type: "integer", separator: "", min: 1 });
             FillTable();
             $(".removetag").click(function (e) {
@@ -322,55 +340,101 @@
             });
         });
         function FillTable() {
-            if ($("#pedido-fromDate").data("DateTimePicker").date() == null) {
-                var pedido_fromDate = null;    
+            if (!(0 === $("#ID-input").NumBox("getRaw").length)) {
+                $("#filtertags-nofilter").hide()
+                $("#id-val").text($("#ID-input").NumBox("getRaw"));
+                $("#id-val").parent().parent().show();
+            }
+            else {
+                $("#id-val").parent().parent().hide();
+            }
+            if (!$("#motivoSelect").val() == "") {
+                $("#filtertags-nofilter").hide();
+                $("#motivo-val").text($("#motivoSelect option:selected").text())
+                $("#motivo-val").parent().parent().show();
+            }
+            else {
+                $("#motivo-val").parent().parent().hide();
+            }
+            if (!$("#statusSelect").val() == "") {
+                $("#filtertags-nofilter").hide();
+                $("#status-val").text($("#statusSelect option:selected").text())
+                $("#status-val").parent().parent().show();
+            }
+            else {
+                $("#status-val").parent().parent().hide();
+            }
+            if ($("#pedido-fromDate-input").val() == "") {
+                var pedido_fromDate = null;
+                $("#pedido-fromDate-val").parent().parent().hide();
             }
             else {
                 var pedido_fromDate = $("#pedido-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
                 $("#filtertags-nofilter").hide()
-                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Pedido (min.)</span><span class="label label-primary label-right">' + $("#pedido-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                //$("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Pedido (min.)</span><span class="label label-primary label-right">' + $("#pedido-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                $("#pedido-fromDate-val").text($("#pedido-fromDate-input").val());
+                $("#pedido-fromDate-val").parent().parent().show();
             }
-            if ($("#pedido-toDate").data("DateTimePicker").date() == null) {
-                var pedido_toDate = null;    
+            if ($("#pedido-toDate-input").val() == "") {
+                var pedido_toDate = null;
+                $("#pedido-toDate-val").parent().parent().hide();
             }
             else {
                 var pedido_toDate = $("#pedido-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
                 $("#filtertags-nofilter").hide()
-                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Pedido (max.)</span><span class="label label-primary label-right">' + $("#pedido-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                //$("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Pedido (max.)</span><span class="label label-primary label-right">' + $("#pedido-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                $("#pedido-toDate-val").text($("#pedido-toDate-input").val());
+                $("#pedido-toDate-val").parent().parent().show();
             }
-            if ($("#inicio-fromDate").data("DateTimePicker").date() == null) {
-                var inicio_fromDate = null;    
+            if ($("#inicio-fromDate-input").val() == "") {
+                var inicio_fromDate = null;
+                $("#inicio-fromDate-val").parent().parent().hide();
             }
             else {
                 var inicio_fromDate = $("#inicio-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
                 $("#filtertags-nofilter").hide()
-                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Inicio (min.)</span><span class="label label-primary label-right">' + $("#inicio-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                //$("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Inicio (min.)</span><span class="label label-primary label-right">' + $("#inicio-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                $("#inicio-fromDate-val").text($("#inicio-fromDate-input").val());
+                $("#inicio-fromDate-val").parent().parent().show();
             }
-            if ($("#inicio-toDate").data("DateTimePicker").date() == null) {
-                var inicio_toDate = null;    
+            if ($("#inicio-toDate-input").val() == "") {
+                var inicio_toDate = null;
+                $("#inicio-toDate-val").parent().parent().hide();
             }
             else {
                 var inicio_toDate = $("#inicio-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
                 $("#filtertags-nofilter").hide()
-                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Inicio (max.)</span><span class="label label-primary label-right">' + $("#inicio-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                //$("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Inicio (max.)</span><span class="label label-primary label-right">' + $("#inicio-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                $("#inicio-toDate-val").text($("#inicio-toDate-input").val());
+                $("#inicio-toDate-val").parent().parent().show();
             }
-            if ($("#fim-fromDate").data("DateTimePicker").date() == null) {
-                var fim_fromDate = null;    
+            if ($("#fim-fromDate-input").val() == "") {
+                var fim_fromDate = null;
+                $("#fim-fromDate-val").parent().parent().hide();
             }
             else {
                 var fim_fromDate = $("#fim-fromDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
                 $("#filtertags-nofilter").hide()
-                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Fim (min.)</span><span class="label label-primary label-right">' + $("#fim-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                //$("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Fim (min.)</span><span class="label label-primary label-right">' + $("#fim-fromDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                $("#fim-fromDate-val").text($("#fim-fromDate-input").val());
+                $("#fim-fromDate-val").parent().parent().show();
             }
-            if ($("#fim-toDate").data("DateTimePicker").date() == null) {
-                var fim_toDate = null;    
+            if ($("#fim-toDate-input").val() == "") {
+                var fim_toDate = null;
+                $("#fim-toDate-val").parent().parent().hide();
             }
             else {
                 var fim_toDate = $("#fim-toDate").data("DateTimePicker").date().utc().format("YYYY-MM-DD");
                 $("#filtertags-nofilter").hide()
-                $("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Fim (max.)</span><span class="label label-primary label-right">' + $("#fim-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                //$("#filtertags").append('<div class="tag-wrapper"> <span class="label label-success label-left">Dt. Fim (max.)</span><span class="label label-primary label-right">' + $("#fim-toDate-input").val() + '&thinsp; <i class="fa fa-times removetag"></i>&thinsp; </span> </div>');
+                $("#fim-toDate-val").text($("#fim-toDate-input").val());
+                $("#fim-toDate-val").parent().parent().show();
             }
-             
+            
+            if ($(".tag-wrapper").is(":visible") == false) {
+                $("#filtertags-nofilter").show()
+            }
+
             var table = $("#MyTable");
             $.ajax({
                 url: "/Marcacoes/MyTableData",
@@ -438,8 +502,15 @@
             });
         }
         function CleanButton() {
-            $("#fromDate-input").val("");
-            $("#toDate-input").val("");
+            $("#ID-input").val("")
+            $("#motivoSelect").val("")
+            $("#statusSelect").val("")
+            $("#pedido-fromDate-input").val("");
+            $("#pedido-toDate-input").val("");
+            $("#inicio-fromDate-input").val("");
+            $("#inicio-toDate-input").val("");
+            $("#fim-fromDate-input").val("");
+            $("#fim-toDate-input").val("");
             FillTable();
         }
         function SetId(id) {

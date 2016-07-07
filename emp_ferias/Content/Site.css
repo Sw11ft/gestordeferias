@@ -165,12 +165,12 @@ th, td {
     text-align: center;
     margin-right: 5px;
     margin-left: 5px;
-    border-color: #FF9500;
+    border-color: #4cd964;
     padding: 5px 9px 5px 9px;
     height: 35px !important;
     outline: none !important;
     background: none;
-    color: #FF9500;
+    color: #4cd964;
     font-weight: bold;
 }
 .btn-round-warning {
@@ -640,7 +640,6 @@ th, td {
     color: white;
     vertical-align: middle;
     font-weight: 100;
-                    this.Flash("error", i.Message);
     font-size: 0.4em;
 }
 .flash-message {
@@ -679,17 +678,25 @@ th, td {
 #myPending > thead > tr > th:first-child, #myPending > thead > tr > th:last-child {
     border-radius: 0 !important;
 }
-#tablePanel {
+#actionPending-panel-bottom {
+    background-color: #2C93FF;
+    height: 10px;
+    border-radius: 0 0 10px 10px !important;
+    margin-top: 0px;
+    border: 0;
+
+}
+#tablePanel, #actionPending-panel {
     margin-bottom: 0 !important;
     margin-top: 15px !important;
     border-radius: 10px 10px 0px 0px !important; 
     height: 25px;
     line-height: 25px;
 }
-#tablePanel > div {
+#tablePanel > div, #actionPending-panel > div {
     border-radius: 10px 10px 0px 0px !important;    
 }
-#tablePanel > div > h3 {
+#tablePanel > div > h3, #actionPending-panel > div > h3 {
     line-height: 25px;
 }
 #previousTable {
@@ -717,8 +724,11 @@ th, td {
 #previousTable_next:focus, #previousTable_next:active, #previousTable_previous:focus, #previousTable_previous:active, .paginate-button:focus, .paginate-button:active {
     outline: none;
 } 
-#table1 {
-    background-color: rgba(0, 0, 0, 0.03)
+#actionPendingTable {
+    margin-top: 0px !important;
+}
+#actionPendingTable > thead > tr > th:first-child, #actionPendingTable > thead > tr > th:last-child {
+    border-radius: 0px !important;
 }
 #actionPending-panel {
     margin-bottom: 0 !important;
@@ -730,6 +740,10 @@ th, td {
     background-color: #FF9500;
     color: white;
 }
+#approve-header {
+    background-color: #4cd964;
+    color: white;
+}
 .modal-content {
     border-radius: 10px;
 }
@@ -739,7 +753,6 @@ th, td {
 #filtertags {
     float:left;
     text-align:left;
-    line-height: 27px;
     padding: 0;
 }
 #filterbuttons {
@@ -751,4 +764,14 @@ th, td {
 .tag-wrapper {
     height: 21.28px;
     line-height: 20.28px;
+}
+#filtertags-nofilter {
+    line-height: 45px;
+}
+.dataTables_empty {
+    background-color: rgba(217, 237, 247, 0.4);
+    border-radius: 0 0 10px 10px !important;
+}
+.UserName {
+    cursor: pointer;
 }

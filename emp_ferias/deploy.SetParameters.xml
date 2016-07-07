@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <setParameter name="IIS Web Application Name" value="FeriasWebsite" />
+  <setParameter name="DefaultConnection-Web.config Connection String" value="Data Source=(localdb)\v11.0;Initial Catalog=emp_ferias; Integrated Security=SSPI" />
+</parameters>

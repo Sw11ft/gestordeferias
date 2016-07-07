@@ -404,5 +404,79 @@ namespace emp_ferias.lib.Services
             if (!MemoryCache.Default.Contains("RefreshMarcStatus"))
                 MemoryCache.Default.Add("RefreshMarcStatus", "", DateTimeOffset.Now.AddHours(6));
         }
+
+        public int[] CalcDays(string UserId, bool IncludeSaturday, Motivo Motivo) //retorna o total de férias MARCADAS (e não apenas as gozadas)!!!
+        {
+            int[] Total = new int[4];
+            Total[0] = 0; Total[1] = 0; Total[2] = 0; Total[3] = 0;
+            //Total[0] = dias uteis num ano
+            //Total[1] = dias uteis no total
+            //Total[2] = total de dias num ano
+            //Total[3] = total de dias (no total)
+
+            List<Marcacao> Marcacoes = db.Marcacoes.Where(x => x.UserId == UserId && x.Motivo == Motivo && x.Status != Status.Expirado && x.Status != Status.Pendente && x.Status != Status.Rejeitado).ToList();
+
+            foreach (var i in Marcacoes)
+            {
+                int DUA = 0; //dias uteis no ano
+                int DUT = 0; //dias uteis no total
+                int TA = 0; //total de dias num ano
+                int TT = 0; //total de dias (no total)
+
+                for (var day = i.DataInicio.Date; day.Date <= i.DataFim.Date; day = day.AddDays(1)) //passa por cada dia entre a data de inicio e a data de fim da marcação
+                {
+                    if (day.Year == DateTime.UtcNow.Year)
+                        TA++; //se o dia pertencer a este ano, adiciona 1 ao total de dias no ano
+
+                    if (day.DayOfWeek != DayOfWeek.Sunday && day.DayOfWeek != DayOfWeek.Saturday)
+                    {
+                        if (day.Year == DateTime.UtcNow.Year)
+                            DUA++; //se for um dia util (exc sáb e dom) e neste ano, adiciona um ao total de dias uteis no ano
+                        DUT++; //se for um dia util (exc sáb e dom), adiciona um ao total de dias uteis
+                    }
+                    else
+                    {
+                        if (IncludeSaturday && day.DayOfWeek == DayOfWeek.Saturday) 
+                        {
+                            if (day.Year == DateTime.UtcNow.Year)
+                                DUA++; //se o util incluir o sáb como dia util e o dia for neste ano, adiciona um ao total de dias uteis no ano
+                            DUT++; //se o util incluir o sáb como dia util, adiciona um ao total de dias uteis
+                        }
+                    }
+                    TT++; //adiciona um ao total de dias por cada dia que passa
+                }
+
+                //adiciona os valores calculados ao array que vai ser retornado
+                Total[0] += DUA;
+                Total[1] += DUT;
+                Total[2] += TA;
+                Total[3] += TT;
+            }
+
+            return Total;
+        }
+
+        public int[] CalcStatus(string UserId)
+        {
+            int[] Total = new int[4];
+            Total[0] = 0; Total[1] = 0; Total[2] = 0; Total[3] = 0;
+            //Total[0] -> Aceites
+            //Total[1] -> Rejeitadas
+            //Total[2] -> Expiradas
+            //Total[3] -> EVERYTHING!!
+            var Marcacoes = db.Marcacoes.Where(x => x.UserId == UserId && x.Status != Status.Pendente).ToList();
+            foreach (var i in Marcacoes)
+            {
+                if (i.Status == Status.Expirado)
+                    Total[2]++;
+                else if (i.Status == Status.Rejeitado)
+                    Total[1]++;
+                else
+                    Total[0]++;
+                System.Diagnostics.Debug.WriteLine(i.Status);
+                Total[3]++; 
+            }
+            return Total;
+        }
     }
 }

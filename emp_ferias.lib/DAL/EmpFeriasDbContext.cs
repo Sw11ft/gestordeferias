@@ -1,4 +1,5 @@
 ﻿using emp_ferias.lib.Classes;
+using emp_ferias.lib.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,5 +19,11 @@ namespace emp_ferias.lib.DAL
         }
 
         public System.Data.Entity.DbSet<emp_ferias.lib.Classes.User> Users { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<EmpFeriasDbContext, Configuration>());
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
