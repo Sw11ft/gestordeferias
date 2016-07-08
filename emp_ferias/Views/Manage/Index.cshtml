@@ -155,15 +155,56 @@
             <td class="userinfo-left"><label class="userinfo">Password</label></td>
             <td class="userinfo-right">@Html.ActionLink("Alterar","ChangePassword")</td>
         </tr>
+        <tr>
+            <td colspan="2"><a data-toggle="modal" data-target="#UserModal" onclick="UpdateModal(this.getAttribute('data-userid'))" data-userid="@Model.UserId"><i class="fa fa-plus"></i>&nbsp;Mais Info</a></td>
+        </tr>
     </table>
+</div>
 
-        
+<div class="modal fade" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="UserModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="UserModal-title">Utilizador</h4>
+            </div>
+            <div class="modal-body" id="UserModal-body">
+                <div id="UserModal-progressicon">
+                    <i class="fa fa-cog fa-spin fa-3x fa-fw" id="tableState-symbol"></i>
+                </div>
+                <div id="UserModal-userinfo">
 
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-round-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts {
     <script src="~/bower_components/Chart.js/dist/Chart.js"></script>
     <script>
+        function UpdateModal(id) {
+            $.ajax({
+                url: "/User/UserModalData",
+                type: "GET",
+                data: {
+                    "id": id
+                },
+                beforeSend: function () {
+                    $("#UserModal-progressicon").show();
+                    $("#UserModal-userinfo").hide();
+                },
+                success: function (result) {
+                    $("#UserModal-userinfo").html(result);
+                    $("#UserModal-progressicon").hide();
+                    $("#UserModal-userinfo").show();
+                },
+            });
+        }
+
         $(document).ready(function () {
             var ctx = document.getElementById("doughnut");
 

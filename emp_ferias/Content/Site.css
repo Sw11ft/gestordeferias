@@ -775,3 +775,31 @@ th, td {
 .UserName {
     cursor: pointer;
 }
+.clear-both {
+    clear: both;
+}
+.inline-block {
+    display: inline-block;
+}
+#UserModal-userinfo {
+    text-align: center;
+}
+#UserModal-username {
+    font-size: 30px;
+    line-height: 30px;
+    margin-top: 0px !important;
+    text-align: center; 
+    font-weight: 800;
+}
+.modal-divider {
+    margin: 5px;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.infodiv {
+    font-size: 15px;
+    text-align: left !important;
+}
+.slash {
+    color: #d3d3d3;
+}

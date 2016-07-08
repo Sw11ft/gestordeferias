@@ -9,6 +9,28 @@
         content: ""    
     }
 </style>
+
+<script>
+    function UpdateModal(id) {
+        $.ajax({
+            url: "/User/UserModalData",
+            type: "GET",
+            data: {
+                "id": id
+            },
+            beforeSend: function () {
+                $("#UserModal-progressicon").show();
+                $("#UserModal-userinfo").hide();
+            },
+            success: function (result) {
+                $("#UserModal-userinfo").html(result);
+                $("#UserModal-progressicon").hide();
+                $("#UserModal-userinfo").show();
+            },
+        });
+    }
+</script>
+
 <div class="modal fade" id="filters" tabindex="-1" role="dialog" aria-labelledby="filters">
     <div class="modal-dialog modal-sm" role="document" id="filters-body">
         <div class="modal-content">
@@ -115,6 +137,29 @@
 </div>
 @if (Model.LoggedUser.RoleTests.IsAdmin || Model.LoggedUser.RoleTests.IsMod)
 {
+    <!-- USER INFO MODAL-->
+    <div class="modal fade" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="UserModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="UserModal-title">Utilizador</h4>
+                </div>
+                <div class="modal-body" id="UserModal-body">
+                    <div id="UserModal-progressicon">
+                        <i class="fa fa-cog fa-spin fa-3x fa-fw" id="tableState-symbol"></i>
+                    </div>
+                    <div id="UserModal-userinfo">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-round-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END MODAL -->
     <!-- APPROVE MODAL -->
     <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approve">
         <div class="modal-dialog modal-sm" role="document">

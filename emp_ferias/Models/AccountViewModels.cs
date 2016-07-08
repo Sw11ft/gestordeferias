@@ -20,12 +20,11 @@ namespace emp_ferias.Models
 
     public class LoginViewModel
     {
-        [Required]
-        [Display(Name = "UserName")]
-        
+        [Required(ErrorMessage = "O nome de utilizador é obrigatório")]
+        [Display(Name = "Nome de Utilizador")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A password é obrigatória")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

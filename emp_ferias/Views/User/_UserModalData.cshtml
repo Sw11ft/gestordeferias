@@ -1,10 +1,37 @@
 ﻿@model emp_ferias.Models.UserModalViewModel
-<p>@Model.TotalMarcacoes</p>
-<p>@Model.TotalAprovadas</p>
-<p>@Model.TotalRejeitadas</p>
-<p>@Model.TotalExpiradas</p>
-<p>@Model.TotalFerias</p>
-<p>@Model.TotalFeriasDiasUteis</p>
-<p>@Model.FeriasAno</p>
-<p>@Model.FeriasDiasUteisAno</p>
+<h2 id="UserModal-username" class="inline-block"><i class="fa fa-user" style="color: @(Model.Role == "Administrador" ? "#2C93FF" : Model.Role == "Moderador" ? "red" : "#777")"></i>&nbsp;@Model.UserName</h2>
+<hr class="modal-divider"/>
+<br />
+<div class="pull-left infodiv">
+    <label>Total de marcações:</label><span class="inline-block">&nbsp;@Model.TotalMarcacoes<button style="outline: none" type="button" class="btn-simple" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="right" data-html="true" data-content='@Model.TotalAprovadas aprovadas <span class="slash">/</span> @Model.TotalRejeitadas rejeitadas <span class="slash">/</span> @Model.TotalExpiradas expiradas'><i class="fa fa-info-circle" aria-hidden="true"></i></button></span><br />
+    <span style="color: #d3d3d3">---------</span><label>&nbsp;Férias:</label> <span class="inline-block">@Model.TotalFerias dia(s) (@Model.TotalFeriasDiasUteis D.U.)</span><br />
+    <span style="color: #d3d3d3">---------</span><label>&nbsp;Justificadas:</label> <span class="inline-block">@Model.TotalJustificadas dia(s) (@Model.TotalJustificadasDiasUteis dias D.U.)</span><br />
+    <span style="color: #d3d3d3">---------</span><label>&nbsp;Injustificadas:</label> <span class="inline-block">@Model.TotalInjustificadas dia(s) (@Model.TotalInjustificadasDiasUteis D.U.)</span><br />
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<hr class="modal-divider" />
+<br />
+<div class="pull-left infodiv">
+    <label>Este ano:</label><br />
+    <span style="color: #d3d3d3">---------</span><label>&nbsp;Férias:</label> <span class="inline-block">@Model.FeriasAno dia(s) (@Model.FeriasDiasUteisAno D.U.)</span><br />
+    <span style="color: #d3d3d3">---------</span><label>&nbsp;Justificadas:</label> <span class="inline-block">@Model.JustificadasAno dia(s) (@Model.JustificadasDiasUteisAno D.U.)</span> <br />
+    <span style="color: #d3d3d3">---------</span><label>&nbsp;Injustificadas:</label> <span class="inline-block">@Model.InjustificadasAno dia(s) (@Model.InjustificadasDiasUteisAno D.U.)</span><br />
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<span class="pull-left"><strong>D.U. <i class="fa fa-arrow-right"></i></strong> <i>dias úteis</i></span>
+<br />
 
+<script>
+    $('[data-toggle="popover"]').popover();
+</script>

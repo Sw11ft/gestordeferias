@@ -29,16 +29,23 @@
     @foreach (var item in Model.Marcacoes)
     {
         if (item.Status != Status.Pendente)
-        {
-               
+        {       
             <tr class="bg-info">
                     
                 <td>
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.UserName)
+                    @if (Model.LoggedUser.RoleTests.IsAdmin || Model.LoggedUser.RoleTests.IsMod)
+                    {
+                        <a onclick="UpdateModal(this.getAttribute('data-userid'))" data-userid="@item.User.Id" class="UserName" data-toggle="modal" data-target="#UserModal">@item.User.UserName</a>
+                    }
+                    else
+                    {
+                        @item.User.UserName
+                    }
                 </td>
+
                 <td>
                     @Html.DisplayFor(modelItem => item.DataPedido)
                 </td>
